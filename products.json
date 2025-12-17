@@ -1,0 +1,124 @@
+{
+  "products": [
+    {
+      "id": "prod001",
+      "name": "Industrial Safety Helmet",
+      "category": "safety",
+      "description": "High-quality industrial safety helmet with adjustable headband and chin strap. Meets ISI standards.",
+      "price": 450,
+      "stock": 150,
+      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
+      "specifications": {
+        "Material": "ABS Plastic",
+        "Color": "Yellow",
+        "Weight": "400g",
+        "Standards": "ISI Certified"
+      }
+    },
+    {
+      "id": "prod002",
+      "name": "Angle Grinder Machine",
+      "category": "tools",
+      "description": "Heavy-duty angle grinder with 850W motor, 4-inch wheel, and safety guard.",
+      "price": 3200,
+      "stock": 45,
+      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w-400",
+      "specifications": {
+        "Power": "850W",
+        "Wheel Size": "4 inch",
+        "Speed": "11000 RPM",
+        "Warranty": "1 year"
+      }
+    },
+    {
+      "id": "prod003",
+      "name": "Industrial Gloves (Pair)",
+      "category": "safety",
+      "description": "Leather industrial gloves with reinforced palms for maximum protection.",
+      "price": 280,
+      "stock": 300,
+      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
+      "specifications": {
+        "Material": "Leather",
+        "Size": "Medium",
+        "Type": "Cut-resistant",
+        "Pair": "Yes"
+      }
+    },
+    {
+      "id": "prod004",
+      "name": "Electric Drill Machine",
+      "category": "tools",
+      "description": "Cordless electric drill with variable speed and hammer function.",
+      "price": 4500,
+      "stock": 25,
+      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
+      "specifications": {
+        "Power": "18V",
+        "Chuck Size": "13mm",
+        "Battery": "Lithium-ion",
+        "Torque": "50Nm"
+      }
+    },
+    {
+      "id": "prod005",
+      "name": "Safety Shoes",
+      "category": "safety",
+      "description": "Steel-toe safety shoes with anti-slip sole and waterproof finish.",
+      "price": 1200,
+      "stock": 80,
+      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
+      "specifications": {
+        "Toe": "Steel",
+        "Sole": "Anti-slip",
+        "Material": "Leather",
+        "Size": "Various"
+      }
+    },
+    {
+      "id": "prod006",
+      "name": "Welding Machine",
+      "category": "machinery",
+      "description": "Arc welding machine with digital display and thermal protection.",
+      "price": 18500,
+      "stock": 12,
+      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
+      "specifications": {
+        "Input": "220V",
+        "Output": "140A",
+        "Duty Cycle": "60%",
+        "Weight": "18kg"
+      }
+    },
+    {
+      "id": "prod007",
+      "name": "Industrial Lubricant Oil",
+      "category": "consumables",
+      "description": "High-performance lubricant oil for industrial machinery. 5L can.",
+      "price": 850,
+      "stock": 200,
+      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
+      "specifications": {
+        "Volume": "5 Liters",
+        "Type": "Synthetic",
+        "Viscosity": "SAE 40",
+        "Application": "General purpose"
+      }
+    },
+    {
+      "id": "prod008",
+      "name": "Power Saw Machine",
+      "category": "tools",
+      "description": "Circular power saw with laser guide and dust collection port.",
+      "price": 7500,
+      "stock": 18,
+      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
+      "specifications": {
+        "Power": "1500W",
+        "Blade Size": "7.25 inch",
+        "Speed": "5500 RPM",
+        "Depth Cut": "65mm"
+      }
+    }
+  ]
+}
