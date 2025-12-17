@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Successful - SARM ENTERPRISES</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .success-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .success-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: cardAppear 0.6s ease-out;
+        }
+        
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+            animation: iconBounce 1s ease;
+        }
+        
+        @keyframes iconBounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-20px);}
+            60% {transform: translateY(-10px);}
+        }
+        
+        .success-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .success-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        .order-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .detail-label {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .whatsapp-notice {
+            background: #25D366;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4);}
+            70% {box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);}
+            100% {box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);}
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .action-buttons .btn {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        @media (max-width: 768px) {
+            .success-card {
+                padding: 30px 20px;
+            }
+            
+            .success-title {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-page">
+        <div class="success-card">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            
+            <h1 class="success-title">Order Placed Successfully!</h1>
+            <p class="success-subtitle">Thank you for shopping with SARM ENTERPRISES</p>
+            
+            <div class="whatsapp-notice">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp confirmation has been sent to your number</span>
+            </div>
+            
+            <div class="order-details" id="orderDetails">
+                <div class="detail-item">
+                    <span class="detail-label">Order ID:</span>
+                    <span class="detail-value" id="orderId">Loading...</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value" style="color: #4CAF50;">Confirmed</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Payment Method:</span>
+                    <span class="detail-value" id="paymentMethod">Loading...</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Estimated Delivery:</span>
+                    <span class="detail-value">3-5 business days</span>
+                </div>
+            </div>
+            
+            <p style="color: #666; margin-bottom: 20px;">
+                <i class="fas fa-info-circle"></i>
+                Our team will contact you shortly to confirm your order details.
+            </p>
+            
+            <div class="action-buttons">
+                <a href="index.html" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Continue Shopping
+                </a>
+                <button id="printInvoice" class="btn btn-outline">
+                    <i class="fas fa-print"></i> Print Invoice
+                </button>
+                <button id="trackOrder" class="btn btn-outline">
+                    <i class="fas fa-shipping-fast"></i> Track Order
+                </button>
+            </div>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                <p style="color: #666; font-size: 0.9rem;">
+                    Need help? Call us at <strong>+91 79023 12096</strong> or 
+                    <a href="mailto:support@sarmenterprises.com" style="color: #1976d2;">email us</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get order ID from localStorage
+            const orderId = localStorage.getItem('lastOrderId');
+            
+            if (orderId) {
+                document.getElementById('orderId').textContent = orderId.substring(0, 12) + '...';
+                
+                // In a real app, you would fetch order details from Firebase
+                // For now, we'll show placeholder data
+                document.getElementById('paymentMethod').textContent = 'Cash on Delivery';
+                
+                // Print invoice
+                document.getElementById('printInvoice').addEventListener('click', function() {
+                    window.print();
+                });
+                
+                // Track order (would redirect to tracking page)
+                document.getElementById('trackOrder').addEventListener('click', function() {
+                    alert('Tracking will be available once your order is shipped. You will receive a WhatsApp message with tracking details.');
+                });
+                
+                // Clear order ID after 5 minutes
+                setTimeout(() => {
+                    localStorage.removeItem('lastOrderId');
+                }, 300000);
+            } else {
+                // No order found, redirect to home
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
