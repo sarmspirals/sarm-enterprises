@@ -1,300 +1,150 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - SARM ENTERPRISES</title>
+    <title>SARM ENTERPRISES - Admin Panel</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
-<body class="admin-body">
-    <div class="admin-container">
-        <!-- Admin Login Screen -->
-        <div id="adminLogin" class="admin-login">
-            <div class="login-box">
-                <div class="login-header">
-                    <i class="fas fa-lock"></i>
-                    <h2>Admin Login</h2>
-                    <p>SARM ENTERPRISES Dashboard</p>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h1>SARM ENTERPRISES - Admin Panel</h1>
+                <p>KAWOOSA KHALISA, NARBAL, BADGAM</p>
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Store</a>
+                <button id="logout-btn" class="btn-auth">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <div class="admin-sidebar">
+            <h3>Admin Menu</h3>
+            <ul>
+                <li><a href="#" class="active" data-tab="orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li><a href="#" data-tab="products"><i class="fas fa-box"></i> Products</a></li>
+                <li><a href="#" data-tab="stock"><i class="fas fa-warehouse"></i> Stock Management</a></li>
+                <li><a href="#" data-tab="customers"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="#" data-tab="settings"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </div>
+
+        <div class="admin-content">
+            <!-- Orders Tab -->
+            <div id="orders-tab" class="tab-content active">
+                <h2>Recent Orders</h2>
+                <div class="orders-filter">
+                    <select id="order-status-filter">
+                        <option value="all">All Orders</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
                 </div>
-                <form id="adminLoginForm">
-                    <div class="form-group">
-                        <label><i class="fas fa-envelope"></i> Admin Email</label>
-                        <input type="email" id="adminEmail" required>
+                <div class="orders-list" id="orders-container">
+                    <!-- Orders will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Products Tab -->
+            <div id="products-tab" class="tab-content">
+                <h2>Product Management</h2>
+                <button class="btn-primary" onclick="openAddProductModal()">Add New Product</button>
+                <div class="products-list" id="admin-products-container">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Stock Tab -->
+            <div id="stock-tab" class="tab-content">
+                <h2>Stock Management</h2>
+                <div class="stock-list" id="stock-container">
+                    <!-- Stock items will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Customers Tab -->
+            <div id="customers-tab" class="tab-content">
+                <h2>Customer Management</h2>
+                <div class="customers-list" id="customers-container">
+                    <!-- Customers will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <h2>Settings</h2>
+                <div class="settings-form">
+                    <h3>Business Information</h3>
+                    <div class="business-info">
+                        <p><strong>Address:</strong> KAWOOSA KHALISA, NARBAL, BADGAM</p>
+                        <p><strong>Phone:</strong> 7006927825</p>
+                        <p><strong>Email:</strong> mir7amir@gmail.com</p>
+                        <p><strong>UPI ID:</strong> 7006927825@pz</p>
+                        <p><strong>Delivery Policy:</strong> Free within 5km</p>
                     </div>
+                    
+                    <h3>WhatsApp Alert Settings</h3>
                     <div class="form-group">
-                        <label><i class="fas fa-lock"></i> Password</label>
-                        <input type="password" id="adminPassword" required>
+                        <label>Admin WhatsApp Number:</label>
+                        <input type="text" id="admin-whatsapp" value="7006927825">
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
-                    <p id="adminLoginError" class="auth-error"></p>
-                </form>
-                <p class="login-footer">
-                    <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Website</a>
-                </p>
+                    
+                    <button class="btn-primary" onclick="saveSettings()">Save Settings</button>
+                </div>
             </div>
         </div>
-
-        <!-- Admin Dashboard -->
-        <div id="adminDashboard" style="display: none;">
-            <!-- Admin Header -->
-            <header class="admin-header">
-                <div class="admin-header-content">
-                    <div class="admin-brand">
-                        <i class="fas fa-industry"></i>
-                        <div>
-                            <h1>SARM ENTERPRISES</h1>
-                            <p>Admin Dashboard</p>
-                        </div>
-                    </div>
-                    <div class="admin-actions">
-                        <button id="refreshData" class="btn btn-outline">
-                            <i class="fas fa-sync-alt"></i> Refresh
-                        </button>
-                        <button id="addProductBtn" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Add Product
-                        </button>
-                        <button id="adminLogout" class="btn btn-outline">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
-                    </div>
-                </div>
-                <div class="admin-stats">
-                    <div class="stat-card">
-                        <i class="fas fa-shopping-cart"></i>
-                        <div>
-                            <h3 id="totalOrders">0</h3>
-                            <p>Total Orders</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-clock"></i>
-                        <div>
-                            <h3 id="pendingOrders">0</h3>
-                            <p>Pending</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-rupee-sign"></i>
-                        <div>
-                            <h3 id="totalRevenue">₹0</h3>
-                            <p>Revenue</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-boxes"></i>
-                        <div>
-                            <h3 id="lowStock">0</h3>
-                            <p>Low Stock</p>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Main Content -->
-            <main class="admin-main">
-                <div class="admin-tabs">
-                    <button class="admin-tab active" data-tab="orders">
-                        <i class="fas fa-clipboard-list"></i> Orders
-                    </button>
-                    <button class="admin-tab" data-tab="products">
-                        <i class="fas fa-box-open"></i> Products
-                    </button>
-                    <button class="admin-tab" data-tab="inventory">
-                        <i class="fas fa-warehouse"></i> Inventory
-                    </button>
-                    <button class="admin-tab" data-tab="customers">
-                        <i class="fas fa-users"></i> Customers
-                    </button>
-                </div>
-
-                <!-- Orders Tab -->
-                <div id="ordersTab" class="tab-content active">
-                    <div class="tab-header">
-                        <h2><i class="fas fa-clipboard-list"></i> Order Management</h2>
-                        <div class="tab-filters">
-                            <select id="orderFilter">
-                                <option value="all">All Orders</option>
-                                <option value="pending">Pending</option>
-                                <option value="confirmed">Confirmed</option>
-                                <option value="shipped">Shipped</option>
-                                <option value="delivered">Delivered</option>
-                                <option value="cancelled">Cancelled</option>
-                            </select>
-                            <input type="date" id="orderDateFilter">
-                        </div>
-                    </div>
-                    <div class="table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Items</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Date</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ordersTable">
-                                <!-- Orders will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Products Tab -->
-                <div id="productsTab" class="tab-content">
-                    <div class="tab-header">
-                        <h2><i class="fas fa-box-open"></i> Product Management</h2>
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="productSearch" placeholder="Search products...">
-                        </div>
-                    </div>
-                    <div class="table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Category</th>
-                                    <th>Price</th>
-                                    <th>Stock</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="productsTable">
-                                <!-- Products will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Inventory Tab -->
-                <div id="inventoryTab" class="tab-content">
-                    <div class="tab-header">
-                        <h2><i class="fas fa-warehouse"></i> Inventory Management</h2>
-                        <button id="exportInventory" class="btn btn-outline">
-                            <i class="fas fa-download"></i> Export CSV
-                        </button>
-                    </div>
-                    <div class="inventory-grid" id="inventoryGrid">
-                        <!-- Inventory items will be loaded here -->
-                    </div>
-                </div>
-
-                <!-- Customers Tab -->
-                <div id="customersTab" class="tab-content">
-                    <div class="tab-header">
-                        <h2><i class="fas fa-users"></i> Customer Management</h2>
-                    </div>
-                    <div class="table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Customer</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Orders</th>
-                                    <th>Total Spent</th>
-                                    <th>Joined</th>
-                                </tr>
-                            </thead>
-                            <tbody id="customersTable">
-                                <!-- Customers will be loaded here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <!-- Add/Edit Product Modal -->
-    <div id="productModal" class="modal">
-        <div class="modal-content wide-modal">
-            <span class="close-modal">&times;</span>
-            <h2 id="modalTitle"><i class="fas fa-plus"></i> Add New Product</h2>
-            <form id="productForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label><i class="fas fa-tag"></i> Product Name *</label>
-                        <input type="text" id="productName" required>
-                    </div>
-                    <div class="form-group">
-                        <label><i class="fas fa-list"></i> Category *</label>
-                        <select id="productCategory" required>
-                            <option value="">Select Category</option>
-                            <option value="machinery">Machinery</option>
-                            <option value="safety">Safety Equipment</option>
-                            <option value="tools">Tools</option>
-                            <option value="consumables">Consumables</option>
-                            <option value="electrical">Electrical</option>
-                            <option value="plumbing">Plumbing</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label><i class="fas fa-align-left"></i> Description *</label>
-                    <textarea id="productDescription" rows="3" required></textarea>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label><i class="fas fa-rupee-sign"></i> Price (₹) *</label>
-                        <input type="number" id="productPrice" min="0" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label><i class="fas fa-box"></i> Stock Quantity *</label>
-                        <input type="number" id="productStock" min="0" required>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label><i class="fas fa-link"></i> Image URL</label>
-                    <input type="url" id="productImageUrl" placeholder="https://example.com/image.jpg">
-                </div>
-                
-                <div class="form-group">
-                    <label><i class="fas fa-cogs"></i> Specifications</label>
-                    <div id="specificationsContainer">
-                        <div class="spec-row">
-                            <input type="text" class="spec-key" placeholder="Key (e.g., Material)">
-                            <input type="text" class="spec-value" placeholder="Value (e.g., Steel)">
-                            <button type="button" class="btn btn-outline remove-spec">-</button>
-                        </div>
-                    </div>
-                    <button type="button" id="addSpec" class="btn btn-outline">
-                        <i class="fas fa-plus"></i> Add Specification
-                    </button>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" class="btn btn-outline close-modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Save Product
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+    </main>
 
     <!-- Order Details Modal -->
-    <div id="orderModal" class="modal">
-        <div class="modal-content wide-modal">
-            <span class="close-modal">&times;</span>
-            <h2><i class="fas fa-file-invoice"></i> Order Details</h2>
-            <div id="orderDetails">
-                <!-- Order details will be loaded here -->
+    <div id="order-details-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Order Details</h2>
+            <div id="order-details-content"></div>
+            <div class="order-actions">
+                <select id="order-status-select">
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="shipped">Shipped</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+                <button class="btn-primary" onclick="updateOrderStatus()">Update Status</button>
+                <button class="btn-secondary" onclick="sendOrderUpdate()">Send Update via WhatsApp</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="add-product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Product</h2>
+            <form id="add-product-form">
+                <input type="text" placeholder="Product Name" required>
+                <input type="number" placeholder="Price" required>
+                <input type="number" placeholder="Stock Quantity" required>
+                <select required>
+                    <option value="">Select Category</option>
+                    <option value="notebooks">Notebooks</option>
+                    <option value="flowers">Flowers</option>
+                    <option value="pens">Pens</option>
+                </select>
+                <input type="text" placeholder="Image URL" required>
+                <textarea placeholder="Description"></textarea>
+                <button type="submit" class="btn-primary">Add Product</button>
+            </form>
         </div>
     </div>
 
