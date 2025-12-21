@@ -1,124 +1,164 @@
 {
   "products": [
     {
-      "id": "prod001",
-      "name": "Industrial Safety Helmet",
-      "category": "safety",
-      "description": "High-quality industrial safety helmet with adjustable headband and chin strap. Meets ISI standards.",
-      "price": 450,
-      "stock": 150,
-      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
-      "specifications": {
-        "Material": "ABS Plastic",
-        "Color": "Yellow",
-        "Weight": "400g",
-        "Standards": "ISI Certified"
-      }
+      "id": 1,
+      "name": "Spiral notebook 100 pages",
+      "price": 10,
+      "image": "img/01.jpg",
+      "category": "notebooks",
+      "stock": 100
     },
     {
-      "id": "prod002",
-      "name": "Angle Grinder Machine",
-      "category": "tools",
-      "description": "Heavy-duty angle grinder with 850W motor, 4-inch wheel, and safety guard.",
-      "price": 3200,
-      "stock": 45,
-      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w-400",
-      "specifications": {
-        "Power": "850W",
-        "Wheel Size": "4 inch",
-        "Speed": "11000 RPM",
-        "Warranty": "1 year"
-      }
+      "id": 2,
+      "name": "Spiral notebook 200 pages",
+      "price": 20,
+      "image": "img/02.jpg",
+      "category": "notebooks",
+      "stock": 100
     },
     {
-      "id": "prod003",
-      "name": "Industrial Gloves (Pair)",
-      "category": "safety",
-      "description": "Leather industrial gloves with reinforced palms for maximum protection.",
-      "price": 280,
-      "stock": 300,
-      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
-      "specifications": {
-        "Material": "Leather",
-        "Size": "Medium",
-        "Type": "Cut-resistant",
-        "Pair": "Yes"
-      }
+      "id": 3,
+      "name": "Spiral notebook 250 pages",
+      "price": 30,
+      "image": "img/03.jpg",
+      "category": "notebooks",
+      "stock": 100
     },
     {
-      "id": "prod004",
-      "name": "Electric Drill Machine",
-      "category": "tools",
-      "description": "Cordless electric drill with variable speed and hammer function.",
-      "price": 4500,
-      "stock": 25,
-      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
-      "specifications": {
-        "Power": "18V",
-        "Chuck Size": "13mm",
-        "Battery": "Lithium-ion",
-        "Torque": "50Nm"
-      }
+      "id": 4,
+      "name": "Spiral notebook 300 pages",
+      "price": 40,
+      "image": "img/04.jpg",
+      "category": "notebooks",
+      "stock": 100
     },
     {
-      "id": "prod005",
-      "name": "Safety Shoes",
-      "category": "safety",
-      "description": "Steel-toe safety shoes with anti-slip sole and waterproof finish.",
-      "price": 1200,
-      "stock": 80,
-      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
-      "specifications": {
-        "Toe": "Steel",
-        "Sole": "Anti-slip",
-        "Material": "Leather",
-        "Size": "Various"
-      }
+      "id": 5,
+      "name": "Spiral notebook 350 pages",
+      "price": 50,
+      "image": "img/05.jpg",
+      "category": "notebooks",
+      "stock": 100
     },
     {
-      "id": "prod006",
-      "name": "Welding Machine",
-      "category": "machinery",
-      "description": "Arc welding machine with digital display and thermal protection.",
-      "price": 18500,
-      "stock": 12,
-      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
-      "specifications": {
-        "Input": "220V",
-        "Output": "140A",
-        "Duty Cycle": "60%",
-        "Weight": "18kg"
-      }
+      "id": 6,
+      "name": "Spiral notebook 400 pages",
+      "price": 60,
+      "image": "img/06.jpg",
+      "category": "notebooks",
+      "stock": 100
     },
     {
-      "id": "prod007",
-      "name": "Industrial Lubricant Oil",
-      "category": "consumables",
-      "description": "High-performance lubricant oil for industrial machinery. 5L can.",
-      "price": 850,
-      "stock": 200,
-      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
-      "specifications": {
-        "Volume": "5 Liters",
-        "Type": "Synthetic",
-        "Viscosity": "SAE 40",
-        "Application": "General purpose"
-      }
+      "id": 7,
+      "name": "Spiral notebook 450 pages",
+      "price": 70,
+      "image": "img/07.jpg",
+      "category": "notebooks",
+      "stock": 100
     },
     {
-      "id": "prod008",
-      "name": "Power Saw Machine",
-      "category": "tools",
-      "description": "Circular power saw with laser guide and dust collection port.",
-      "price": 7500,
-      "stock": 18,
-      "imageUrl": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400",
-      "specifications": {
-        "Power": "1500W",
-        "Blade Size": "7.25 inch",
-        "Speed": "5500 RPM",
-        "Depth Cut": "65mm"
-      }
+      "id": 8,
+      "name": "Spiral notebook 500 pages",
+      "price": 80,
+      "image": "img/08.jpg",
+      "category": "notebooks",
+      "stock": 100
+    },
+    {
+      "id": 9,
+      "name": "flowers lilly",
+      "price": 90,
+      "image": "img/09.jpg",
+      "category": "flowers",
+      "stock": 100
+    },
+    {
+      "id": 10,
+      "name": "flowers rose",
+      "price": 100,
+      "image": "img/10.jpg",
+      "category": "flowers",
+      "stock": 100
+    },
+    {
+      "id": 11,
+      "name": "small flowers",
+      "price": 110,
+      "image": "img/11.jpg",
+      "category": "flowers",
+      "stock": 100
+    },
+    {
+      "id": 12,
+      "name": "big flowers",
+      "price": 120,
+      "image": "img/12.jpg",
+      "category": "flowers",
+      "stock": 100
+    },
+    {
+      "id": 13,
+      "name": "sun flowers",
+      "price": 130,
+      "image": "img/13.jpg",
+      "category": "flowers",
+      "stock": 100
+    },
+    {
+      "id": 14,
+      "name": "mari gold",
+      "price": 140,
+      "image": "img/14.jpg",
+      "category": "flowers",
+      "stock": 100
+    },
+    {
+      "id": 15,
+      "name": "pen red",
+      "price": 150,
+      "image": "img/15.jpg",
+      "category": "pens",
+      "stock": 100
+    },
+    {
+      "id": 16,
+      "name": "pen blue",
+      "price": 160,
+      "image": "img/16.jpg",
+      "category": "pens",
+      "stock": 100
+    },
+    {
+      "id": 17,
+      "name": "pen green",
+      "price": 170,
+      "image": "img/17.jpg",
+      "category": "pens",
+      "stock": 100
+    },
+    {
+      "id": 18,
+      "name": "pen white",
+      "price": 180,
+      "image": "img/18.jpg",
+      "category": "pens",
+      "stock": 100
+    },
+    {
+      "id": 19,
+      "name": "pen note",
+      "price": 190,
+      "image": "img/19.jpg",
+      "category": "pens",
+      "stock": 100
+    },
+    {
+      "id": 20,
+      "name": "pen book",
+      "price": 200,
+      "image": "img/20.jpg",
+      "category": "pens",
+      "stock": 100
     }
   ]
 }
