@@ -9,12 +9,12 @@
       "stock": 100
     },
     {
-      "id": 2,
+      "id": p200,
       "name": "Spiral notebook 200 pages",
-      "price": 20,
-      "image": "img/02.jpg",
+      "price": 69,
+      "image": "200.jpg",
       "category": "notebooks",
-      "stock": 100
+      "stock": 500
     },
     {
       "id": 3,
