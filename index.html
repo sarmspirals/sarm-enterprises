@@ -4,386 +4,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SARM ENTERPRISES - Industrial Supplies</title>
-    <link rel="stylesheet" href="style.css">
+    <title>SARM ENTERPRISES - Stationery & Flowers</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 </head>
 <body>
-    <!-- Header & Navigation -->
-    <header class="header">
-        <div class="container">
-            <nav class="navbar">
-                <a href="index.html" class="logo">
-                    <i class="fas fa-industry"></i>
-                    <span>SARM</span>ENTERPRISES
-                </a>
-                
-                <div class="nav-links">
-                    <a href="index.html"><i class="fas fa-home"></i> Home</a>
-                    <a href="#products"><i class="fas fa-boxes"></i> Products</a>
-                    <a href="#about"><i class="fas fa-info-circle"></i> About</a>
-                    <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
-                    <div class="user-section">
-                        <span id="user-greeting"></span>
-                        <button id="login-btn" class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> Login</button>
-                        <button id="logout-btn" class="btn btn-outline" style="display:none"><i class="fas fa-sign-out-alt"></i> Logout</button>
-                        <a href="admin.html" id="admin-link" class="btn btn-admin" style="display:none"><i class="fas fa-cog"></i> Admin</a>
-                    </div>
-                </div>
-                
-                <div class="cart-icon">
-                    <a href="#cart" id="cart-toggle">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span id="cart-count">0</span>
-                    </a>
-                </div>
-                
-                <button class="menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </nav>
-        </div>
+    <!-- Header with Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h1>SARM ENTERPRISES</h1>
+                <p>KAWOOSA KHALISA, NARBAL, BADGAM</p>
+            </div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#products">Products</a>
+                <a href="#cart">Cart <span id="cart-count">0</span></a>
+                <a href="#contact">Contact</a>
+                <button id="login-btn" class="btn-auth">Login</button>
+                <button id="logout-btn" class="btn-auth" style="display:none;">Logout</button>
+                <a href="admin.html" class="btn-admin">Admin</a>
+            </div>
+        </nav>
     </header>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h2><i class="fas fa-user-circle"></i> Login / Register</h2>
-            <div class="auth-tabs">
-                <button class="tab-btn active" data-tab="login">Login</button>
-                <button class="tab-btn" data-tab="register">Register</button>
-            </div>
-            
-            <div id="login-form" class="auth-form">
-                <div class="form-group">
-                    <label><i class="fas fa-envelope"></i> Email</label>
-                    <input type="email" id="login-email" placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="login-password" placeholder="Enter your password">
-                </div>
-                <button id="login-submit" class="btn btn-primary btn-block">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </button>
-                <p class="auth-error" id="login-error"></p>
-            </div>
-            
-            <div id="register-form" class="auth-form" style="display:none">
-                <div class="form-group">
-                    <label><i class="fas fa-user"></i> Full Name</label>
-                    <input type="text" id="register-name" placeholder="Enter your full name">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-envelope"></i> Email</label>
-                    <input type="email" id="register-email" placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="register-password" placeholder="Create a password (min. 6 characters)">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-lock"></i> Confirm Password</label>
-                    <input type="password" id="register-confirm" placeholder="Confirm your password">
-                </div>
-                <button id="register-submit" class="btn btn-primary btn-block">
-                    <i class="fas fa-user-plus"></i> Register
-                </button>
-                <p class="auth-error" id="register-error"></p>
-            </div>
-        </div>
-    </div>
-
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Premium Industrial Supplies & Equipment</h1>
-                <p>Your trusted partner for quality industrial materials, machinery, and safety equipment since 2010</p>
-                <a href="#products" class="btn btn-primary btn-lg">
-                    <i class="fas fa-shopping-bag"></i> Shop Now
-                </a>
-                <a href="#contact" class="btn btn-outline btn-lg">
-                    <i class="fas fa-phone"></i> Contact Us
-                </a>
-            </div>
-            <div class="hero-stats">
-                <div class="stat">
-                    <h3>500+</h3>
-                    <p>Products</p>
-                </div>
-                <div class="stat">
-                    <h3>1000+</h3>
-                    <p>Happy Clients</p>
-                </div>
-                <div class="stat">
-                    <h3>15+</h3>
-                    <p>Years Experience</p>
-                </div>
-            </div>
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h2>Quality Stationery & Beautiful Flowers</h2>
+            <p>Your one-stop shop for all stationery needs and fresh flowers</p>
+            <a href="#products" class="btn-primary">Shop Now</a>
         </div>
     </section>
 
     <!-- Products Section -->
     <section id="products" class="products-section">
-        <div class="container">
-            <h2 class="section-title"><i class="fas fa-box-open"></i> Our Products</h2>
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All Products</button>
-                <button class="filter-btn" data-filter="machinery">Machinery</button>
-                <button class="filter-btn" data-filter="safety">Safety Equipment</button>
-                <button class="filter-btn" data-filter="tools">Tools</button>
-                <button class="filter-btn" data-filter="consumables">Consumables</button>
-            </div>
-            
-            <div class="products-grid" id="products-container">
-                <!-- Products will be loaded here by JavaScript -->
-                <div class="loading">Loading products...</div>
-            </div>
+        <h2>Our Products</h2>
+        <div class="category-filter">
+            <button class="category-btn active" data-category="all">All Products</button>
+            <button class="category-btn" data-category="notebooks">Notebooks</button>
+            <button class="category-btn" data-category="flowers">Flowers</button>
+            <button class="category-btn" data-category="pens">Pens</button>
+        </div>
+        <div class="products-grid" id="products-container">
+            <!-- Products will be loaded here -->
         </div>
     </section>
 
-    <!-- Shopping Cart Sidebar -->
-    <div id="cart-sidebar" class="cart-sidebar">
-        <div class="cart-header">
-            <h3><i class="fas fa-shopping-cart"></i> Your Cart</h3>
-            <button class="close-cart">&times;</button>
-        </div>
-        <div class="cart-items" id="cart-items">
-            <div class="empty-cart">
-                <i class="fas fa-shopping-cart"></i>
-                <p>Your cart is empty</p>
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Your Shopping Cart</h2>
+            <div id="cart-items">
+                <!-- Cart items will be loaded here -->
             </div>
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <span>Total:</span>
-                <span id="cart-total">₹0</span>
+            <div class="cart-summary">
+                <p>Subtotal: ₹<span id="cart-subtotal">0</span></p>
+                <p>Delivery: ₹<span id="delivery-charge">0</span></p>
+                <p><strong>Total: ₹<span id="cart-total">0</span></strong></p>
+                <button id="checkout-btn" class="btn-primary">Proceed to Checkout</button>
             </div>
-            <button id="checkout-btn" class="btn btn-primary btn-block" disabled>
-                <i class="fas fa-credit-card"></i> Proceed to Checkout
-            </button>
         </div>
     </div>
 
     <!-- Checkout Modal -->
-    <div id="checkoutModal" class="modal">
-        <div class="modal-content wide-modal">
-            <span class="close-modal">&times;</span>
-            <h2><i class="fas fa-shipping-fast"></i> Checkout</h2>
-            
-            <div class="checkout-container">
-                <div class="order-summary">
-                    <h3>Order Summary</h3>
-                    <div id="checkout-items"></div>
-                    <div class="summary-total">
-                        <span>Total Amount:</span>
-                        <span id="summary-total">₹0</span>
-                    </div>
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-checkout">&times;</span>
+            <h2>Checkout</h2>
+            <form id="checkout-form">
+                <h3>Customer Details</h3>
+                <input type="text" placeholder="Full Name" required>
+                <input type="tel" placeholder="Phone Number (10 digits)" pattern="[0-9]{10}" required>
+                <textarea placeholder="Address" required></textarea>
+                <input type="text" placeholder="Pincode" pattern="[0-9]{6}" required>
+                <input type="text" placeholder="Landmark" required>
+                
+                <h3>Payment Method</h3>
+                <div class="payment-options">
+                    <label>
+                        <input type="radio" name="payment" value="cod" checked>
+                        Cash on Delivery (COD)
+                    </label>
+                    <label>
+                        <input type="radio" name="payment" value="upi">
+                        UPI Payment (ID: 7006927825@pz)
+                    </label>
                 </div>
                 
-                <div class="customer-form">
-                    <h3>Customer Details</h3>
-                    <form id="checkout-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label><i class="fas fa-user"></i> Full Name *</label>
-                                <input type="text" id="customer-name" required>
-                            </div>
-                            <div class="form-group">
-                                <label><i class="fas fa-phone"></i> Phone Number *</label>
-                                <input type="tel" id="customer-phone" pattern="[6-9][0-9]{9}" required>
-                                <small>10-digit Indian number starting with 6-9</small>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label><i class="fas fa-envelope"></i> Email Address *</label>
-                            <input type="email" id="customer-email" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label><i class="fas fa-map-marker-alt"></i> Complete Address *</label>
-                            <textarea id="customer-address" rows="3" required></textarea>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label><i class="fas fa-map-pin"></i> Pincode *</label>
-                                <input type="text" id="customer-pincode" pattern="[0-9]{6}" required>
-                            </div>
-                            <div class="form-group">
-                                <label><i class="fas fa-landmark"></i> Landmark</label>
-                                <input type="text" id="customer-landmark">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label><i class="fas fa-credit-card"></i> Payment Method *</label>
-                            <div class="payment-options">
-                                <label class="payment-option">
-                                    <input type="radio" name="payment" value="cod" checked>
-                                    <i class="fas fa-money-bill-wave"></i>
-                                    <span>Cash on Delivery (COD)</span>
-                                </label>
-                                <label class="payment-option">
-                                    <input type="radio" name="payment" value="upi">
-                                    <i class="fas fa-qrcode"></i>
-                                    <span>UPI Payment</span>
-                                </label>
-                            </div>
-                            
-                            <div id="upi-qr-section" style="display:none; text-align:center; margin-top:20px;">
-                                <img src="upi-qr.jpg" alt="UPI QR Code" style="max-width:200px; border:1px solid #ddd; padding:10px;">
-                                <p style="margin-top:10px; font-size:14px;">Scan to pay via UPI<br>
-                                <strong>UPI ID: sarm.enterprises@upi</strong></p>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label><i class="fas fa-sticky-note"></i> Special Instructions</label>
-                            <textarea id="special-notes" rows="2"></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary btn-block btn-lg">
-                            <i class="fas fa-paper-plane"></i> Place Order
-                        </button>
-                    </form>
-                </div>
-            </div>
+                <h3>Order Summary</h3>
+                <div id="order-summary"></div>
+                
+                <button type="submit" class="btn-primary">Place Order</button>
+            </form>
         </div>
     </div>
 
-    <!-- About Section -->
-    <section id="about" class="about-section">
-        <div class="container">
-            <h2 class="section-title"><i class="fas fa-building"></i> About SARM Enterprises</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <p>Since 2010, SARM Enterprises has been a trusted name in industrial supplies, providing quality products to businesses across India.</p>
-                    <div class="features">
-                        <div class="feature">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Genuine Products</span>
-                        </div>
-                        <div class="feature">
-                            <i class="fas fa-shipping-fast"></i>
-                            <span>Fast Delivery</span>
-                        </div>
-                        <div class="feature">
-                            <i class="fas fa-headset"></i>
-                            <span>24/7 Support</span>
-                        </div>
-                        <div class="feature">
-                            <i class="fas fa-shield-alt"></i>
-                            <span>Quality Assurance</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-login">&times;</span>
+            <h2>Login</h2>
+            <form id="login-form">
+                <input type="email" placeholder="Email" id="login-email" required>
+                <input type="password" placeholder="Password" id="login-password" required>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+            <p>Don't have an account? <a href="#" id="show-register">Register</a></p>
         </div>
-    </section>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-register">&times;</span>
+            <h2>Register</h2>
+            <form id="register-form">
+                <input type="text" placeholder="Full Name" id="register-name" required>
+                <input type="email" placeholder="Email" id="register-email" required>
+                <input type="password" placeholder="Password" id="register-password" required>
+                <input type="tel" placeholder="Phone Number" id="register-phone" required>
+                <button type="submit" class="btn-primary">Register</button>
+            </form>
+            <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+        </div>
+    </div>
 
     <!-- Contact Section -->
     <section id="contact" class="contact-section">
-        <div class="container">
-            <h2 class="section-title"><i class="fas fa-phone-alt"></i> Contact Us</h2>
-            <div class="contact-grid">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <h3>Address</h3>
-                            <p>Industrial Area, Phase 2<br>Delhi NCR, India - 201301</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-phone"></i>
-                        <div>
-                            <h3>Phone</h3>
-                            <p>+91 79023 12096</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <h3>Email</h3>
-                            <p>info@sarmenterprises.com</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-clock"></i>
-                        <div>
-                            <h3>Business Hours</h3>
-                            <p>Mon-Sat: 9:00 AM - 7:00 PM<br>Sunday: 10:00 AM - 5:00 PM</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-form">
-                    <h3>Quick Inquiry</h3>
-                    <form id="inquiry-form">
-                        <input type="text" placeholder="Your Name" required>
-                        <input type="tel" placeholder="Phone Number" required>
-                        <input type="email" placeholder="Email Address">
-                        <textarea placeholder="Your Message" rows="4" required></textarea>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i> Send Message
-                        </button>
-                    </form>
-                </div>
-            </div>
+        <h2>Contact Us</h2>
+        <div class="contact-info">
+            <p><i class="fas fa-map-marker-alt"></i> KAWOOSA KHALISA, NARBAL, BADGAM</p>
+            <p><i class="fas fa-phone"></i> 7006927825</p>
+            <p><i class="fas fa-envelope"></i> mir7amir@gmail.com</p>
+            <p><i class="fas fa-truck"></i> Free Delivery within 5km</p>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h3><i class="fas fa-industry"></i> SARM ENTERPRISES</h3>
-                    <p>Your trusted partner for industrial supplies and equipment since 2010.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h3>Quick Links</h3>
-                    <a href="#products">Products</a>
-                    <a href="#about">About Us</a>
-                    <a href="#contact">Contact</a>
-                    <a href="admin.html">Admin Login</a>
-                </div>
-                <div class="footer-col">
-                    <h3>Categories</h3>
-                    <a href="#products?category=machinery">Machinery</a>
-                    <a href="#products?category=safety">Safety Equipment</a>
-                    <a href="#products?category=tools">Tools</a>
-                    <a href="#products?category=consumables">Consumables</a>
-                </div>
-                <div class="footer-col">
-                    <h3>Payment Methods</h3>
-                    <div class="payment-methods">
-                        <i class="fas fa-money-bill-wave" title="Cash on Delivery"></i>
-                        <i class="fas fa-qrcode" title="UPI"></i>
-                        <i class="fas fa-university" title="Bank Transfer"></i>
-                    </div>
-                    <p class="copyright">© 2024 SARM ENTERPRISES. All rights reserved.</p>
-                </div>
-            </div>
-        </div>
+    <footer>
+        <p>&copy; 2024 SARM ENTERPRISES. All rights reserved.</p>
     </footer>
 
-    <!-- Scripts -->
     <script src="firebase-config.js"></script>
     <script src="app.js"></script>
 </body>
-  </html>
+</html>
