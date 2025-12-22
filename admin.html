@@ -12,8 +12,8 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <h1><i class="fas fa-book"></i> SARM ENTERPRISES - Admin</h1>
-                <p class="tagline">Manage Your Products</p>
+                <h1><i class="fas fa-user-shield"></i> Admin Dashboard</h1>
+                <p class="tagline">SARM ENTERPRISES Management</p>
             </div>
             <button id="logoutBtn" class="btn-logout">
                 <i class="fas fa-sign-out-alt"></i> Logout
@@ -23,25 +23,26 @@
 
     <div class="admin-container">
         <div class="admin-header">
-            <h2>Product Management Dashboard</h2>
+            <h2>Welcome to Admin Panel</h2>
             <div class="admin-stats">
                 <span id="totalProducts">0 Products</span>
+                <span id="totalOrders">0 Orders</span>
                 <span id="lowStock">0 Low Stock</span>
             </div>
         </div>
 
         <!-- Add/Edit Product Form -->
         <div class="form-card">
-            <h3><i class="fas fa-plus-circle"></i> Add New Product</h3>
+            <h3><i class="fas fa-plus-circle"></i> Add/Edit Product</h3>
             <form id="productForm">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="productName">Product Name</label>
+                        <label for="productName"><i class="fas fa-tag"></i> Product Name</label>
                         <input type="text" id="productName" required 
                                placeholder="e.g., Spiral Notebook 200 Pages">
                     </div>
                     <div class="form-group">
-                        <label for="productPages">Number of Pages</label>
+                        <label for="productPages"><i class="fas fa-file-alt"></i> Number of Pages</label>
                         <input type="number" id="productPages" required 
                                placeholder="e.g., 200">
                     </div>
@@ -49,26 +50,36 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="productPrice">Price (₹)</label>
+                        <label for="productPrice"><i class="fas fa-rupee-sign"></i> Price (₹)</label>
                         <input type="number" id="productPrice" required 
                                placeholder="e.g., 69" step="0.01">
                     </div>
                     <div class="form-group">
-                        <label for="productStock">Stock Quantity</label>
+                        <label for="productStock"><i class="fas fa-box"></i> Stock Quantity</label>
                         <input type="number" id="productStock" required 
                                placeholder="e.g., 50">
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="productImage">Image URL</label>
-                    <input type="url" id="productImage" 
-                           placeholder="https://example.com/image.jpg">
-                    <small>Leave empty for default image</small>
+                    <label for="productImage"><i class="fas fa-image"></i> Product Image</label>
+                    <div class="file-input-wrapper">
+                        <button type="button" class="btn-upload">
+                            <i class="fas fa-upload"></i> Choose Image
+                        </button>
+                        <input type="file" id="productImage" accept="image/*">
+                    </div>
+                    <div id="imagePreviewContainer" class="image-preview-container">
+                        <img id="imagePreview" class="image-preview" src="" alt="Image Preview">
+                        <div id="imageInfo"></div>
+                    </div>
+                    <div id="uploadProgress" class="upload-progress" style="display: none;">
+                        <div id="uploadProgressBar" class="upload-progress-bar"></div>
+                    </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="productDescription">Description</label>
+                    <label for="productDescription"><i class="fas fa-align-left"></i> Description</label>
                     <textarea id="productDescription" rows="3" 
                               placeholder="Product description..."></textarea>
                 </div>
@@ -77,10 +88,42 @@
                     <i class="fas fa-save"></i> Add Product
                 </button>
                 <button type="button" class="btn-secondary" id="cancelEdit" style="display: none;">
-                    Cancel Edit
+                    <i class="fas fa-times"></i> Cancel Edit
                 </button>
                 <input type="hidden" id="editProductId">
             </form>
+        </div>
+
+        <!-- Logo Management -->
+        <div class="form-card">
+            <h3><i class="fas fa-image"></i> Logo Management</h3>
+            <div class="form-group">
+                <label for="logoUpload">Upload New Logo</label>
+                <div class="file-input-wrapper">
+                    <button type="button" class="btn-upload">
+                        <i class="fas fa-upload"></i> Choose Logo
+                    </button>
+                    <input type="file" id="logoUpload" accept="image/*">
+                </div>
+                <div id="logoPreviewContainer" class="image-preview-container">
+                    <img id="logoPreview" class="image-preview" src="" alt="Logo Preview">
+                    <div id="logoInfo"></div>
+                </div>
+                <div id="logoUploadProgress" class="upload-progress" style="display: none;">
+                    <div id="logoUploadProgressBar" class="upload-progress-bar"></div>
+                </div>
+                <button type="button" class="btn-primary" id="uploadLogoBtn" style="margin-top: 10px;">
+                    <i class="fas fa-upload"></i> Upload Logo
+                </button>
+            </div>
+        </div>
+
+        <!-- Image Gallery -->
+        <div class="form-card">
+            <h3><i class="fas fa-images"></i> Image Gallery</h3>
+            <div id="imageGallery" class="image-gallery">
+                <!-- Images will be loaded here -->
+            </div>
         </div>
 
         <!-- Products List -->
@@ -109,7 +152,17 @@
         <!-- Stock Summary -->
         <div class="form-card">
             <h3><i class="fas fa-chart-bar"></i> Stock Summary</h3>
-            <canvas id="stockChart"></canvas>
+            <div class="chart-container">
+                <canvas id="stockChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Orders Management -->
+        <div class="form-card">
+            <h3><i class="fas fa-shopping-cart"></i> Recent Orders</h3>
+            <div id="ordersList">
+                <p>No orders yet</p>
+            </div>
         </div>
     </div>
 
