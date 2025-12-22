@@ -1,5 +1,6 @@
-import { auth, db, handleLogout } from './app.js';
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import { auth, db, storage, showNotification } from './app.js';
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, getDoc, setDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import { ref, uploadBytes, getDownloadURL, deleteObject, listAll } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 
 // DOM Elements
 const productForm = document.getElementById('productForm');
@@ -8,12 +9,20 @@ const logoutBtn = document.getElementById('logoutBtn');
 const submitBtn = document.getElementById('submitBtn');
 const cancelEdit = document.getElementById('cancelEdit');
 const editProductId = document.getElementById('editProductId');
-const newQuote = document.getElementById('newQuote');
-const addQuoteBtn = document.getElementById('addQuoteBtn');
-const quotesList = document.getElementById('quotesList');
+const productImage = document.getElementById('productImage');
+const imagePreview = document.getElementById('imagePreview');
+const uploadProgress = document.getElementById('uploadProgress');
+const uploadProgressBar = document.getElementById('uploadProgressBar');
+const imageInfo = document.getElementById('imageInfo');
+const imageGallery = document.getElementById('imageGallery');
+const logoUpload = document.getElementById('logoUpload');
+const logoPreview = document.getElementById('logoPreview');
+const uploadLogoBtn = document.getElementById('uploadLogoBtn');
 
 // Chart variable
 let stockChart;
+let selectedImageFile = null;
+let selectedLogoFile = null;
 
 // Initialize Admin Dashboard
 async function initAdmin() {
@@ -29,12 +38,44 @@ async function initAdmin() {
     // Load products
     loadProducts();
     loadQuotes();
+    loadGalleryImages();
+    loadCurrentLogo();
     
     // Setup form submission
     productForm.addEventListener('submit', handleProductSubmit);
     
-    // Setup quote button
-    addQuoteBtn.addEventListener('click', addQuote);
+    // Setup image selection
+    productImage.addEventListener('change', (e) => {
+        selectedImageFile = e.target.files[0];
+        if (selectedImageFile) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                imageInfo.innerHTML = `
+                    <div>
+                        <strong>${selectedImageFile.name}</strong><br>
+                        <small>${(selectedImageFile.size / 1024).toFixed(2)} KB</small>
+                    </div>
+                `;
+            };
+            reader.readAsDataURL(selectedImageFile);
+        }
+    });
+    
+    // Setup logo selection
+    logoUpload.addEventListener('change', (e) => {
+        selectedLogoFile = e.target.files[0];
+        if (selectedLogoFile) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                logoPreview.src = e.target.result;
+            };
+            reader.readAsDataURL(selectedLogoFile);
+        }
+    });
+    
+    // Setup logo upload
+    uploadLogoBtn.addEventListener('click', uploadLogo);
     
     // Cancel edit button
     cancelEdit.addEventListener('click', () => {
@@ -42,35 +83,200 @@ async function initAdmin() {
     });
 }
 
-// Handle Product Form Submission
+// Handle Product Form Submission with Image Upload
 async function handleProductSubmit(e) {
     e.preventDefault();
+    
+    let imageUrl = '';
+    
+    // If there's a new image file, upload it
+    if (selectedImageFile) {
+        try {
+            imageUrl = await uploadImage(selectedImageFile);
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            showNotification('Error uploading image. Please try again.', true);
+            return;
+        }
+    }
     
     const productData = {
         name: document.getElementById('productName').value,
         pages: parseInt(document.getElementById('productPages').value),
         price: parseFloat(document.getElementById('productPrice').value),
         stock: parseInt(document.getElementById('productStock').value),
-        image: document.getElementById('productImage').value || 'default-notebook.jpg',
         description: document.getElementById('productDescription').value || '',
-        createdAt: new Date().toISOString()
+        updatedAt: new Date().toISOString()
     };
+    
+    // Only add imageUrl if we have one
+    if (imageUrl) {
+        productData.imageUrl = imageUrl;
+    }
     
     try {
         if (editProductId.value) {
+            // Keep existing image if no new image uploaded
+            if (!imageUrl) {
+                const existingProduct = await getDoc(doc(db, "products", editProductId.value));
+                if (existingProduct.exists() && existingProduct.data().imageUrl) {
+                    productData.imageUrl = existingProduct.data().imageUrl;
+                }
+            }
+            
             // Update existing product
             await updateDoc(doc(db, "products", editProductId.value), productData);
-            showSuccess('Product updated successfully!');
+            showNotification('Product updated successfully!');
         } else {
             // Add new product
+            productData.createdAt = new Date().toISOString();
             await addDoc(collection(db, "products"), productData);
-            showSuccess('Product added successfully!');
+            showNotification('Product added successfully!');
         }
         
         resetForm();
+        loadGalleryImages(); // Refresh gallery
     } catch (error) {
         console.error('Error saving product:', error);
-        alert('Error saving product. Please try again.');
+        showNotification('Error saving product. Please try again.', true);
+    }
+}
+
+// Upload Image to Firebase Storage
+async function uploadImage(file) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            uploadProgress.style.display = 'block';
+            uploadProgressBar.style.width = '0%';
+            uploadProgressBar.textContent = '0%';
+            
+            // Create a unique filename
+            const timestamp = Date.now();
+            const fileName = `product_${timestamp}_${file.name}`;
+            const storageRef = ref(storage, `products/${fileName}`);
+            
+            // Create upload task
+            const uploadTask = uploadBytes(storageRef, file);
+            
+            // Simulate progress
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 10;
+                if (progress <= 90) {
+                    uploadProgressBar.style.width = `${progress}%`;
+                    uploadProgressBar.textContent = `${progress}%`;
+                }
+            }, 100);
+            
+            // Wait for upload to complete
+            const snapshot = await uploadTask;
+            clearInterval(progressInterval);
+            
+            // Get download URL
+            const downloadURL = await getDownloadURL(snapshot.ref);
+            
+            // Update progress to 100%
+            uploadProgressBar.style.width = '100%';
+            uploadProgressBar.textContent = '100%';
+            
+            setTimeout(() => {
+                uploadProgress.style.display = 'none';
+            }, 500);
+            
+            resolve(downloadURL);
+        } catch (error) {
+            uploadProgress.style.display = 'none';
+            reject(error);
+        }
+    });
+}
+
+// Upload Logo
+async function uploadLogo() {
+    if (!selectedLogoFile) {
+        showNotification('Please select a logo file first', true);
+        return;
+    }
+    
+    try {
+        const logoUploadProgress = document.getElementById('logoUploadProgress');
+        const logoUploadProgressBar = document.getElementById('logoUploadProgressBar');
+        
+        logoUploadProgress.style.display = 'block';
+        logoUploadProgressBar.style.width = '0%';
+        logoUploadProgressBar.textContent = '0%';
+        
+        // Create a unique filename
+        const timestamp = Date.now();
+        const fileName = `logo_${timestamp}_${selectedLogoFile.name}`;
+        const storageRef = ref(storage, `logo/${fileName}`);
+        
+        // Upload file
+        const snapshot = await uploadBytes(storageRef, selectedLogoFile);
+        
+        // Get download URL
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        
+        // Save to Firestore
+        await setDoc(doc(db, "settings", "logo"), {
+            url: downloadURL,
+            updatedAt: new Date().toISOString()
+        });
+        
+        // Update progress
+        logoUploadProgressBar.style.width = '100%';
+        logoUploadProgressBar.textContent = '100%';
+        
+        setTimeout(() => {
+            logoUploadProgress.style.display = 'none';
+            showNotification('Logo uploaded successfully!');
+            loadCurrentLogo();
+        }, 500);
+        
+    } catch (error) {
+        console.error('Error uploading logo:', error);
+        showNotification('Error uploading logo. Please try again.', true);
+    }
+}
+
+// Load Gallery Images
+async function loadGalleryImages() {
+    try {
+        const listRef = ref(storage, 'products/');
+        const result = await listAll(listRef);
+        
+        imageGallery.innerHTML = '';
+        
+        for (const itemRef of result.items) {
+            const url = await getDownloadURL(itemRef);
+            const imgElement = document.createElement('img');
+            imgElement.src = url;
+            imgElement.className = 'gallery-image';
+            imgElement.title = itemRef.name;
+            imgElement.onclick = () => selectGalleryImage(url);
+            imageGallery.appendChild(imgElement);
+        }
+    } catch (error) {
+        console.error('Error loading gallery:', error);
+    }
+}
+
+// Select image from gallery
+function selectGalleryImage(url) {
+    imagePreview.src = url;
+    imageInfo.innerHTML = '<div><strong>Gallery Image</strong><br><small>Click to select</small></div>';
+    selectedImageFile = null; // Clear file selection
+}
+
+// Load Current Logo
+async function loadCurrentLogo() {
+    try {
+        const logoDoc = await getDoc(doc(db, "settings", "logo"));
+        if (logoDoc.exists() && logoDoc.data().url) {
+            logoPreview.src = logoDoc.data().url;
+        }
+    } catch (error) {
+        console.error('Error loading logo:', error);
     }
 }
 
@@ -80,11 +286,13 @@ function loadProducts() {
         productsList.innerHTML = '';
         let totalProducts = 0;
         let lowStockCount = 0;
+        const productsData = [];
         
         snapshot.forEach((doc) => {
             const product = doc.data();
             totalProducts++;
             if (product.stock <= 10) lowStockCount++;
+            productsData.push({ id: doc.id, ...product });
             createProductListItem(product, doc.id);
         });
         
@@ -93,7 +301,7 @@ function loadProducts() {
         document.getElementById('lowStock').textContent = `${lowStockCount} Low Stock`;
         
         // Update chart
-        updateStockChart(snapshot);
+        updateStockChart(productsData);
     });
 }
 
@@ -114,10 +322,9 @@ function createProductListItem(product, id) {
     }
     
     productItem.innerHTML = `
-        <img src="${product.image || 'default-notebook.jpg'}" 
+        <img src="${product.imageUrl || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3'}" 
              alt="${product.name}" 
-             class="product-image"
-             onerror="this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3'">
+             class="product-image">
         <div class="product-info">
             <h3 class="product-title">${product.name}</h3>
             <div class="product-price">₹${product.price}</div>
@@ -125,7 +332,7 @@ function createProductListItem(product, id) {
                 <i class="fas fa-box"></i> ${stockText} (${product.stock})
             </span>
             <p>${product.description || 'No description'}</p>
-            <div class="admin-actions">
+            <div class="admin-actions" style="display: flex; gap: 10px; margin-top: 10px;">
                 <button class="btn-primary edit-btn" data-id="${id}">
                     <i class="fas fa-edit"></i> Edit
                 </button>
@@ -149,9 +356,14 @@ function editProduct(id, product) {
     document.getElementById('productPages').value = product.pages;
     document.getElementById('productPrice').value = product.price;
     document.getElementById('productStock').value = product.stock;
-    document.getElementById('productImage').value = product.image || '';
     document.getElementById('productDescription').value = product.description || '';
     editProductId.value = id;
+    
+    // Set image preview
+    if (product.imageUrl) {
+        imagePreview.src = product.imageUrl;
+        imageInfo.innerHTML = '<div><strong>Current Image</strong><br><small>Select new image to change</small></div>';
+    }
     
     submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Product';
     cancelEdit.style.display = 'inline-block';
@@ -164,11 +376,32 @@ function editProduct(id, product) {
 async function deleteProduct(id, productName) {
     if (confirm(`Are you sure you want to delete "${productName}"?`)) {
         try {
-            await deleteDoc(doc(db, "products", id));
-            showSuccess('Product deleted successfully!');
+            // First, get the product to check if it has an image in storage
+            const productDoc = await getDoc(doc(db, "products", id));
+            if (productDoc.exists()) {
+                const product = productDoc.data();
+                
+                // Delete image from storage if it exists
+                if (product.imageUrl) {
+                    try {
+                        // Extract path from URL and create storage ref
+                        const imagePath = decodeURIComponent(product.imageUrl.split('/o/')[1].split('?')[0]);
+                        const imageRef = ref(storage, imagePath);
+                        await deleteObject(imageRef);
+                    } catch (storageError) {
+                        console.error('Error deleting image:', storageError);
+                        // Continue with product deletion even if image deletion fails
+                    }
+                }
+                
+                // Delete product from Firestore
+                await deleteDoc(doc(db, "products", id));
+                showNotification('Product deleted successfully!');
+                loadGalleryImages(); // Refresh gallery
+            }
         } catch (error) {
             console.error('Error deleting product:', error);
-            alert('Error deleting product. Please try again.');
+            showNotification('Error deleting product. Please try again.', true);
         }
     }
 }
@@ -177,6 +410,9 @@ async function deleteProduct(id, productName) {
 function resetForm() {
     productForm.reset();
     editProductId.value = '';
+    imagePreview.src = '';
+    imageInfo.innerHTML = '';
+    selectedImageFile = null;
     submitBtn.innerHTML = '<i class="fas fa-save"></i> Add Product';
     cancelEdit.style.display = 'none';
 }
@@ -184,6 +420,9 @@ function resetForm() {
 // Load Quotes
 async function loadQuotes() {
     onSnapshot(collection(db, "quotes"), (snapshot) => {
+        const quotesList = document.getElementById('quotesList');
+        if (!quotesList) return;
+        
         quotesList.innerHTML = '';
         
         snapshot.forEach((doc) => {
@@ -207,6 +446,7 @@ function createQuoteItem(quote, id) {
         </button>
     `;
     
+    const quotesList = document.getElementById('quotesList');
     quotesList.appendChild(quoteItem);
     
     quoteItem.querySelector('.delete-quote-btn').addEventListener('click', 
@@ -215,9 +455,10 @@ function createQuoteItem(quote, id) {
 
 // Add Quote
 async function addQuote() {
-    const text = newQuote.value.trim();
+    const newQuoteInput = document.getElementById('newQuote');
+    const text = newQuoteInput.value.trim();
     if (!text) {
-        alert('Please enter a quote');
+        showNotification('Please enter a quote', true);
         return;
     }
     
@@ -227,11 +468,11 @@ async function addQuote() {
             createdAt: new Date().toISOString()
         });
         
-        newQuote.value = '';
-        showSuccess('Quote added successfully!');
+        newQuoteInput.value = '';
+        showNotification('Quote added successfully!');
     } catch (error) {
         console.error('Error adding quote:', error);
-        alert('Error adding quote. Please try again.');
+        showNotification('Error adding quote. Please try again.', true);
     }
 }
 
@@ -240,26 +481,20 @@ async function deleteQuote(id) {
     if (confirm('Are you sure you want to delete this quote?')) {
         try {
             await deleteDoc(doc(db, "quotes", id));
-            showSuccess('Quote deleted successfully!');
+            showNotification('Quote deleted successfully!');
         } catch (error) {
             console.error('Error deleting quote:', error);
-            alert('Error deleting quote. Please try again.');
+            showNotification('Error deleting quote. Please try again.', true);
         }
     }
 }
 
 // Update Stock Chart
-function updateStockChart(snapshot) {
+function updateStockChart(productsData) {
     const ctx = document.getElementById('stockChart').getContext('2d');
     
-    const products = [];
-    const stockData = [];
-    
-    snapshot.forEach((doc) => {
-        const product = doc.data();
-        products.push(product.name);
-        stockData.push(product.stock);
-    });
+    const productNames = productsData.map(p => p.name);
+    const stockData = productsData.map(p => p.stock);
     
     const colors = stockData.map(stock => {
         if (stock <= 0) return '#e74c3c';
@@ -274,7 +509,7 @@ function updateStockChart(snapshot) {
     stockChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: products,
+            labels: productNames,
             datasets: [{
                 label: 'Stock Quantity',
                 data: stockData,
@@ -285,6 +520,7 @@ function updateStockChart(snapshot) {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 y: {
                     beginAtZero: true,
@@ -297,6 +533,11 @@ function updateStockChart(snapshot) {
                     title: {
                         display: true,
                         text: 'Products'
+                    },
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
                     }
                 }
             },
@@ -309,19 +550,11 @@ function updateStockChart(snapshot) {
     });
 }
 
-// Show Success Message
-function showSuccess(message) {
-    const successMessage = document.getElementById('successMessage');
-    document.getElementById('successText').textContent = message;
-    successMessage.style.display = 'flex';
-}
-
-// Initialize default products on first load
+// Initialize default products
 async function initializeDefaultProducts() {
     try {
         const querySnapshot = await getDocs(collection(db, "products"));
         
-        // If no products exist, add default ones
         if (querySnapshot.empty) {
             const defaultProducts = [
                 {
@@ -329,15 +562,13 @@ async function initializeDefaultProducts() {
                     pages: 200,
                     price: 69,
                     stock: 100,
-                    image: "200.jpg",
-                    description: "Premium 200 pages spiral notebook"
+                    description: "Premium 200 pages spiral notebook with quality paper"
                 },
                 {
                     name: "Spiral Notebook 250 Pages",
                     pages: 250,
                     price: 85,
                     stock: 80,
-                    image: "250.jpg",
                     description: "Premium 250 pages spiral notebook"
                 },
                 {
@@ -345,7 +576,6 @@ async function initializeDefaultProducts() {
                     pages: 300,
                     price: 105,
                     stock: 60,
-                    image: "300.jpg",
                     description: "Premium 300 pages spiral notebook"
                 },
                 {
@@ -353,7 +583,6 @@ async function initializeDefaultProducts() {
                     pages: 400,
                     price: 129,
                     stock: 40,
-                    image: "400.jpg",
                     description: "Premium 400 pages spiral notebook"
                 },
                 {
@@ -361,7 +590,6 @@ async function initializeDefaultProducts() {
                     pages: 500,
                     price: 135,
                     stock: 30,
-                    image: "500.jpg",
                     description: "Premium 500 pages spiral notebook"
                 }
             ];
@@ -369,7 +597,8 @@ async function initializeDefaultProducts() {
             for (const product of defaultProducts) {
                 await addDoc(collection(db, "products"), {
                     ...product,
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
                 });
             }
             
@@ -391,7 +620,9 @@ async function initializeDefaultQuotes() {
                 { text: "Quality Pages for Lifelong Memories" },
                 { text: "Your ideas are precious. We provide the perfect canvas to preserve them." },
                 { text: "Writing transforms thoughts into treasures" },
-                { text: "Every page tells a story, every notebook holds a journey" }
+                { text: "Every page tells a story, every notebook holds a journey" },
+                { text: "Capture your dreams, one page at a time" },
+                { text: "Quality you can write on, durability you can rely on" }
             ];
             
             for (const quote of defaultQuotes) {
@@ -408,9 +639,26 @@ async function initializeDefaultQuotes() {
     }
 }
 
+// Logout Function
+async function handleLogout() {
+    try {
+        await auth.signOut();
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Logout error:', error);
+        showNotification('Error logging out. Please try again.', true);
+    }
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
     await initAdmin();
     await initializeDefaultProducts();
     await initializeDefaultQuotes();
+    
+    // Setup quote button
+    const addQuoteBtn = document.getElementById('addQuoteBtn');
+    if (addQuoteBtn) {
+        addQuoteBtn.addEventListener('click', addQuote);
+    }
 });
