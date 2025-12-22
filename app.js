@@ -25,24 +25,27 @@ const logoElement = document.getElementById('logo');
 const adminAccessDiv = document.getElementById('adminAccess');
 const adminLink = document.getElementById('adminLink');
 
-// Check Authentication State - Hide admin from non-logged in users
+// Check Authentication State
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // User is signed in - Show admin access
         console.log('Admin signed in:', user.email);
         if (adminAccessDiv) adminAccessDiv.style.display = 'block';
         if (adminLink) adminLink.style.display = 'flex';
     } else {
-        // User is signed out - Hide admin access
         console.log('User is signed out');
         if (adminAccessDiv) adminAccessDiv.style.display = 'none';
         if (adminLink) adminLink.style.display = 'none';
     }
 });
 
-// Load Logo from Firestore
+// Load Logo with error handling
 async function loadLogo() {
     try {
+        const logoElement = document.getElementById('logo');
+        if (!logoElement) {
+            return; // No logo element on this page
+        }
+        
         const logoDoc = await getDoc(doc(db, "settings", "logo"));
         if (logoDoc.exists() && logoDoc.data().url) {
             logoElement.src = logoDoc.data().url;
@@ -52,14 +55,17 @@ async function loadLogo() {
             logoElement.src = "https://images.unsplash.com/photo-1567446537710-0c5ff5a6ac32?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80";
         }
     } catch (error) {
-        console.error("Error loading logo:", error);
+        console.log("Logo loading skipped or failed:", error.message);
+        // Don't throw error for missing logo
     }
 }
 
-// Load Products with Firebase Storage Images
+// Load Products with error handling
 async function loadProducts() {
     try {
         const querySnapshot = await getDocs(collection(db, "products"));
+        if (!productsContainer) return;
+        
         productsContainer.innerHTML = '';
         
         const productsArray = [];
@@ -73,14 +79,22 @@ async function loadProducts() {
         productsArray.forEach((product) => {
             createProductCard(product);
         });
+        
+        if (productsArray.length === 0) {
+            productsContainer.innerHTML = '<p class="error-message">No products found. Please add products from admin panel.</p>';
+        }
     } catch (error) {
         console.error("Error loading products:", error);
-        productsContainer.innerHTML = '<p class="error-message">Error loading products. Please try again later.</p>';
+        if (productsContainer) {
+            productsContainer.innerHTML = '<p class="error-message">Error loading products. Please try again later.</p>';
+        }
     }
 }
 
-// Create Product Card with Firebase Storage Images
+// Create Product Card
 function createProductCard(product) {
+    if (!productsContainer) return;
+    
     const productCard = document.createElement('div');
     productCard.className = 'product-card';
     
@@ -95,7 +109,7 @@ function createProductCard(product) {
         stockText = 'Low Stock';
     }
     
-    // Use Firebase Storage image URL
+    // Use image URL or default
     const imageUrl = product.imageUrl || `https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`;
     
     productCard.innerHTML = `
@@ -125,12 +139,13 @@ function createProductCard(product) {
     productsContainer.appendChild(productCard);
 }
 
-// Load Quotes
+// Load Quotes with error handling
 async function loadQuotes() {
     try {
-        const quotesSnapshot = await getDocs(collection(db, "quotes"));
         const quotesContainer = document.querySelector('.hero-quotes');
         if (!quotesContainer) return;
+        
+        const quotesSnapshot = await getDocs(collection(db, "quotes"));
         
         quotesContainer.innerHTML = '';
         quotesSnapshot.forEach((doc) => {
@@ -143,28 +158,53 @@ async function loadQuotes() {
             `;
             quotesContainer.appendChild(quoteElement);
         });
+        
+        // Add default quotes if none exist
+        if (quotesSnapshot.empty) {
+            const defaultQuotes = [
+                "Where Thoughts Find Their Perfect Home",
+                "Quality Pages for Lifelong Memories",
+                "Your ideas are precious. We provide the perfect canvas"
+            ];
+            
+            defaultQuotes.forEach(text => {
+                const quoteElement = document.createElement('div');
+                quoteElement.className = 'quote';
+                quoteElement.innerHTML = `
+                    <i class="fas fa-quote-left"></i>
+                    <p>${text}</p>
+                `;
+                quotesContainer.appendChild(quoteElement);
+            });
+        }
     } catch (error) {
-        console.error("Error loading quotes:", error);
+        console.log("Quotes loading skipped or failed:", error.message);
     }
 }
 
 // Real-time listener for products
 function setupProductsListener() {
-    onSnapshot(collection(db, "products"), (snapshot) => {
-        productsContainer.innerHTML = '';
-        const productsArray = [];
-        
-        snapshot.forEach((doc) => {
-            productsArray.push({ id: doc.id, ...doc.data() });
+    if (!productsContainer) return;
+    
+    try {
+        onSnapshot(collection(db, "products"), (snapshot) => {
+            productsContainer.innerHTML = '';
+            const productsArray = [];
+            
+            snapshot.forEach((doc) => {
+                productsArray.push({ id: doc.id, ...doc.data() });
+            });
+            
+            // Sort by pages
+            productsArray.sort((a, b) => a.pages - b.pages);
+            
+            productsArray.forEach((product) => {
+                createProductCard(product);
+            });
         });
-        
-        // Sort by pages
-        productsArray.sort((a, b) => a.pages - b.pages);
-        
-        productsArray.forEach((product) => {
-            createProductCard(product);
-        });
-    });
+    } catch (error) {
+        console.error("Error setting up products listener:", error);
+    }
 }
 
 // Show Notification
@@ -186,13 +226,16 @@ function showNotification(message, isError = false) {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    // Load logo
+    loadLogo();
+    
+    // Load products if on main page
     if (productsContainer) {
         loadProducts();
         setupProductsListener();
     }
     
-    // Load logo and quotes
-    loadLogo();
+    // Load quotes
     loadQuotes();
     
     // Mobile menu toggle
