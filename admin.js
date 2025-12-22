@@ -1,8 +1,9 @@
+// Step 1: Add these imports at the TOP of the file
 import { auth, db, storage, showNotification } from './app.js';
 import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, getDoc, setDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 import { ref, uploadBytes, getDownloadURL, deleteObject, listAll } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 
-// DOM Elements
+// Step 2: DOM Elements - Add these lines
 const productForm = document.getElementById('productForm');
 const productsList = document.getElementById('productsList');
 const logoutBtn = document.getElementById('logoutBtn');
@@ -24,14 +25,23 @@ let stockChart;
 let selectedImageFile = null;
 let selectedLogoFile = null;
 
-// Initialize Admin Dashboard
+// Step 3: Initialize Admin Dashboard - Add this function
 async function initAdmin() {
     // Check authentication
-    if (!auth.currentUser) {
-        window.location.href = 'index.html';
-        return;
-    }
-    
+    auth.onAuthStateChanged((user) => {
+        if (!user) {
+            // Not logged in, redirect to login page
+            window.location.href = 'admin-login.html';
+            return;
+        }
+        
+        console.log('Admin logged in:', user.email);
+        setupAdmin();
+    });
+}
+
+// Step 4: Setup admin after login - Add this function
+async function setupAdmin() {
     // Setup logout button
     logoutBtn.addEventListener('click', handleLogout);
     
@@ -42,46 +52,75 @@ async function initAdmin() {
     loadCurrentLogo();
     
     // Setup form submission
-    productForm.addEventListener('submit', handleProductSubmit);
+    if (productForm) {
+        productForm.addEventListener('submit', handleProductSubmit);
+    }
     
     // Setup image selection
-    productImage.addEventListener('change', (e) => {
-        selectedImageFile = e.target.files[0];
-        if (selectedImageFile) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                imagePreview.src = e.target.result;
-                imageInfo.innerHTML = `
-                    <div>
-                        <strong>${selectedImageFile.name}</strong><br>
-                        <small>${(selectedImageFile.size / 1024).toFixed(2)} KB</small>
-                    </div>
-                `;
-            };
-            reader.readAsDataURL(selectedImageFile);
-        }
-    });
+    if (productImage) {
+        productImage.addEventListener('change', (e) => {
+            selectedImageFile = e.target.files[0];
+            if (selectedImageFile) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    imageInfo.innerHTML = `
+                        <div>
+                            <strong>${selectedImageFile.name}</strong><br>
+                            <small>${(selectedImageFile.size / 1024).toFixed(2)} KB</small>
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(selectedImageFile);
+            }
+        });
+    }
     
     // Setup logo selection
-    logoUpload.addEventListener('change', (e) => {
-        selectedLogoFile = e.target.files[0];
-        if (selectedLogoFile) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                logoPreview.src = e.target.result;
-            };
-            reader.readAsDataURL(selectedLogoFile);
-        }
-    });
+    if (logoUpload) {
+        logoUpload.addEventListener('change', (e) => {
+            selectedLogoFile = e.target.files[0];
+            if (selectedLogoFile) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    logoPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(selectedLogoFile);
+            }
+        });
+    }
     
     // Setup logo upload
-    uploadLogoBtn.addEventListener('click', uploadLogo);
+    if (uploadLogoBtn) {
+        uploadLogoBtn.addEventListener('click', uploadLogo);
+    }
     
     // Cancel edit button
-    cancelEdit.addEventListener('click', () => {
-        resetForm();
-    });
+    if (cancelEdit) {
+        cancelEdit.addEventListener('click', () => {
+            resetForm();
+        });
+    }
+    
+    // Setup quote button
+    const addQuoteBtn = document.getElementById('addQuoteBtn');
+    if (addQuoteBtn) {
+        addQuoteBtn.addEventListener('click', addQuote);
+    }
 }
+
+// Step 5: Handle logout - Add this function
+async function handleLogout() {
+    try {
+        await auth.signOut();
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Logout error:', error);
+        showNotification('Error logging out. Please try again.', true);
+    }
+}
+
+// Step 6: KEEP ALL YOUR EXISTING FUNCTIONS BELOW HERE
 
 // Handle Product Form Submission with Image Upload
 async function handleProductSubmit(e) {
@@ -135,7 +174,9 @@ async function handleProductSubmit(e) {
         }
         
         resetForm();
-        loadGalleryImages(); // Refresh gallery
+        if (imageGallery) {
+            loadGalleryImages(); // Refresh gallery
+        }
     } catch (error) {
         console.error('Error saving product:', error);
         showNotification('Error saving product. Please try again.', true);
@@ -146,46 +187,51 @@ async function handleProductSubmit(e) {
 async function uploadImage(file) {
     return new Promise(async (resolve, reject) => {
         try {
-            uploadProgress.style.display = 'block';
-            uploadProgressBar.style.width = '0%';
-            uploadProgressBar.textContent = '0%';
+            if (uploadProgress) {
+                uploadProgress.style.display = 'block';
+                uploadProgressBar.style.width = '0%';
+                uploadProgressBar.textContent = '0%';
+            }
             
             // Create a unique filename
             const timestamp = Date.now();
             const fileName = `product_${timestamp}_${file.name}`;
             const storageRef = ref(storage, `products/${fileName}`);
             
-            // Create upload task
-            const uploadTask = uploadBytes(storageRef, file);
-            
             // Simulate progress
             let progress = 0;
             const progressInterval = setInterval(() => {
                 progress += 10;
-                if (progress <= 90) {
+                if (progress <= 90 && uploadProgressBar) {
                     uploadProgressBar.style.width = `${progress}%`;
                     uploadProgressBar.textContent = `${progress}%`;
                 }
             }, 100);
             
-            // Wait for upload to complete
-            const snapshot = await uploadTask;
+            // Upload file
+            const snapshot = await uploadBytes(storageRef, file);
             clearInterval(progressInterval);
             
             // Get download URL
             const downloadURL = await getDownloadURL(snapshot.ref);
             
             // Update progress to 100%
-            uploadProgressBar.style.width = '100%';
-            uploadProgressBar.textContent = '100%';
+            if (uploadProgressBar) {
+                uploadProgressBar.style.width = '100%';
+                uploadProgressBar.textContent = '100%';
+            }
             
             setTimeout(() => {
-                uploadProgress.style.display = 'none';
+                if (uploadProgress) {
+                    uploadProgress.style.display = 'none';
+                }
             }, 500);
             
             resolve(downloadURL);
         } catch (error) {
-            uploadProgress.style.display = 'none';
+            if (uploadProgress) {
+                uploadProgress.style.display = 'none';
+            }
             reject(error);
         }
     });
@@ -202,9 +248,11 @@ async function uploadLogo() {
         const logoUploadProgress = document.getElementById('logoUploadProgress');
         const logoUploadProgressBar = document.getElementById('logoUploadProgressBar');
         
-        logoUploadProgress.style.display = 'block';
-        logoUploadProgressBar.style.width = '0%';
-        logoUploadProgressBar.textContent = '0%';
+        if (logoUploadProgress) {
+            logoUploadProgress.style.display = 'block';
+            logoUploadProgressBar.style.width = '0%';
+            logoUploadProgressBar.textContent = '0%';
+        }
         
         // Create a unique filename
         const timestamp = Date.now();
@@ -224,11 +272,15 @@ async function uploadLogo() {
         });
         
         // Update progress
-        logoUploadProgressBar.style.width = '100%';
-        logoUploadProgressBar.textContent = '100%';
+        if (logoUploadProgressBar) {
+            logoUploadProgressBar.style.width = '100%';
+            logoUploadProgressBar.textContent = '100%';
+        }
         
         setTimeout(() => {
-            logoUploadProgress.style.display = 'none';
+            if (logoUploadProgress) {
+                logoUploadProgress.style.display = 'none';
+            }
             showNotification('Logo uploaded successfully!');
             loadCurrentLogo();
         }, 500);
@@ -245,16 +297,18 @@ async function loadGalleryImages() {
         const listRef = ref(storage, 'products/');
         const result = await listAll(listRef);
         
-        imageGallery.innerHTML = '';
-        
-        for (const itemRef of result.items) {
-            const url = await getDownloadURL(itemRef);
-            const imgElement = document.createElement('img');
-            imgElement.src = url;
-            imgElement.className = 'gallery-image';
-            imgElement.title = itemRef.name;
-            imgElement.onclick = () => selectGalleryImage(url);
-            imageGallery.appendChild(imgElement);
+        if (imageGallery) {
+            imageGallery.innerHTML = '';
+            
+            for (const itemRef of result.items) {
+                const url = await getDownloadURL(itemRef);
+                const imgElement = document.createElement('img');
+                imgElement.src = url;
+                imgElement.className = 'gallery-image';
+                imgElement.title = itemRef.name;
+                imgElement.onclick = () => selectGalleryImage(url);
+                imageGallery.appendChild(imgElement);
+            }
         }
     } catch (error) {
         console.error('Error loading gallery:', error);
@@ -263,16 +317,18 @@ async function loadGalleryImages() {
 
 // Select image from gallery
 function selectGalleryImage(url) {
-    imagePreview.src = url;
-    imageInfo.innerHTML = '<div><strong>Gallery Image</strong><br><small>Click to select</small></div>';
-    selectedImageFile = null; // Clear file selection
+    if (imagePreview) {
+        imagePreview.src = url;
+        imageInfo.innerHTML = '<div><strong>Gallery Image</strong><br><small>Click to select</small></div>';
+        selectedImageFile = null; // Clear file selection
+    }
 }
 
 // Load Current Logo
 async function loadCurrentLogo() {
     try {
         const logoDoc = await getDoc(doc(db, "settings", "logo"));
-        if (logoDoc.exists() && logoDoc.data().url) {
+        if (logoDoc.exists() && logoDoc.data().url && logoPreview) {
             logoPreview.src = logoDoc.data().url;
         }
     } catch (error) {
@@ -283,7 +339,9 @@ async function loadCurrentLogo() {
 // Load Products
 function loadProducts() {
     onSnapshot(collection(db, "products"), (snapshot) => {
-        productsList.innerHTML = '';
+        if (productsList) {
+            productsList.innerHTML = '';
+        }
         let totalProducts = 0;
         let lowStockCount = 0;
         const productsData = [];
@@ -293,12 +351,21 @@ function loadProducts() {
             totalProducts++;
             if (product.stock <= 10) lowStockCount++;
             productsData.push({ id: doc.id, ...product });
-            createProductListItem(product, doc.id);
+            if (productsList) {
+                createProductListItem(product, doc.id);
+            }
         });
         
         // Update stats
-        document.getElementById('totalProducts').textContent = `${totalProducts} Products`;
-        document.getElementById('lowStock').textContent = `${lowStockCount} Low Stock`;
+        const totalProductsEl = document.getElementById('totalProducts');
+        const lowStockEl = document.getElementById('lowStock');
+        
+        if (totalProductsEl) {
+            totalProductsEl.textContent = `${totalProducts} Products`;
+        }
+        if (lowStockEl) {
+            lowStockEl.textContent = `${lowStockCount} Low Stock`;
+        }
         
         // Update chart
         updateStockChart(productsData);
@@ -343,11 +410,20 @@ function createProductListItem(product, id) {
         </div>
     `;
     
-    productsList.appendChild(productItem);
+    if (productsList) {
+        productsList.appendChild(productItem);
+    }
     
     // Add event listeners
-    productItem.querySelector('.edit-btn').addEventListener('click', () => editProduct(id, product));
-    productItem.querySelector('.delete-btn').addEventListener('click', () => deleteProduct(id, product.name));
+    const editBtn = productItem.querySelector('.edit-btn');
+    const deleteBtn = productItem.querySelector('.delete-btn');
+    
+    if (editBtn) {
+        editBtn.addEventListener('click', () => editProduct(id, product));
+    }
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', () => deleteProduct(id, product.name));
+    }
 }
 
 // Edit Product
@@ -360,16 +436,23 @@ function editProduct(id, product) {
     editProductId.value = id;
     
     // Set image preview
-    if (product.imageUrl) {
+    if (product.imageUrl && imagePreview) {
         imagePreview.src = product.imageUrl;
         imageInfo.innerHTML = '<div><strong>Current Image</strong><br><small>Select new image to change</small></div>';
     }
     
-    submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Product';
-    cancelEdit.style.display = 'inline-block';
+    if (submitBtn) {
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Product';
+    }
+    if (cancelEdit) {
+        cancelEdit.style.display = 'inline-block';
+    }
     
     // Scroll to form
-    document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
+    const formCard = document.querySelector('.form-card');
+    if (formCard) {
+        formCard.scrollIntoView({ behavior: 'smooth' });
+    }
 }
 
 // Delete Product
@@ -397,7 +480,9 @@ async function deleteProduct(id, productName) {
                 // Delete product from Firestore
                 await deleteDoc(doc(db, "products", id));
                 showNotification('Product deleted successfully!');
-                loadGalleryImages(); // Refresh gallery
+                if (imageGallery) {
+                    loadGalleryImages(); // Refresh gallery
+                }
             }
         } catch (error) {
             console.error('Error deleting product:', error);
@@ -408,13 +493,23 @@ async function deleteProduct(id, productName) {
 
 // Reset Form
 function resetForm() {
-    productForm.reset();
+    if (productForm) {
+        productForm.reset();
+    }
     editProductId.value = '';
-    imagePreview.src = '';
-    imageInfo.innerHTML = '';
+    if (imagePreview) {
+        imagePreview.src = '';
+    }
+    if (imageInfo) {
+        imageInfo.innerHTML = '';
+    }
     selectedImageFile = null;
-    submitBtn.innerHTML = '<i class="fas fa-save"></i> Add Product';
-    cancelEdit.style.display = 'none';
+    if (submitBtn) {
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> Add Product';
+    }
+    if (cancelEdit) {
+        cancelEdit.style.display = 'none';
+    }
 }
 
 // Load Quotes
@@ -447,10 +542,14 @@ function createQuoteItem(quote, id) {
     `;
     
     const quotesList = document.getElementById('quotesList');
-    quotesList.appendChild(quoteItem);
+    if (quotesList) {
+        quotesList.appendChild(quoteItem);
+    }
     
-    quoteItem.querySelector('.delete-quote-btn').addEventListener('click', 
-        () => deleteQuote(id));
+    const deleteBtn = quoteItem.querySelector('.delete-quote-btn');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', () => deleteQuote(id));
+    }
 }
 
 // Add Quote
@@ -491,7 +590,8 @@ async function deleteQuote(id) {
 
 // Update Stock Chart
 function updateStockChart(productsData) {
-    const ctx = document.getElementById('stockChart').getContext('2d');
+    const ctx = document.getElementById('stockChart');
+    if (!ctx) return;
     
     const productNames = productsData.map(p => p.name);
     const stockData = productsData.map(p => p.stock);
@@ -506,7 +606,8 @@ function updateStockChart(productsData) {
         stockChart.destroy();
     }
     
-    stockChart = new Chart(ctx, {
+    const chartCtx = ctx.getContext('2d');
+    stockChart = new Chart(chartCtx, {
         type: 'bar',
         data: {
             labels: productNames,
@@ -639,26 +740,7 @@ async function initializeDefaultQuotes() {
     }
 }
 
-// Logout Function
-async function handleLogout() {
-    try {
-        await auth.signOut();
-        window.location.href = 'index.html';
-    } catch (error) {
-        console.error('Logout error:', error);
-        showNotification('Error logging out. Please try again.', true);
-    }
-}
-
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', async () => {
-    await initAdmin();
-    await initializeDefaultProducts();
-    await initializeDefaultQuotes();
-    
-    // Setup quote button
-    const addQuoteBtn = document.getElementById('addQuoteBtn');
-    if (addQuoteBtn) {
-        addQuoteBtn.addEventListener('click', addQuote);
-    }
+// Step 7: Add this at the VERY BOTTOM of the file
+document.addEventListener('DOMContentLoaded', () => {
+    initAdmin();
 });
