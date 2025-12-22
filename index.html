@@ -1,156 +1,198 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SARM ENTERPRISES - Stationery & Flowers</title>
+    <title>SARM ENTERPRISES - Premium Notebooks</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-    <!-- Header with Navigation -->
-    <header>
-        <nav class="navbar">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
             <div class="nav-brand">
-                <h1>SARM ENTERPRISES</h1>
-                <p>KAWOOSA KHALISA, NARBAL, BADGAM</p>
+                <h1><i class="fas fa-book"></i> SARM ENTERPRISES</h1>
+                <p class="tagline">Quality Pages for Quality Thoughts</p>
             </div>
-            <div class="nav-links">
+            <div class="nav-menu">
                 <a href="#home">Home</a>
                 <a href="#products">Products</a>
-                <a href="#cart">Cart <span id="cart-count">0</span></a>
+                <a href="#about">About</a>
                 <a href="#contact">Contact</a>
-                <button id="login-btn" class="btn-auth">Login</button>
-                <button id="logout-btn" class="btn-auth" style="display:none;">Logout</button>
-                <a href="admin.html" class="btn-admin">Admin</a>
+                <button id="loginBtn" class="btn-login">
+                    <i class="fas fa-user"></i> Admin
+                </button>
             </div>
-        </nav>
-    </header>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h2>Quality Stationery & Beautiful Flowers</h2>
-            <p>Your one-stop shop for all stationery needs and fresh flowers</p>
+            <h2>Capture Your Thoughts with Our Premium Notebooks</h2>
+            <p>Experience the perfect blend of quality paper, durable binding, and elegant design. Your ideas deserve the best.</p>
+            <div class="hero-quotes">
+                <div class="quote">
+                    <i class="fas fa-quote-left"></i>
+                    <p>Where Thoughts Find Their Perfect Home</p>
+                </div>
+                <div class="quote">
+                    <i class="fas fa-quote-left"></i>
+                    <p>Quality Pages for Lifelong Memories</p>
+                </div>
+            </div>
             <a href="#products" class="btn-primary">Shop Now</a>
         </div>
     </section>
 
     <!-- Products Section -->
     <section id="products" class="products-section">
-        <h2>Our Products</h2>
-        <div class="category-filter">
-            <button class="category-btn active" data-category="all">All Products</button>
-            <button class="category-btn" data-category="notebooks">Notebooks</button>
-            <button class="category-btn" data-category="flowers">Flowers</button>
-            <button class="category-btn" data-category="pens">Pens</button>
-        </div>
-        <div class="products-grid" id="products-container">
-            <!-- Products will be loaded here -->
+        <div class="container">
+            <h2 class="section-title">Our Premium Notebook Collection</h2>
+            <p class="section-subtitle">Choose from our wide range of spiral notebooks for all your writing needs</p>
+            
+            <div class="products-grid" id="productsContainer">
+                <!-- Products will be loaded from Firestore -->
+            </div>
         </div>
     </section>
 
-    <!-- Cart Modal -->
-    <div id="cart-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Your Shopping Cart</h2>
-            <div id="cart-items">
-                <!-- Cart items will be loaded here -->
-            </div>
-            <div class="cart-summary">
-                <p>Subtotal: ₹<span id="cart-subtotal">0</span></p>
-                <p>Delivery: ₹<span id="delivery-charge">0</span></p>
-                <p><strong>Total: ₹<span id="cart-total">0</span></strong></p>
-                <button id="checkout-btn" class="btn-primary">Proceed to Checkout</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Checkout Modal -->
-    <div id="checkout-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-checkout">&times;</span>
-            <h2>Checkout</h2>
-            <form id="checkout-form">
-                <h3>Customer Details</h3>
-                <input type="text" placeholder="Full Name" required>
-                <input type="tel" placeholder="Phone Number (10 digits)" pattern="[0-9]{10}" required>
-                <textarea placeholder="Address" required></textarea>
-                <input type="text" placeholder="Pincode" pattern="[0-9]{6}" required>
-                <input type="text" placeholder="Landmark" required>
-                
-                <h3>Payment Method</h3>
-                <div class="payment-options">
-                    <label>
-                        <input type="radio" name="payment" value="cod" checked>
-                        Cash on Delivery (COD)
-                    </label>
-                    <label>
-                        <input type="radio" name="payment" value="upi">
-                        UPI Payment (ID: 7006927825@pz)
-                    </label>
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-shipping-fast"></i>
+                    <h3>Free Delivery</h3>
+                    <p>Free delivery within 5km radius</p>
                 </div>
-                
-                <h3>Order Summary</h3>
-                <div id="order-summary"></div>
-                
-                <button type="submit" class="btn-primary">Place Order</button>
-            </form>
+                <div class="feature-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Quality Guarantee</h3>
+                    <p>Premium quality paper and binding</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-headset"></i>
+                    <h3>24/7 Support</h3>
+                    <p>Always available to assist you</p>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Login Modal -->
-    <div id="login-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-login">&times;</span>
-            <h2>Login</h2>
-            <form id="login-form">
-                <input type="email" placeholder="Email" id="login-email" required>
-                <input type="password" placeholder="Password" id="login-password" required>
-                <button type="submit" class="btn-primary">Login</button>
-            </form>
-            <p>Don't have an account? <a href="#" id="show-register">Register</a></p>
-        </div>
-    </div>
-
-    <!-- Register Modal -->
-    <div id="register-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-register">&times;</span>
-            <h2>Register</h2>
-            <form id="register-form">
-                <input type="text" placeholder="Full Name" id="register-name" required>
-                <input type="email" placeholder="Email" id="register-email" required>
-                <input type="password" placeholder="Password" id="register-password" required>
-                <input type="tel" placeholder="Phone Number" id="register-phone" required>
-                <button type="submit" class="btn-primary">Register</button>
-            </form>
-            <p>Already have an account? <a href="#" id="show-login">Login</a></p>
-        </div>
-    </div>
+    </section>
 
     <!-- Contact Section -->
     <section id="contact" class="contact-section">
-        <h2>Contact Us</h2>
-        <div class="contact-info">
-            <p><i class="fas fa-map-marker-alt"></i> KAWOOSA KHALISA, NARBAL, BADGAM</p>
-            <p><i class="fas fa-phone"></i> 7006927825</p>
-            <p><i class="fas fa-envelope"></i> mir7amir@gmail.com</p>
-            <p><i class="fas fa-truck"></i> Free Delivery within 5km</p>
+        <div class="container">
+            <h2 class="section-title">Contact Us for Orders</h2>
+            <p class="section-subtitle">Get in touch with us through any of these methods</p>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3><i class="fas fa-map-marker-alt"></i> Our Address</h3>
+                    <p>KAWOOSA KHALISA, NARBAL, BADGAM</p>
+                    <p>Pincode: 193411</p>
+                    
+                    <h3><i class="fas fa-phone"></i> Phone Numbers</h3>
+                    <p>7006927825 / 7006927825</p>
+                    
+                    <h3><i class="fas fa-envelope"></i> Email</h3>
+                    <p>sarmenterprises786@gmail.com</p>
+                    
+                    <h3><i class="fas fa-qrcode"></i> UPI ID</h3>
+                    <p class="upi-id">7006927825@pz</p>
+                    
+                    <div class="business-hours">
+                        <h3><i class="fas fa-clock"></i> Business Hours</h3>
+                        <p>Monday - Saturday: 9:00 AM - 8:00 PM</p>
+                        <p>Sunday: 10:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+                
+                <div class="contact-options">
+                    <h3>Order Now</h3>
+                    <div class="contact-buttons">
+                        <a href="https://wa.me/917006927825?text=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
+                           class="btn-whatsapp" target="_blank">
+                            <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                        </a>
+                        
+                        <a href="tel:+917006927825" class="btn-phone">
+                            <i class="fas fa-phone"></i> Call Us
+                        </a>
+                        
+                        <a href="mailto:sarmenterprises786@gmail.com?subject=Order%20Inquiry&body=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
+                           class="btn-email">
+                            <i class="fas fa-envelope"></i> Email Us
+                        </a>
+                    </div>
+                    
+                    <div class="quote-card">
+                        <i class="fas fa-quote-right"></i>
+                        <p>"Your ideas are precious. We provide the perfect canvas to preserve them."</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <footer>
-        <p>&copy; 2024 SARM ENTERPRISES. All rights reserved.</p>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-book"></i> SARM ENTERPRISES</h3>
+                    <p>Quality Notebooks Since 2010</p>
+                    <p class="footer-quote">"Writing transforms thoughts into treasures"</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="#home">Home</a>
+                    <a href="#products">Products</a>
+                    <a href="#contact">Contact</a>
+                    <a href="#" id="adminLoginLink">Admin Login</a>
+                </div>
+                <div class="footer-social">
+                    <h4>Connect With Us</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 SARM ENTERPRISES. All rights reserved. | Crafted with <i class="fas fa-heart"></i> in Kashmir</p>
+            </div>
+        </div>
     </footer>
 
-    <script src="firebase-config.js"></script>
-    <script src="app.js"></script>
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Admin Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn-primary">Login</button>
+                <p id="loginError" class="error-message"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module" src="app.js"></script>
 </body>
 </html>
