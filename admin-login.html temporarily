@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZe6bywYSgnMFZsef1xgfPFQBkw4y7tco",
+            authDomain: "sarm-enterprises.firebaseapp.com",
+            projectId: "sarm-enterprises",
+            storageBucket: "sarm-enterprises.firebasestorage.app",
+            messagingSenderId: "790231205096",
+            appId: "1:790231205096:web:656c5fc47c6a675e1ef55d",
+            measurementId: "G-5M1ZM089KH"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        // Replace with your admin email/password
+        signInWithEmailAndPassword(auth, "admin@sarmenterprises.com", "yourpassword")
+            .then(() => {
+                window.location.href = "admin.html";
+            })
+            .catch(error => {
+                console.error("Login error:", error);
+                alert("Login failed. Check console for details.");
+            });
+    </script>
+</head>
+<body>
+    <p>Logging in...</p>
+</body>
+</html>
