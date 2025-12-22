@@ -3,94 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Successful - SARM ENTERPRISES</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Success - SARM ENTERPRISES</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .success-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        .success-card {
+            background: white;
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success-color);
+            margin-bottom: 1rem;
+        }
+        
+        .success-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="nav-brand">
-                <h1>SARM ENTERPRISES</h1>
-                <p>KAWOOSA KHALISA, NARBAL, BADGAM</p>
-            </div>
-            <div class="nav-links">
-                <a href="index.html">Home</a>
-            </div>
-        </nav>
-    </header>
-
-    <main class="success-container">
+    <div class="success-container">
         <div class="success-card">
             <div class="success-icon">
                 <i class="fas fa-check-circle"></i>
             </div>
-            <h2>Order Placed Successfully!</h2>
-            <p>Thank you for your order with SARM ENTERPRISES</p>
+            <h1>Thank You!</h1>
+            <p>Your order request has been received successfully.</p>
+            <p>We will contact you shortly to confirm your order details.</p>
             
-            <div class="order-details">
-                <h3>Your Order Details</h3>
-                <div id="order-success-details">
-                    <p>Loading order details...</p>
-                </div>
+            <div class="quote-card" style="margin: 2rem 0;">
+                <i class="fas fa-quote-left"></i>
+                <p>"Thank you for choosing SARM ENTERPRISES. Your satisfaction is our priority!"</p>
             </div>
             
-            <div class="next-steps">
-                <h3>What's Next?</h3>
-                <ul>
-                    <li><i class="fas fa-whatsapp"></i> You'll receive a WhatsApp confirmation shortly</li>
-                    <li><i class="fas fa-truck"></i> We'll process and ship your order within 24 hours</li>
-                    <li><i class="fas fa-phone"></i> Our delivery team will contact you before delivery</li>
-                    <li><i class="fas fa-star"></i> You can track your order status anytime</li>
-                </ul>
+            <div class="success-actions">
+                <a href="index.html" class="btn-primary">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+                <a href="https://wa.me/917006927825" class="btn-whatsapp" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Contact on WhatsApp
+                </a>
             </div>
             
-            <div class="contact-info-success">
-                <h3>Need Help?</h3>
-                <p><i class="fas fa-phone"></i> Call us: 7006927825</p>
-                <p><i class="fas fa-whatsapp"></i> WhatsApp: 7006927825</p>
-                <p><i class="fas fa-envelope"></i> Email: mir7amir@gmail.com</p>
-            </div>
-            
-            <div class="action-buttons">
-                <a href="index.html" class="btn-primary">Continue Shopping</a>
-                <button onclick="printInvoice()" class="btn-secondary">Print Invoice</button>
+            <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee;">
+                <h4>Need immediate assistance?</h4>
+                <p>Call us at: <strong>7006927825</strong></p>
+                <p>Email: <strong>sarmenterprises786@gmail.com</strong></p>
             </div>
         </div>
-    </main>
-
-    <footer>
-        <p>&copy; 2024 SARM ENTERPRISES. All rights reserved.</p>
-        <p>KAWOOSA KHALISA, NARBAL, BADGAM | Phone: 7006927825</p>
-    </footer>
+    </div>
 
     <script>
-        // Get order ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const orderId = urlParams.get('order');
-        
-        if (orderId) {
-            document.getElementById('order-success-details').innerHTML = `
-                <p><strong>Order ID:</strong> ${orderId.substring(0, 8)}</p>
-                <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
-                <p>We've sent a confirmation to your WhatsApp number.</p>
-            `;
-            
-            // Send thank you message via WhatsApp
-            setTimeout(() => {
-                const message = `Thank you for your order with SARM ENTERPRISES!\n` +
-                               `Order ID: ${orderId.substring(0, 8)}\n` +
-                               `We'll deliver your order soon.\n` +
-                               `For queries, call: 7006927825`;
-                
-                // Note: This would typically be sent from server-side
-                console.log('WhatsApp message:', message);
-            }, 1000);
-        }
-        
-        function printInvoice() {
-            window.print();
-        }
+        // Auto-redirect after 10 seconds
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 10000);
     </script>
 </body>
 </html>
