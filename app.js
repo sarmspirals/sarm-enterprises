@@ -1,7 +1,7 @@
-// Firebase Configuration and Initialization
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, listAll } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAZe6bywYSgnMFZsef1xgfPFQBkw4y7tco",
@@ -17,89 +17,61 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // DOM Elements
-const loginBtn = document.getElementById('loginBtn');
-const loginModal = document.getElementById('loginModal');
-const closeModal = document.querySelector('.close-modal');
-const loginForm = document.getElementById('loginForm');
-const loginError = document.getElementById('loginError');
 const productsContainer = document.getElementById('productsContainer');
-const adminLoginLink = document.getElementById('adminLoginLink');
+const logoElement = document.getElementById('logo');
+const adminAccessDiv = document.getElementById('adminAccess');
+const adminLink = document.getElementById('adminLink');
 
-// Check Authentication State
+// Check Authentication State - Hide admin from non-logged in users
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        // User is signed in
-        console.log('User is signed in:', user.email);
-        // Redirect to admin page if on main page
-        if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-            loginBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-            loginBtn.onclick = handleLogout;
-        }
+        // User is signed in - Show admin access
+        console.log('Admin signed in:', user.email);
+        if (adminAccessDiv) adminAccessDiv.style.display = 'block';
+        if (adminLink) adminLink.style.display = 'flex';
     } else {
-        // User is signed out
+        // User is signed out - Hide admin access
         console.log('User is signed out');
-        if (window.location.pathname.endsWith('admin.html')) {
-            window.location.href = 'index.html';
+        if (adminAccessDiv) adminAccessDiv.style.display = 'none';
+        if (adminLink) adminLink.style.display = 'none';
+    }
+});
+
+// Load Logo from Firestore
+async function loadLogo() {
+    try {
+        const logoDoc = await getDoc(doc(db, "settings", "logo"));
+        if (logoDoc.exists() && logoDoc.data().url) {
+            logoElement.src = logoDoc.data().url;
+            logoElement.alt = "SARM ENTERPRISES Logo";
+        } else {
+            // Default logo
+            logoElement.src = "https://images.unsplash.com/photo-1567446537710-0c5ff5a6ac32?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80";
         }
-    }
-});
-
-// Modal Controls
-loginBtn.addEventListener('click', () => {
-    loginModal.style.display = 'flex';
-});
-
-closeModal.addEventListener('click', () => {
-    loginModal.style.display = 'none';
-});
-
-window.addEventListener('click', (e) => {
-    if (e.target === loginModal) {
-        loginModal.style.display = 'none';
-    }
-});
-
-// Login Form Submission
-loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    
-    try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        console.log('Login successful:', userCredential.user);
-        loginModal.style.display = 'none';
-        loginError.textContent = '';
-        
-        // Redirect to admin page
-        window.location.href = 'admin.html';
     } catch (error) {
-        console.error('Login error:', error);
-        loginError.textContent = 'Invalid email or password. Please try again.';
-    }
-});
-
-// Logout Function
-async function handleLogout() {
-    try {
-        await signOut(auth);
-        window.location.href = 'index.html';
-    } catch (error) {
-        console.error('Logout error:', error);
+        console.error("Error loading logo:", error);
     }
 }
 
-// Load Products from Firestore
+// Load Products with Firebase Storage Images
 async function loadProducts() {
     try {
         const querySnapshot = await getDocs(collection(db, "products"));
         productsContainer.innerHTML = '';
         
+        const productsArray = [];
         querySnapshot.forEach((doc) => {
-            const product = doc.data();
-            createProductCard(product, doc.id);
+            productsArray.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Sort by pages
+        productsArray.sort((a, b) => a.pages - b.pages);
+        
+        productsArray.forEach((product) => {
+            createProductCard(product);
         });
     } catch (error) {
         console.error("Error loading products:", error);
@@ -107,8 +79,8 @@ async function loadProducts() {
     }
 }
 
-// Create Product Card
-function createProductCard(product, id) {
+// Create Product Card with Firebase Storage Images
+function createProductCard(product) {
     const productCard = document.createElement('div');
     productCard.className = 'product-card';
     
@@ -123,8 +95,11 @@ function createProductCard(product, id) {
         stockText = 'Low Stock';
     }
     
+    // Use Firebase Storage image URL
+    const imageUrl = product.imageUrl || `https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`;
+    
     productCard.innerHTML = `
-        <img src="${product.image || 'default-notebook.jpg'}" 
+        <img src="${imageUrl}" 
              alt="${product.name}" 
              class="product-image"
              onerror="this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3'">
@@ -132,17 +107,17 @@ function createProductCard(product, id) {
             <h3 class="product-title">${product.name}</h3>
             <div class="product-price">₹${product.price}</div>
             <span class="product-stock ${stockClass}">
-                <i class="fas fa-box"></i> ${stockText} (${product.stock})
+                <i class="fas fa-box"></i> ${stockText} (${product.stock} units)
             </span>
             <ul class="product-features">
-                <li><i class="fas fa-check-circle"></i> ${product.pages} Pages</li>
-                <li><i class="fas fa-ruler-combined"></i> A4 Size (210x297mm)</li>
+                <li><i class="fas fa-file-alt"></i> ${product.pages} Pages</li>
+                <li><i class="fas fa-ruler-combined"></i> A4 Size</li>
                 <li><i class="fas fa-spinner"></i> Spiral Binding</li>
-                <li><i class="fas fa-file-alt"></i> Premium Quality Paper</li>
+                <li><i class="fas fa-truck"></i> Free Delivery within 5km</li>
             </ul>
-            <a href="https://wa.me/917006927825?text=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20${encodeURIComponent(product.name)}" 
+            <a href="https://wa.me/917006927825?text=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20${encodeURIComponent(product.name)}%20(Price:%20₹${product.price})" 
                class="btn-whatsapp" target="_blank" style="width: 100%; text-align: center; margin-top: 10px;">
-                <i class="fab fa-whatsapp"></i> Order Now
+                <i class="fab fa-whatsapp"></i> Order on WhatsApp
             </a>
         </div>
     `;
@@ -150,14 +125,63 @@ function createProductCard(product, id) {
     productsContainer.appendChild(productCard);
 }
 
+// Load Quotes
+async function loadQuotes() {
+    try {
+        const quotesSnapshot = await getDocs(collection(db, "quotes"));
+        const quotesContainer = document.querySelector('.hero-quotes');
+        if (!quotesContainer) return;
+        
+        quotesContainer.innerHTML = '';
+        quotesSnapshot.forEach((doc) => {
+            const quote = doc.data();
+            const quoteElement = document.createElement('div');
+            quoteElement.className = 'quote';
+            quoteElement.innerHTML = `
+                <i class="fas fa-quote-left"></i>
+                <p>${quote.text}</p>
+            `;
+            quotesContainer.appendChild(quoteElement);
+        });
+    } catch (error) {
+        console.error("Error loading quotes:", error);
+    }
+}
+
 // Real-time listener for products
 function setupProductsListener() {
     onSnapshot(collection(db, "products"), (snapshot) => {
         productsContainer.innerHTML = '';
+        const productsArray = [];
+        
         snapshot.forEach((doc) => {
-            createProductCard(doc.data(), doc.id);
+            productsArray.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // Sort by pages
+        productsArray.sort((a, b) => a.pages - b.pages);
+        
+        productsArray.forEach((product) => {
+            createProductCard(product);
         });
     });
+}
+
+// Show Notification
+function showNotification(message, isError = false) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${isError ? 'error' : ''}`;
+    notification.innerHTML = `
+        <i class="fas fa-${isError ? 'exclamation-circle' : 'check-circle'}"></i>
+        ${message}
+    `;
+    document.body.appendChild(notification);
+    
+    notification.style.display = 'block';
+    setTimeout(() => {
+        notification.style.display = 'none';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 
 // Initialize
@@ -167,13 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
         setupProductsListener();
     }
     
-    // Admin login link
-    if (adminLoginLink) {
-        adminLoginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginModal.style.display = 'flex';
-        });
-    }
+    // Load logo and quotes
+    loadLogo();
+    loadQuotes();
     
     // Mobile menu toggle
     const menuToggle = document.querySelector('.menu-toggle');
@@ -187,4 +207,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export for admin.js
-export { auth, db, handleLogout };
+export { auth, db, storage, showNotification };
