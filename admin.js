@@ -1,444 +1,416 @@
-// Admin JavaScript
-let currentTab = 'orders';
-let currentOrderId = null;
+import { auth, db, handleLogout } from './app.js';
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    checkAdminAuth();
-    setupAdminEventListeners();
-    loadOrders();
-});
+// DOM Elements
+const productForm = document.getElementById('productForm');
+const productsList = document.getElementById('productsList');
+const logoutBtn = document.getElementById('logoutBtn');
+const submitBtn = document.getElementById('submitBtn');
+const cancelEdit = document.getElementById('cancelEdit');
+const editProductId = document.getElementById('editProductId');
+const newQuote = document.getElementById('newQuote');
+const addQuoteBtn = document.getElementById('addQuoteBtn');
+const quotesList = document.getElementById('quotesList');
 
-// Admin Authentication
-function checkAdminAuth() {
-    auth.onAuthStateChanged((user) => {
-        if (!user) {
-            window.location.href = 'index.html';
-        } else {
-            // Check if user is admin (you should implement proper admin check)
-            loadAdminData();
-        }
-    });
-}
+// Chart variable
+let stockChart;
 
-// Setup Event Listeners
-function setupAdminEventListeners() {
-    // Tab switching
-    document.querySelectorAll('.admin-sidebar a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const tab = e.target.dataset.tab;
-            switchTab(tab);
-        });
-    });
-    
-    // Order status filter
-    document.getElementById('order-status-filter')?.addEventListener('change', (e) => {
-        loadOrders(e.target.value);
-    });
-    
-    // Logout
-    document.getElementById('logout-btn')?.addEventListener('click', () => {
-        auth.signOut();
+// Initialize Admin Dashboard
+async function initAdmin() {
+    // Check authentication
+    if (!auth.currentUser) {
         window.location.href = 'index.html';
+        return;
+    }
+    
+    // Setup logout button
+    logoutBtn.addEventListener('click', handleLogout);
+    
+    // Load products
+    loadProducts();
+    loadQuotes();
+    
+    // Setup form submission
+    productForm.addEventListener('submit', handleProductSubmit);
+    
+    // Setup quote button
+    addQuoteBtn.addEventListener('click', addQuote);
+    
+    // Cancel edit button
+    cancelEdit.addEventListener('click', () => {
+        resetForm();
     });
-    
-    // Modal close buttons
-    document.querySelectorAll('.close').forEach(closeBtn => {
-        closeBtn.addEventListener('click', () => {
-            closeBtn.closest('.modal').style.display = 'none';
-        });
-    });
-    
-    // Add product form
-    document.getElementById('add-product-form')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        await addNewProduct(e.target);
-    });
 }
 
-// Tab Switching
-function switchTab(tabName) {
-    // Update active tab in sidebar
-    document.querySelectorAll('.admin-sidebar a').forEach(link => {
-        link.classList.remove('active');
-        if (link.dataset.tab === tabName) {
-            link.classList.add('active');
-        }
-    });
+// Handle Product Form Submission
+async function handleProductSubmit(e) {
+    e.preventDefault();
     
-    // Hide all tab contents
-    document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    
-    // Show selected tab
-    document.getElementById(`${tabName}-tab`)?.classList.add('active');
-    
-    // Load data for the tab
-    switch(tabName) {
-        case 'orders':
-            loadOrders();
-            break;
-        case 'products':
-            loadAdminProducts();
-            break;
-        case 'stock':
-            loadStock();
-            break;
-        case 'customers':
-            loadCustomers();
-            break;
-        case 'settings':
-            loadSettings();
-            break;
-    }
-}
-
-// Load Orders
-async function loadOrders(status = 'all') {
-    const ordersContainer = document.getElementById('orders-container');
-    if (!ordersContainer) return;
-    
-    ordersContainer.innerHTML = '<p>Loading orders...</p>';
-    
-    try {
-        let query = db.collection('orders').orderBy('timestamp', 'desc');
-        
-        if (status !== 'all') {
-            query = query.where('status', '==', status);
-        }
-        
-        const snapshot = await query.limit(50).get();
-        
-        if (snapshot.empty) {
-            ordersContainer.innerHTML = '<p>No orders found.</p>';
-            return;
-        }
-        
-        ordersContainer.innerHTML = '';
-        
-        snapshot.forEach(doc => {
-            const order = { id: doc.id, ...doc.data() };
-            const orderElement = createOrderElement(order);
-            ordersContainer.appendChild(orderElement);
-        });
-    } catch (error) {
-        console.error('Error loading orders:', error);
-        ordersContainer.innerHTML = '<p>Error loading orders.</p>';
-    }
-}
-
-function createOrderElement(order) {
-    const div = document.createElement('div');
-    div.className = `order-item ${order.status}`;
-    div.innerHTML = `
-        <div class="order-header">
-            <span class="order-id">Order #${order.id.substring(0, 8)}</span>
-            <span class="order-status ${order.status}">${order.status}</span>
-            <span class="order-total">₹${order.total}</span>
-        </div>
-        <div class="order-details">
-            <p><strong>Customer:</strong> ${order.customer.name}</p>
-            <p><strong>Phone:</strong> ${order.customer.phone}</p>
-            <p><strong>Date:</strong> ${order.timestamp?.toDate().toLocaleDateString()}</p>
-            <p><strong>Items:</strong> ${order.items.length} items</p>
-        </div>
-        <div class="order-actions">
-            <button onclick="viewOrderDetails('${order.id}')">View Details</button>
-            <button onclick="updateOrderStatusPrompt('${order.id}', '${order.status}')">Update Status</button>
-        </div>
-    `;
-    return div;
-}
-
-// View Order Details
-async function viewOrderDetails(orderId) {
-    try {
-        const doc = await db.collection('orders').doc(orderId).get();
-        if (!doc.exists) return;
-        
-        const order = { id: doc.id, ...doc.data() };
-        currentOrderId = orderId;
-        
-        const modal = document.getElementById('order-details-modal');
-        const content = document.getElementById('order-details-content');
-        
-        let itemsHtml = '<h3>Items:</h3><ul>';
-        order.items.forEach(item => {
-            itemsHtml += `<li>${item.name} × ${item.quantity} = ₹${item.price * item.quantity}</li>`;
-        });
-        itemsHtml += '</ul>';
-        
-        content.innerHTML = `
-            <div class="order-detail-section">
-                <h3>Order Information</h3>
-                <p><strong>Order ID:</strong> ${order.id}</p>
-                <p><strong>Status:</strong> ${order.status}</p>
-                <p><strong>Date:</strong> ${order.timestamp?.toDate().toLocaleString()}</p>
-                <p><strong>Payment Method:</strong> ${order.paymentMethod}</p>
-            </div>
-            
-            <div class="order-detail-section">
-                <h3>Customer Information</h3>
-                <p><strong>Name:</strong> ${order.customer.name}</p>
-                <p><strong>Phone:</strong> ${order.customer.phone}</p>
-                <p><strong>Address:</strong> ${order.customer.address}</p>
-                <p><strong>Pincode:</strong> ${order.customer.pincode}</p>
-                <p><strong>Landmark:</strong> ${order.customer.landmark}</p>
-            </div>
-            
-            ${itemsHtml}
-            
-            <div class="order-detail-section">
-                <h3>Payment Summary</h3>
-                <p><strong>Subtotal:</strong> ₹${order.subtotal}</p>
-                <p><strong>Delivery:</strong> ₹${order.delivery}</p>
-                <p><strong>Total:</strong> ₹${order.total}</p>
-            </div>
-        `;
-        
-        // Set current status in select
-        document.getElementById('order-status-select').value = order.status;
-        
-        modal.style.display = 'block';
-    } catch (error) {
-        console.error('Error loading order details:', error);
-    }
-}
-
-// Update Order Status
-async function updateOrderStatus() {
-    if (!currentOrderId) return;
-    
-    const newStatus = document.getElementById('order-status-select').value;
-    
-    try {
-        await db.collection('orders').doc(currentOrderId).update({
-            status: newStatus,
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        
-        alert('Order status updated successfully!');
-        loadOrders();
-        document.getElementById('order-details-modal').style.display = 'none';
-    } catch (error) {
-        console.error('Error updating order status:', error);
-        alert('Error updating order status');
-    }
-}
-
-// Send WhatsApp Update
-async function sendOrderUpdate() {
-    if (!currentOrderId) return;
-    
-    try {
-        const doc = await db.collection('orders').doc(currentOrderId).get();
-        if (!doc.exists) return;
-        
-        const order = doc.data();
-        const newStatus = document.getElementById('order-status-select').value;
-        
-        const message = `Your order #${currentOrderId.substring(0, 8)} status has been updated to: ${newStatus}\n` +
-                       `SARM ENTERPRISES\n` +
-                       `Thank you for your business!`;
-        
-        window.open(`https://wa.me/${order.customer.phone}?text=${encodeURIComponent(message)}`, '_blank');
-    } catch (error) {
-        console.error('Error sending WhatsApp update:', error);
-    }
-}
-
-// Load Products for Admin
-async function loadAdminProducts() {
-    const container = document.getElementById('admin-products-container');
-    if (!container) return;
-    
-    try {
-        const snapshot = await db.collection('products').get();
-        container.innerHTML = '';
-        
-        snapshot.forEach(doc => {
-            const product = { id: doc.id, ...doc.data() };
-            const productElement = createAdminProductElement(product);
-            container.appendChild(productElement);
-        });
-    } catch (error) {
-        console.error('Error loading products:', error);
-    }
-}
-
-function createAdminProductElement(product) {
-    const div = document.createElement('div');
-    div.className = 'admin-product-item';
-    div.innerHTML = `
-        <img src="${product.image}" alt="${product.name}">
-        <div class="product-info">
-            <h4>${product.name}</h4>
-            <p>Price: ₹${product.price}</p>
-            <p>Stock: ${product.stock}</p>
-            <p>Category: ${product.category}</p>
-        </div>
-        <div class="product-actions">
-            <button onclick="editProduct('${product.id}')">Edit</button>
-            <button onclick="deleteProduct('${product.id}')">Delete</button>
-            <button onclick="updateStockPrompt('${product.id}', '${product.name}', ${product.stock})">Update Stock</button>
-        </div>
-    `;
-    return div;
-}
-
-// Add New Product
-async function addNewProduct(form) {
     const productData = {
-        name: form[0].value,
-        price: parseFloat(form[1].value),
-        stock: parseInt(form[2].value),
-        category: form[3].value,
-        image: form[4].value,
-        description: form[5].value,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        name: document.getElementById('productName').value,
+        pages: parseInt(document.getElementById('productPages').value),
+        price: parseFloat(document.getElementById('productPrice').value),
+        stock: parseInt(document.getElementById('productStock').value),
+        image: document.getElementById('productImage').value || 'default-notebook.jpg',
+        description: document.getElementById('productDescription').value || '',
+        createdAt: new Date().toISOString()
     };
     
     try {
-        await db.collection('products').add(productData);
-        alert('Product added successfully!');
-        form.reset();
-        document.getElementById('add-product-modal').style.display = 'none';
-        loadAdminProducts();
-    } catch (error) {
-        console.error('Error adding product:', error);
-        alert('Error adding product');
-    }
-}
-
-// Update Stock
-async function updateStock(productId, newStock) {
-    try {
-        await db.collection('products').doc(productId).update({
-            stock: newStock
-        });
-        alert('Stock updated successfully!');
-        loadAdminProducts();
-        loadStock();
-    } catch (error) {
-        console.error('Error updating stock:', error);
-        alert('Error updating stock');
-    }
-}
-
-// Load Stock
-async function loadStock() {
-    const container = document.getElementById('stock-container');
-    if (!container) return;
-    
-    try {
-        const snapshot = await db.collection('products').orderBy('category').get();
-        container.innerHTML = '';
-        
-        snapshot.forEach(doc => {
-            const product = { id: doc.id, ...doc.data() };
-            const stockElement = createStockElement(product);
-            container.appendChild(stockElement);
-        });
-    } catch (error) {
-        console.error('Error loading stock:', error);
-    }
-}
-
-function createStockElement(product) {
-    const div = document.createElement('div');
-    div.className = 'stock-item';
-    const stockClass = product.stock <= 10 ? 'low' : product.stock <= 50 ? 'medium' : 'high';
-    div.innerHTML = `
-        <span class="product-name">${product.name}</span>
-        <span class="stock-level ${stockClass}">${product.stock} units</span>
-        <div class="stock-actions">
-            <button onclick="updateStockPrompt('${product.id}', '${product.name}', ${product.stock})">Update</button>
-        </div>
-    `;
-    return div;
-}
-
-// Load Customers
-async function loadCustomers() {
-    const container = document.getElementById('customers-container');
-    if (!container) return;
-    
-    try {
-        const snapshot = await db.collection('users').get();
-        container.innerHTML = '';
-        
-        if (snapshot.empty) {
-            container.innerHTML = '<p>No customers found.</p>';
-            return;
+        if (editProductId.value) {
+            // Update existing product
+            await updateDoc(doc(db, "products", editProductId.value), productData);
+            showSuccess('Product updated successfully!');
+        } else {
+            // Add new product
+            await addDoc(collection(db, "products"), productData);
+            showSuccess('Product added successfully!');
         }
         
-        snapshot.forEach(doc => {
-            const customer = { id: doc.id, ...doc.data() };
-            const customerElement = createCustomerElement(customer);
-            container.appendChild(customerElement);
-        });
+        resetForm();
     } catch (error) {
-        console.error('Error loading customers:', error);
+        console.error('Error saving product:', error);
+        alert('Error saving product. Please try again.');
     }
 }
 
-function createCustomerElement(customer) {
-    const div = document.createElement('div');
-    div.className = 'customer-item';
-    div.innerHTML = `
-        <div class="customer-info">
-            <h4>${customer.name}</h4>
-            <p>Email: ${customer.email}</p>
-            <p>Phone: ${customer.phone}</p>
-            <p>Joined: ${customer.createdAt?.toDate().toLocaleDateString()}</p>
-        </div>
-        <div class="customer-actions">
-            <button onclick="viewCustomerOrders('${customer.id}')">View Orders</button>
-            <button onclick="contactCustomer('${customer.phone}')">Contact</button>
+// Load Products
+function loadProducts() {
+    onSnapshot(collection(db, "products"), (snapshot) => {
+        productsList.innerHTML = '';
+        let totalProducts = 0;
+        let lowStockCount = 0;
+        
+        snapshot.forEach((doc) => {
+            const product = doc.data();
+            totalProducts++;
+            if (product.stock <= 10) lowStockCount++;
+            createProductListItem(product, doc.id);
+        });
+        
+        // Update stats
+        document.getElementById('totalProducts').textContent = `${totalProducts} Products`;
+        document.getElementById('lowStock').textContent = `${lowStockCount} Low Stock`;
+        
+        // Update chart
+        updateStockChart(snapshot);
+    });
+}
+
+// Create Product List Item
+function createProductListItem(product, id) {
+    const productItem = document.createElement('div');
+    productItem.className = 'product-card';
+    
+    let stockClass = 'stock-in';
+    let stockText = 'In Stock';
+    
+    if (product.stock <= 0) {
+        stockClass = 'stock-out';
+        stockText = 'Out of Stock';
+    } else if (product.stock <= 10) {
+        stockClass = 'stock-low';
+        stockText = 'Low Stock';
+    }
+    
+    productItem.innerHTML = `
+        <img src="${product.image || 'default-notebook.jpg'}" 
+             alt="${product.name}" 
+             class="product-image"
+             onerror="this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3'">
+        <div class="product-info">
+            <h3 class="product-title">${product.name}</h3>
+            <div class="product-price">₹${product.price}</div>
+            <span class="product-stock ${stockClass}">
+                <i class="fas fa-box"></i> ${stockText} (${product.stock})
+            </span>
+            <p>${product.description || 'No description'}</p>
+            <div class="admin-actions">
+                <button class="btn-primary edit-btn" data-id="${id}">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn-secondary delete-btn" data-id="${id}">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </div>
         </div>
     `;
-    return div;
+    
+    productsList.appendChild(productItem);
+    
+    // Add event listeners
+    productItem.querySelector('.edit-btn').addEventListener('click', () => editProduct(id, product));
+    productItem.querySelector('.delete-btn').addEventListener('click', () => deleteProduct(id, product.name));
 }
 
-// Load Settings
-function loadSettings() {
-    // This could load settings from Firestore
-    console.log('Loading settings...');
+// Edit Product
+function editProduct(id, product) {
+    document.getElementById('productName').value = product.name;
+    document.getElementById('productPages').value = product.pages;
+    document.getElementById('productPrice').value = product.price;
+    document.getElementById('productStock').value = product.stock;
+    document.getElementById('productImage').value = product.image || '';
+    document.getElementById('productDescription').value = product.description || '';
+    editProductId.value = id;
+    
+    submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Product';
+    cancelEdit.style.display = 'inline-block';
+    
+    // Scroll to form
+    document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
 }
 
-function saveSettings() {
-    // Save settings to Firestore
-    alert('Settings saved!');
-}
-
-// Utility Functions
-function openAddProductModal() {
-    document.getElementById('add-product-modal').style.display = 'block';
-}
-
-function updateStockPrompt(productId, productName, currentStock) {
-    const newStock = prompt(`Update stock for ${productName}\nCurrent stock: ${currentStock}\nEnter new stock:`, currentStock);
-    if (newStock !== null && !isNaN(newStock)) {
-        updateStock(productId, parseInt(newStock));
+// Delete Product
+async function deleteProduct(id, productName) {
+    if (confirm(`Are you sure you want to delete "${productName}"?`)) {
+        try {
+            await deleteDoc(doc(db, "products", id));
+            showSuccess('Product deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            alert('Error deleting product. Please try again.');
+        }
     }
 }
 
-function updateOrderStatusPrompt(orderId, currentStatus) {
-    currentOrderId = orderId;
-    document.getElementById('order-status-select').value = currentStatus;
-    viewOrderDetails(orderId);
+// Reset Form
+function resetForm() {
+    productForm.reset();
+    editProductId.value = '';
+    submitBtn.innerHTML = '<i class="fas fa-save"></i> Add Product';
+    cancelEdit.style.display = 'none';
 }
 
-function contactCustomer(phone) {
-    window.open(`https://wa.me/${phone}`, '_blank');
+// Load Quotes
+async function loadQuotes() {
+    onSnapshot(collection(db, "quotes"), (snapshot) => {
+        quotesList.innerHTML = '';
+        
+        snapshot.forEach((doc) => {
+            const quote = doc.data();
+            createQuoteItem(quote, doc.id);
+        });
+    });
 }
 
-// Export functions to global scope
-window.viewOrderDetails = viewOrderDetails;
-window.updateOrderStatus = updateOrderStatus;
-window.sendOrderUpdate = sendOrderUpdate;
-window.openAddProductModal = openAddProductModal;
-window.updateStockPrompt = updateStockPrompt;
-window.updateOrderStatusPrompt = updateOrderStatusPrompt;
-window.contactCustomer = contactCustomer;
+// Create Quote Item
+function createQuoteItem(quote, id) {
+    const quoteItem = document.createElement('div');
+    quoteItem.className = 'quote-card';
+    quoteItem.style.margin = '10px 0';
+    
+    quoteItem.innerHTML = `
+        <p>"${quote.text}"</p>
+        <button class="btn-secondary delete-quote-btn" data-id="${id}" 
+                style="margin-top: 10px; padding: 5px 10px;">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+    `;
+    
+    quotesList.appendChild(quoteItem);
+    
+    quoteItem.querySelector('.delete-quote-btn').addEventListener('click', 
+        () => deleteQuote(id));
+}
+
+// Add Quote
+async function addQuote() {
+    const text = newQuote.value.trim();
+    if (!text) {
+        alert('Please enter a quote');
+        return;
+    }
+    
+    try {
+        await addDoc(collection(db, "quotes"), {
+            text: text,
+            createdAt: new Date().toISOString()
+        });
+        
+        newQuote.value = '';
+        showSuccess('Quote added successfully!');
+    } catch (error) {
+        console.error('Error adding quote:', error);
+        alert('Error adding quote. Please try again.');
+    }
+}
+
+// Delete Quote
+async function deleteQuote(id) {
+    if (confirm('Are you sure you want to delete this quote?')) {
+        try {
+            await deleteDoc(doc(db, "quotes", id));
+            showSuccess('Quote deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting quote:', error);
+            alert('Error deleting quote. Please try again.');
+        }
+    }
+}
+
+// Update Stock Chart
+function updateStockChart(snapshot) {
+    const ctx = document.getElementById('stockChart').getContext('2d');
+    
+    const products = [];
+    const stockData = [];
+    
+    snapshot.forEach((doc) => {
+        const product = doc.data();
+        products.push(product.name);
+        stockData.push(product.stock);
+    });
+    
+    const colors = stockData.map(stock => {
+        if (stock <= 0) return '#e74c3c';
+        if (stock <= 10) return '#f39c12';
+        return '#27ae60';
+    });
+    
+    if (stockChart) {
+        stockChart.destroy();
+    }
+    
+    stockChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: products,
+            datasets: [{
+                label: 'Stock Quantity',
+                data: stockData,
+                backgroundColor: colors,
+                borderColor: colors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Quantity'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Products'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+// Show Success Message
+function showSuccess(message) {
+    const successMessage = document.getElementById('successMessage');
+    document.getElementById('successText').textContent = message;
+    successMessage.style.display = 'flex';
+}
+
+// Initialize default products on first load
+async function initializeDefaultProducts() {
+    try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        
+        // If no products exist, add default ones
+        if (querySnapshot.empty) {
+            const defaultProducts = [
+                {
+                    name: "Spiral Notebook 200 Pages",
+                    pages: 200,
+                    price: 69,
+                    stock: 100,
+                    image: "200.jpg",
+                    description: "Premium 200 pages spiral notebook"
+                },
+                {
+                    name: "Spiral Notebook 250 Pages",
+                    pages: 250,
+                    price: 85,
+                    stock: 80,
+                    image: "250.jpg",
+                    description: "Premium 250 pages spiral notebook"
+                },
+                {
+                    name: "Spiral Notebook 300 Pages",
+                    pages: 300,
+                    price: 105,
+                    stock: 60,
+                    image: "300.jpg",
+                    description: "Premium 300 pages spiral notebook"
+                },
+                {
+                    name: "Spiral Notebook 400 Pages",
+                    pages: 400,
+                    price: 129,
+                    stock: 40,
+                    image: "400.jpg",
+                    description: "Premium 400 pages spiral notebook"
+                },
+                {
+                    name: "Spiral Notebook 500 Pages",
+                    pages: 500,
+                    price: 135,
+                    stock: 30,
+                    image: "500.jpg",
+                    description: "Premium 500 pages spiral notebook"
+                }
+            ];
+            
+            for (const product of defaultProducts) {
+                await addDoc(collection(db, "products"), {
+                    ...product,
+                    createdAt: new Date().toISOString()
+                });
+            }
+            
+            console.log('Default products added');
+        }
+    } catch (error) {
+        console.error('Error initializing products:', error);
+    }
+}
+
+// Initialize default quotes
+async function initializeDefaultQuotes() {
+    try {
+        const querySnapshot = await getDocs(collection(db, "quotes"));
+        
+        if (querySnapshot.empty) {
+            const defaultQuotes = [
+                { text: "Where Thoughts Find Their Perfect Home" },
+                { text: "Quality Pages for Lifelong Memories" },
+                { text: "Your ideas are precious. We provide the perfect canvas to preserve them." },
+                { text: "Writing transforms thoughts into treasures" },
+                { text: "Every page tells a story, every notebook holds a journey" }
+            ];
+            
+            for (const quote of defaultQuotes) {
+                await addDoc(collection(db, "quotes"), {
+                    ...quote,
+                    createdAt: new Date().toISOString()
+                });
+            }
+            
+            console.log('Default quotes added');
+        }
+    } catch (error) {
+        console.error('Error initializing quotes:', error);
+    }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', async () => {
+    await initAdmin();
+    await initializeDefaultProducts();
+    await initializeDefaultQuotes();
+});
