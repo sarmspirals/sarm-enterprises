@@ -38,28 +38,25 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Load Logo with error handling
 async function loadLogo() {
     try {
         const logoElement = document.getElementById('logo');
-        if (!logoElement) {
-            return; // No logo element on this page
+        if (!logoElement) return;
+        
+        // Use local logo by default
+        logoElement.src = "assets/logo/logo.png";
+        logoElement.alt = "SARM ENTERPRISES Logo";
+        
+        // Optional: You can still check Firestore for a logo path if you want flexibility
+        const logoDoc = await getDoc(doc(db, "settings", "logo"));
+        if (logoDoc.exists() && logoDoc.data().path) {
+            logoElement.src = logoDoc.data().path;
         }
         
-        const logoDoc = await getDoc(doc(db, "settings", "logo"));
-        if (logoDoc.exists() && logoDoc.data().url) {
-            logoElement.src = logoDoc.data().url;
-            logoElement.alt = "SARM ENTERPRISES Logo";
-        } else {
-            // Default logo
-            logoElement.src = "https://images.unsplash.com/photo-1567446537710-0c5ff5a6ac32?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80";
-        }
     } catch (error) {
-        console.log("Logo loading skipped or failed:", error.message);
-        // Don't throw error for missing logo
+        console.log("Using default logo");
     }
 }
-
 // Load Products with error handling
 async function loadProducts() {
     try {
