@@ -66,10 +66,10 @@ async function handleProductSubmit(e) {
     const pages = parseInt(document.getElementById('productPages').value);
     let imagePath = 'assets/products/default-notebook.jpg';
     
-    if (pages === 200) imagePath = 'assets/products/200.jpg';
-    else if (pages === 250) imagePath = 'assets/products/250.jpg';
-    else if (pages === 300) imagePath = 'assets/products/300.jpg';
-    else if (pages === 400) imagePath = 'assets/products/400.jpg';
+    if (pages === 200) imagePath = '200.jpg';
+    else if (pages === 250) imagePath = '250.jpg';
+    else if (pages === 300) imagePath = '300.jpg';
+    else if (pages === 400) imagePath = '400.jpg';
     else if (pages === 500) imagePath = 'assets/products/500.jpg';
     
     // 2. BUILD PRODUCT DATA WITH LOCAL PATH
