@@ -44,7 +44,7 @@ async function loadLogo() {
         if (!logoElement) return;
         
         // Use local logo by default
-        logoElement.src = "assets/logo/logo.jpg";
+        logoElement.src = "assets/logo/logo.png";
         logoElement.alt = "SARM ENTERPRISES Logo";
         
         // Optional: You can still check Firestore for a logo path if you want flexibility
