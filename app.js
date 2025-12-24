@@ -109,14 +109,11 @@ function createProductCard(product) {
         stockText = 'Low Stock';
     }
     
-    // Use image URL or default
-    const imageUrl = product.imageUrl || `https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80`;
+   // Use the local image path from Firestore, or a default
+const imagePath = product.imagePath || 'assets/products/default-notebook.jpg';
     
     productCard.innerHTML = `
-        <img src="${imageUrl}" 
-             alt="${product.name}" 
-             class="product-image"
-             onerror="this.src='https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3'">
+        <img src="${imagePath}" alt="${product.name}" class="product-image" onerror="this.src='assets/products/default-notebook.jpg'">
         <div class="product-info">
             <h3 class="product-title">${product.name}</h3>
             <div class="product-price">₹${product.price}</div>
