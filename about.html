@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - SARM ENTERPRISES</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Reuse your navigation from index.html -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img id="logo" src="assets/logo/logo.png" alt="SARM ENTERPRISES Logo" class="logo-img" onerror="this.src='https://images.unsplash.com/photo-1567446537710-0c5ff5a6ac32?ixlib=rb-4.0.3'">
+                <div>
+                    <h1>SARM ENTERPRISES</h1>
+                    <p class="tagline">Quality Pages for Quality Thoughts</p>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="index.html#products"><i class="fas fa-book"></i> Products</a>
+                <a href="index.html#contact"><i class="fas fa-phone"></i> Contact</a>
+                <a href="about.html" class="active"><i class="fas fa-info-circle"></i> About</a>
+                <!-- Add links for FAQ & Feedback later -->
+                <a href="admin-login.html" class="btn-login"><i class="fas fa-user-shield"></i> Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top: 100px;">
+        <section class="form-card">
+            <h2>Our Story</h2>
+            <p>Founded right here in <strong>KAWOOSA KHALISA, NARBAL</strong>, SARM ENTERPRISES began with a simple mission: to provide students, professionals, and thinkers in our community with premium quality notebooks that are both durable and affordable.</p>
+            <p>We understand that great ideas deserve a perfect home. Every spiral notebook we offer is crafted with care, using quality paper that prevents ink bleed-through and a binding that withstands daily use.</p>
+
+            <h3>Why Choose Us?</h3>
+            <ul>
+                <li><strong>Local & Reliable:</strong> We are your neighbors. We understand your needs and deliver right to your doorstep within 5km, <strong>free of charge</strong>.</li>
+                <li><strong>Uncompromising Quality:</strong> From 200 to 500 pages, each notebook is checked for paper quality and binding strength.</li>
+                <li><strong>For Every Purpose:</strong> Whether it's for school notes, office work, personal journaling, or project planning, we have the right notebook for you.</li>
+            </ul>
+
+            <div class="quote-card" style="margin-top: 2rem;">
+                <i class="fas fa-quote-left"></i>
+                <p>"We don't just sell notebooks; we provide the tools to capture dreams, organize thoughts, and achieve goals. Your success is our story."</p>
+                <p style="text-align: right; margin-top: 1rem;"><strong>— The SARM ENTERPRISES Team</strong></p>
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="index.html#contact" class="btn-primary">
+                    <i class="fas fa-map-marker-alt"></i> Visit Us / Get in Touch
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Reuse your footer from index.html -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-book"></i> SARM ENTERPRISES</h3>
+                    <p>KAWOOSA KHALISA, NARBAL, BADGAM</p>
+                    <p>Pincode: 193411 | Phone: 7006927825</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="index.html">Home</a>
+                    <a href="index.html#products">Products</a>
+                    <a href="index.html#contact">Contact</a>
+                    <a href="about.html">About Us</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 SARM ENTERPRISES. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add your app.js if needed for the logo -->
+    <script type="module">
+        // Simple script to set active nav link
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                if(link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
