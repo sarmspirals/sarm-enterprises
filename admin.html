@@ -198,6 +198,7 @@
     <!-- ============================================ -->
 <!-- FAQ MANAGEMENT -->
 <!-- ============================================ -->
+<!-- Replace the entire "FAQ Management" card with this: -->
 <div class="form-card">
     <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
     <p>Manage Frequently Asked Questions shown on the FAQ page.</p>
@@ -218,14 +219,14 @@
             <input type="number" id="faqOrder" placeholder="1" value="1">
             <small>Lower numbers appear first on the FAQ page.</small>
         </div>
-        <button class="btn-primary" onclick="addFAQ()">
+        <button class="btn-primary" id="addFaqBtn">
             <i class="fas fa-plus-circle"></i> Add FAQ
         </button>
     </div>
     
     <!-- Existing FAQs List -->
     <h4>Existing FAQs</h4>
-    <button class="btn-secondary" onclick="loadFAQsAdmin()" style="margin-bottom: 1rem;">
+    <button class="btn-secondary" id="refreshFaqsBtn" style="margin-bottom: 1rem;">
         <i class="fas fa-sync-alt"></i> Refresh List
     </button>
     <div id="faqsListAdmin">
