@@ -506,6 +506,131 @@ async function loadApprovedTestimonials() {
 // END OF FEEDBACK FUNCTIONS
 // ============================================
 
+// ============================================
+// FAQ MANAGEMENT FUNCTIONS
+// ============================================
+
+// Load FAQs for admin panel
+async function loadFAQsAdmin() {
+    try {
+        const q = query(collection(db, "faqs"), orderBy("order", "asc"));
+        const querySnapshot = await getDocs(q);
+        
+        const container = document.getElementById('faqsListAdmin');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+            container.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No FAQs added yet.</p>';
+            return;
+        }
+        
+        querySnapshot.forEach((doc) => {
+            const faq = doc.data();
+            const item = document.createElement('div');
+            item.className = 'form-card';
+            item.style.marginBottom = '1rem';
+            item.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <h4 style="margin: 0; flex: 1;">${faq.question}</h4>
+                    <div style="color: #777; font-size: 0.9rem;">Order: ${faq.order}</div>
+                </div>
+                <p style="margin: 0.8rem 0; color: #555;">${faq.answer}</p>
+                <div style="display: flex; gap: 10px; margin-top: 1rem;">
+                    <button class="btn-primary" onclick="editFAQ('${doc.id}', '${faq.question.replace(/'/g, "\\'")}', '${faq.answer.replace(/'/g, "\\'")}', ${faq.order})">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn-secondary" onclick="deleteFAQ('${doc.id}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+        
+    } catch (error) {
+        console.error("Error loading FAQs for admin:", error);
+        const container = document.getElementById('faqsListAdmin');
+        if (container) {
+            container.innerHTML = '<p style="color: #e74c3c;">Error loading FAQs.</p>';
+        }
+    }
+}
+
+// Add new FAQ
+async function addFAQ() {
+    const question = document.getElementById('faqQuestion').value.trim();
+    const answer = document.getElementById('faqAnswer').value.trim();
+    const order = parseInt(document.getElementById('faqOrder').value) || 1;
+    
+    if (!question || !answer) {
+        showNotification('Please enter both question and answer.', true);
+        return;
+    }
+    
+    try {
+        await addDoc(collection(db, "faqs"), {
+            question: question,
+            answer: answer,
+            order: order,
+            createdAt: new Date().toISOString()
+        });
+        
+        showNotification('FAQ added successfully!');
+        document.getElementById('faqQuestion').value = '';
+        document.getElementById('faqAnswer').value = '';
+        document.getElementById('faqOrder').value = '';
+        
+        loadFAQsAdmin(); // Refresh the list
+        
+    } catch (error) {
+        console.error("Error adding FAQ:", error);
+        showNotification('Error adding FAQ.', true);
+    }
+}
+
+// Edit existing FAQ
+async function editFAQ(faqId, currentQuestion, currentAnswer, currentOrder) {
+    const newQuestion = prompt("Edit question:", currentQuestion);
+    if (newQuestion === null) return; // User cancelled
+    
+    const newAnswer = prompt("Edit answer:", currentAnswer);
+    if (newAnswer === null) return;
+    
+    const newOrder = prompt("Edit display order (lower numbers show first):", currentOrder);
+    if (newOrder === null) return;
+    
+    try {
+        await updateDoc(doc(db, "faqs", faqId), {
+            question: newQuestion,
+            answer: newAnswer,
+            order: parseInt(newOrder) || 1
+        });
+        
+        showNotification('FAQ updated successfully!');
+        loadFAQsAdmin(); // Refresh the list
+        
+    } catch (error) {
+        console.error("Error updating FAQ:", error);
+        showNotification('Error updating FAQ.', true);
+    }
+}
+
+// Delete FAQ
+async function deleteFAQ(faqId) {
+    if (!confirm("Are you sure you want to delete this FAQ?")) return;
+    
+    try {
+        await deleteDoc(doc(db, "faqs", faqId));
+        showNotification('FAQ deleted successfully!');
+        loadFAQsAdmin(); // Refresh the list
+        
+    } catch (error) {
+        console.error("Error deleting FAQ:", error);
+        showNotification('Error deleting FAQ.', true);
+    }
+}
 // === INITIALIZE ===
 document.addEventListener('DOMContentLoaded', () => {
     initAdmin();
