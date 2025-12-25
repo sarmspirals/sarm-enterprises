@@ -396,6 +396,116 @@ async function loadAllFeedback() {
     const querySnapshot = await getDocs(q);
     // ... (display logic similar to above)
 }
+
+// ============================================
+// CUSTOMER FEEDBACK MANAGEMENT FUNCTIONS
+// ============================================
+
+// Function to load pending feedback for admin review
+async function loadPendingFeedback() {
+    try {
+        const querySnapshot = await getDocs(
+            query(collection(db, "feedback_submissions"), 
+                  where("status", "==", "pending"),
+                  orderBy("createdAt", "desc"))
+        );
+
+        const container = document.getElementById('pendingFeedbackList');
+        if(!container) {
+            console.log('Feedback container not found on this page');
+            return;
+        }
+
+        container.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+            container.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No pending feedback to review.</p>';
+            return;
+        }
+
+        querySnapshot.forEach((doc) => {
+            const feedback = doc.data();
+            const item = document.createElement('div');
+            item.className = 'form-card';
+            item.style.marginBottom = '1rem';
+            item.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <h4 style="margin: 0;">${feedback.customerName}</h4>
+                    <div style="color: #f39c12; font-size: 1.2rem;">
+                        ${'★'.repeat(feedback.rating)}${'☆'.repeat(5 - feedback.rating)}
+                    </div>
+                </div>
+                <p><small>Submitted: ${new Date(feedback.createdAt).toLocaleDateString('en-IN')}</small></p>
+                <p style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin: 1rem 0;">
+                    "${feedback.message}"
+                </p>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-primary" onclick="approveFeedback('${doc.id}')">
+                        <i class="fas fa-check"></i> Approve
+                    </button>
+                    <button class="btn-secondary" onclick="rejectFeedback('${doc.id}')">
+                        <i class="fas fa-times"></i> Reject
+                    </button>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+
+    } catch (error) {
+        console.error("Error loading pending feedback:", error);
+        const container = document.getElementById('pendingFeedbackList');
+        if(container) {
+            container.innerHTML = '<p style="color: #e74c3c; text-align: center;">Error loading feedback.</p>';
+        }
+    }
+}
+
+// Function for admin to approve feedback
+async function approveFeedback(feedbackId) {
+    if(!confirm("Approve this feedback to publish it on the website?")) return;
+    
+    try {
+        await updateDoc(doc(db, "feedback_submissions", feedbackId), {
+            status: "approved"
+        });
+        showNotification('Feedback approved and published!');
+        loadPendingFeedback(); // Refresh the list
+    } catch (error) {
+        console.error("Error approving feedback:", error);
+        showNotification('Error approving feedback.', true);
+    }
+}
+
+// Function for admin to reject/delete feedback
+async function rejectFeedback(feedbackId) {
+    if(!confirm("Reject and delete this feedback submission?")) return;
+    
+    try {
+        await deleteDoc(doc(db, "feedback_submissions", feedbackId));
+        showNotification('Feedback rejected and deleted.');
+        loadPendingFeedback(); // Refresh the list
+    } catch (error) {
+        console.error("Error rejecting feedback:", error);
+        showNotification('Error rejecting feedback.', true);
+    }
+}
+
+// Function to load approved feedback for homepage (optional - for later)
+async function loadApprovedTestimonials() {
+    // You'll use this function on your homepage later
+    const querySnapshot = await getDocs(
+        query(collection(db, "feedback_submissions"), 
+              where("status", "==", "approved"),
+              orderBy("createdAt", "desc"))
+    );
+    // Return data for homepage display
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+// ============================================
+// END OF FEEDBACK FUNCTIONS
+// ============================================
+
 // === INITIALIZE ===
 document.addEventListener('DOMContentLoaded', () => {
     initAdmin();
