@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Feedback - SARM ENTERPRISES</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation (Same as your index.html) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img id="logo" src="assets/logo/logo.png" alt="SARM ENTERPRISES Logo" class="logo-img" onerror="this.src='https://images.unsplash.com/photo-1567446537710-0c5ff5a6ac32?ixlib=rb-4.0.3'">
+                <div>
+                    <h1>SARM ENTERPRISES</h1>
+                    <p class="tagline">Quality Pages for Quality Thoughts</p>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="index.html#products"><i class="fas fa-book"></i> Products</a>
+                <a href="index.html#contact"><i class="fas fa-phone"></i> Contact</a>
+                <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+                <a href="feedback.html" class="active"><i class="fas fa-comment-dots"></i> Feedback</a>
+                <a href="admin-login.html" class="btn-login"><i class="fas fa-user-shield"></i> Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top: 100px;">
+        <!-- SECTION 1: Submit Feedback Form -->
+        <section class="form-card">
+            <h2><i class="fas fa-pen-alt"></i> Share Your Feedback</h2>
+            <p>We value your experience. Please share your thoughts about our products and service. Your feedback will be reviewed and may be featured on our homepage to help other customers.</p>
+            
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label for="fbName"><i class="fas fa-user"></i> Your Name</label>
+                    <input type="text" id="fbName" required placeholder="e.g., Aamir Khan">
+                </div>
+                
+                <div class="form-group">
+                    <label for="fbRating"><i class="fas fa-star"></i> Your Rating</label>
+                    <select id="fbRating" required>
+                        <option value="" disabled selected>Select a rating...</option>
+                        <option value="5">★★★★★ - Excellent</option>
+                        <option value="4">★★★★☆ - Very Good</option>
+                        <option value="3">★★★☆☆ - Good</option>
+                        <option value="2">★★☆☆☆ - Fair</option>
+                        <option value="1">★☆☆☆☆ - Poor</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fbMessage"><i class="fas fa-comment"></i> Your Feedback / Testimonial</label>
+                    <textarea id="fbMessage" rows="5" required placeholder="What did you like about our notebooks? Was the delivery prompt? Your detailed feedback helps us a lot..."></textarea>
+                </div>
+                
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-paper-plane"></i> Submit Feedback
+                </button>
+            </form>
+        </section>
+
+        <!-- SECTION 2: Display Approved Testimonials -->
+        <section class="form-card" style="margin-top: 3rem;">
+            <h2><i class="fas fa-heart"></i> What Our Customers Say</h2>
+            <p>Here are some of the kind words shared by our valued customers in Narbal and beyond.</p>
+            <div id="approvedTestimonials">
+                <!-- Approved testimonials will be loaded here by JavaScript -->
+                <p style="text-align: center; padding: 2rem;"><i>Loading testimonials...</i></p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Reuse your footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-book"></i> SARM ENTERPRISES</h3>
+                    <p>KAWOOSA KHALISA, NARBAL, BADGAM</p>
+                    <p>Pincode: 193411 | Phone: 7006927825</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="index.html">Home</a>
+                    <a href="index.html#products">Products</a>
+                    <a href="index.html#contact">Contact</a>
+                    <a href="feedback.html">Feedback</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 SARM ENTERPRISES. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- =============================== -->
+    <!-- FEEDBACK SYSTEM JAVASCRIPT CODE -->
+    <!-- =============================== -->
+    <!-- Import Firebase modules -->
+    <script type="module">
+        // Import the functions you need from the SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        // Your web app's Firebase configuration (Use the SAME config from your app.js)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZe6bywYSgnMFZsef1xgfPFQBkw4y7tco",
+            authDomain: "sarm-enterprises.firebaseapp.com",
+            projectId: "sarm-enterprises",
+            storageBucket: "sarm-enterprises.firebasestorage.app",
+            messagingSenderId: "790231205096",
+            appId: "1:790231205096:web:656c5fc47c6a675e1ef55d",
+            measurementId: "G-5M1ZM089KH"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // ==============================================
+        // FUNCTION 1: SUBMIT NEW FEEDBACK (Public Form)
+        // ==============================================
+        async function submitFeedback(event) {
+            event.preventDefault(); // Stop form from reloading page
+
+            const feedbackData = {
+                customerName: document.getElementById('fbName').value,
+                rating: parseInt(document.getElementById('fbRating').value),
+                message: document.getElementById('fbMessage').value,
+                status: "pending", // Admin must approve this
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                // Save to a NEW Firestore collection called "feedback_submissions"
+                const docRef = await addDoc(collection(db, "feedback_submissions"), feedbackData);
+                alert('Thank you for your feedback! It has been submitted for review and will appear here once approved.');
+                event.target.reset(); // Clear the form
+            } catch (error) {
+                console.error("Error submitting feedback:", error);
+                alert('Sorry, there was an error submitting your feedback. Please try again.');
+            }
+        }
+
+        // ==============================================
+        // FUNCTION 2: LOAD & DISPLAY APPROVED TESTIMONIALS
+        // ==============================================
+        async function loadApprovedTestimonials() {
+            try {
+                // Fetch only documents where status is "approved", sorted newest first
+                const q = query(
+                    collection(db, "feedback_submissions"),
+                    where("status", "==", "approved"),
+                    orderBy("createdAt", "desc")
+                );
+                const querySnapshot = await getDocs(q);
+
+                const container = document.getElementById('approvedTestimonials');
+                container.innerHTML = ''; // Clear "Loading..." message
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p style="text-align: center; padding: 2rem;"><i>No approved testimonials yet. Be the first to share your feedback!</i></p>';
+                    return;
+                }
+
+                querySnapshot.forEach((doc) => {
+                    const feedback = doc.data();
+                    const testimonialElement = document.createElement('div');
+                    testimonialElement.className = 'testimonial-card';
+                    testimonialElement.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <h4 style="margin: 0;">${feedback.customerName}</h4>
+                            <div style="color: #f39c12; font-size: 1.2rem;">
+                                ${'★'.repeat(feedback.rating)}${'☆'.repeat(5 - feedback.rating)}
+                            </div>
+                        </div>
+                        <p style="margin-top: 0.8rem; font-style: italic;">"${feedback.message}"</p>
+                        <p style="text-align: right; font-size: 0.9rem; color: #777;">
+                            <i class="far fa-calendar"></i> ${new Date(feedback.createdAt).toLocaleDateString('en-IN')}
+                        </p>
+                    `;
+                    container.appendChild(testimonialElement);
+                });
+
+            } catch (error) {
+                console.error("Error loading testimonials:", error);
+                document.getElementById('approvedTestimonials').innerHTML = '<p style="color: #e74c3c; text-align: center;">Could not load testimonials at the moment.</p>';
+            }
+        }
+
+        // ==============================================
+        // SETUP: Connect form and load testimonials on page load
+        // ==============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Connect the form's submit button to our function
+            const feedbackForm = document.getElementById('feedbackForm');
+            if (feedbackForm) {
+                feedbackForm.addEventListener('submit', submitFeedback);
+            }
+
+            // 2. Load and display approved testimonials
+            loadApprovedTestimonials();
+        });
+
+    </script>
+
+    <!-- Add some custom CSS for testimonials -->
+    <style>
+        .testimonial-card {
+            background: #f8f9fa;
+            border-left: 4px solid var(--secondary-color, #3498db);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+        .testimonial-card:hover {
+            background: #eef2f7;
+        }
+        #fbRating {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background-color: white;
+        }
+    </style>
+</body>
+</html>
