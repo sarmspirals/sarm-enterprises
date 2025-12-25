@@ -186,6 +186,47 @@
         <p><i>Click "Refresh Pending List" to load submissions.</i></p>
     </div>
 </div>
+
+    <!-- ============================================ -->
+<!-- FAQ MANAGEMENT -->
+<!-- ============================================ -->
+<div class="form-card">
+    <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
+    <p>Manage Frequently Asked Questions shown on the FAQ page.</p>
+    
+    <!-- Add New FAQ Form -->
+    <h4>Add New FAQ</h4>
+    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+        <div class="form-group">
+            <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
+            <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
+        </div>
+        <div class="form-group">
+            <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
+            <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
+        </div>
+        <div class="form-group">
+            <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
+            <input type="number" id="faqOrder" placeholder="1" value="1">
+            <small>Lower numbers appear first on the FAQ page.</small>
+        </div>
+        <button class="btn-primary" onclick="addFAQ()">
+            <i class="fas fa-plus-circle"></i> Add FAQ
+        </button>
+    </div>
+    
+    <!-- Existing FAQs List -->
+    <h4>Existing FAQs</h4>
+    <button class="btn-secondary" onclick="loadFAQsAdmin()" style="margin-bottom: 1rem;">
+        <i class="fas fa-sync-alt"></i> Refresh List
+    </button>
+    <div id="faqsListAdmin">
+        <!-- FAQs will be loaded here -->
+        <p style="text-align: center; padding: 2rem; color: #999;">
+            Click "Refresh List" to load existing FAQs.
+        </p>
+    </div>
+</div>
     <!-- Success Message -->
     <div id="successMessage" style="display: none;" class="modal">
         <div class="modal-content" style="text-align: center;">
