@@ -1,6 +1,7 @@
 // === IMPORTS ===
 import { auth, db, showNotification } from './app.js';
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, getDoc, setDocquery, where, orderBy  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+// Fixed import: 'setDocquery' was invalid; replaced with correct 'setDoc' and 'query'
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, getDoc, setDoc, query, where, orderBy  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
 // === DOM ELEMENTS ===
 const productForm = document.getElementById('productForm');
@@ -31,6 +32,9 @@ async function setupAdmin() {
     logoutBtn.addEventListener('click', handleLogout);
     loadProducts();
     loadQuotes();
+    // --- FIX: Initialize feedback and FAQ loading ---
+    loadPendingFeedback(); // Load pending feedback on admin page
+    loadFAQsAdmin();       // Load FAQs for management
 
     if (productForm) {
         productForm.addEventListener('submit', handleProductSubmit);
@@ -297,7 +301,7 @@ function updateStockChart(productsData) {
 }
 
 // ======================================================
-// NEW FUNCTIONS FOR FEEDBACK MANAGEMENT IN ADMIN PANEL
+// FEEDBACK MANAGEMENT FUNCTIONS (Single, Corrected Set)
 // ======================================================
 
 // Function to load pending feedback submissions for admin review
@@ -312,117 +316,19 @@ async function loadPendingFeedback() {
         const querySnapshot = await getDocs(q);
 
         const container = document.getElementById('pendingFeedbackList');
-        if (!container) return; // Exit if the container doesn't exist on this page
-
-        container.innerHTML = ''; // Clear previous content
-
-        if (querySnapshot.empty) {
-            container.innerHTML = '<p style="text-align: center; padding: 2rem;">No pending feedback to review. Great job!</p>';
-            return;
-        }
-
-        // Loop through each pending submission and create a display card
-        querySnapshot.forEach((doc) => {
-            const feedback = doc.data();
-            const item = document.createElement('div');
-            item.className = 'form-card';
-            item.style.marginBottom = '1rem';
-            item.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <h4 style="margin: 0;">${feedback.customerName}</h4>
-                    <div style="color: #f39c12; font-size: 1.2rem;">
-                        ${'★'.repeat(feedback.rating)}${'☆'.repeat(5 - feedback.rating)}
-                    </div>
-                </div>
-                <p><strong>Submitted:</strong> ${new Date(feedback.createdAt).toLocaleString()}</p>
-                <p style="background: #f1f8ff; padding: 1rem; border-radius: 5px; border-left: 3px solid #3498db;">
-                    "${feedback.message}"
-                </p>
-                <div style="display: flex; gap: 10px; margin-top: 1rem;">
-                    <button class="btn-primary" onclick="approveFeedback('${doc.id}')">
-                        <i class="fas fa-check-circle"></i> Approve & Publish
-                    </button>
-                    <button class="btn-secondary" onclick="rejectFeedback('${doc.id}')">
-                        <i class="fas fa-times-circle"></i> Reject
-                    </button>
-                </div>
-            `;
-            container.appendChild(item);
-        });
-
-    } catch (error) {
-        console.error("Error loading pending feedback:", error);
-        const container = document.getElementById('pendingFeedbackList');
-        if (container) {
-            container.innerHTML = '<p style="color: #e74c3c;">Error loading feedback. Check console.</p>';
-        }
-    }
-}
-
-// Function for admin to approve a feedback submission
-async function approveFeedback(feedbackId) {
-    if (!confirm("Approve this testimonial to publish it on the website?")) return;
-
-    try {
-        await updateDoc(doc(db, "feedback_submissions", feedbackId), {
-            status: "approved"
-        });
-        showNotification('Feedback approved and published on the website!');
-        loadPendingFeedback(); // Refresh the list
-    } catch (error) {
-        console.error("Error approving feedback:", error);
-        showNotification('Error approving feedback.', true);
-    }
-}
-
-// Function for admin to reject a feedback submission
-async function rejectFeedback(feedbackId) {
-    if (!confirm("Reject this submission? It will be deleted.")) return;
-
-    try {
-        await deleteDoc(doc(db, "feedback_submissions", feedbackId));
-        showNotification('Feedback submission rejected and deleted.');
-        loadPendingFeedback(); // Refresh the list
-    } catch (error) {
-        console.error("Error rejecting feedback:", error);
-        showNotification('Error rejecting feedback.', true);
-    }
-}
-
-// Function to load ALL feedback for admin viewing (optional)
-async function loadAllFeedback() {
-    // Similar to loadPendingFeedback but fetches all documents
-    const q = query(collection(db, "feedback_submissions"), orderBy("createdAt", "desc"));
-    const querySnapshot = await getDocs(q);
-    // ... (display logic similar to above)
-}
-
-// ============================================
-// CUSTOMER FEEDBACK MANAGEMENT FUNCTIONS
-// ============================================
-
-// Function to load pending feedback for admin review
-async function loadPendingFeedback() {
-    try {
-        const querySnapshot = await getDocs(
-            query(collection(db, "feedback_submissions"), 
-                  where("status", "==", "pending"),
-                  orderBy("createdAt", "desc"))
-        );
-
-        const container = document.getElementById('pendingFeedbackList');
-        if(!container) {
+        if (!container) {
             console.log('Feedback container not found on this page');
             return;
         }
 
-        container.innerHTML = '';
-        
+        container.innerHTML = ''; // Clear previous content
+
         if (querySnapshot.empty) {
             container.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No pending feedback to review.</p>';
             return;
         }
 
+        // Loop through each pending submission and create a display card
         querySnapshot.forEach((doc) => {
             const feedback = doc.data();
             const item = document.createElement('div');
@@ -440,10 +346,10 @@ async function loadPendingFeedback() {
                     "${feedback.message}"
                 </p>
                 <div style="display: flex; gap: 10px;">
-                    <button class="btn-primary" onclick="approveFeedback('${doc.id}')">
+                    <button class="btn-primary" onclick="window.approveFeedback('${doc.id}')">
                         <i class="fas fa-check"></i> Approve
                     </button>
-                    <button class="btn-secondary" onclick="rejectFeedback('${doc.id}')">
+                    <button class="btn-secondary" onclick="window.rejectFeedback('${doc.id}')">
                         <i class="fas fa-times"></i> Reject
                     </button>
                 </div>
@@ -454,41 +360,41 @@ async function loadPendingFeedback() {
     } catch (error) {
         console.error("Error loading pending feedback:", error);
         const container = document.getElementById('pendingFeedbackList');
-        if(container) {
+        if (container) {
             container.innerHTML = '<p style="color: #e74c3c; text-align: center;">Error loading feedback.</p>';
         }
     }
 }
 
-// Function for admin to approve feedback
-async function approveFeedback(feedbackId) {
-    if(!confirm("Approve this feedback to publish it on the website?")) return;
-    
+// Function for admin to approve a feedback submission
+window.approveFeedback = async function(feedbackId) {
+    if (!confirm("Approve this testimonial to publish it on the website?")) return;
+
     try {
         await updateDoc(doc(db, "feedback_submissions", feedbackId), {
             status: "approved"
         });
-        showNotification('Feedback approved and published!');
+        showNotification('Feedback approved and published on the website!');
         loadPendingFeedback(); // Refresh the list
     } catch (error) {
         console.error("Error approving feedback:", error);
         showNotification('Error approving feedback.', true);
     }
-}
+};
 
-// Function for admin to reject/delete feedback
-async function rejectFeedback(feedbackId) {
-    if(!confirm("Reject and delete this feedback submission?")) return;
-    
+// Function for admin to reject a feedback submission
+window.rejectFeedback = async function(feedbackId) {
+    if (!confirm("Reject this submission? It will be deleted.")) return;
+
     try {
         await deleteDoc(doc(db, "feedback_submissions", feedbackId));
-        showNotification('Feedback rejected and deleted.');
+        showNotification('Feedback submission rejected and deleted.');
         loadPendingFeedback(); // Refresh the list
     } catch (error) {
         console.error("Error rejecting feedback:", error);
         showNotification('Error rejecting feedback.', true);
     }
-}
+};
 
 // Function to load approved feedback for homepage (optional - for later)
 async function loadApprovedTestimonials() {
@@ -501,10 +407,6 @@ async function loadApprovedTestimonials() {
     // Return data for homepage display
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
-
-// ============================================
-// END OF FEEDBACK FUNCTIONS
-// ============================================
 
 // ============================================
 // FAQ MANAGEMENT FUNCTIONS
@@ -538,10 +440,10 @@ async function loadFAQsAdmin() {
                 </div>
                 <p style="margin: 0.8rem 0; color: #555;">${faq.answer}</p>
                 <div style="display: flex; gap: 10px; margin-top: 1rem;">
-                    <button class="btn-primary" onclick="editFAQ('${doc.id}', '${faq.question.replace(/'/g, "\\'")}', '${faq.answer.replace(/'/g, "\\'")}', ${faq.order})">
+                    <button class="btn-primary" onclick="window.editFAQ('${doc.id}', '${faq.question.replace(/'/g, "\\'")}', '${faq.answer.replace(/'/g, "\\'")}', ${faq.order})">
                         <i class="fas fa-edit"></i> Edit
                     </button>
-                    <button class="btn-secondary" onclick="deleteFAQ('${doc.id}')">
+                    <button class="btn-secondary" onclick="window.deleteFAQ('${doc.id}')">
                         <i class="fas fa-trash"></i> Delete
                     </button>
                 </div>
@@ -559,7 +461,7 @@ async function loadFAQsAdmin() {
 }
 
 // Add new FAQ
-async function addFAQ() {
+window.addFAQ = async function() {
     const question = document.getElementById('faqQuestion').value.trim();
     const answer = document.getElementById('faqAnswer').value.trim();
     const order = parseInt(document.getElementById('faqOrder').value) || 1;
@@ -588,10 +490,10 @@ async function addFAQ() {
         console.error("Error adding FAQ:", error);
         showNotification('Error adding FAQ.', true);
     }
-}
+};
 
 // Edit existing FAQ
-async function editFAQ(faqId, currentQuestion, currentAnswer, currentOrder) {
+window.editFAQ = async function(faqId, currentQuestion, currentAnswer, currentOrder) {
     const newQuestion = prompt("Edit question:", currentQuestion);
     if (newQuestion === null) return; // User cancelled
     
@@ -615,10 +517,10 @@ async function editFAQ(faqId, currentQuestion, currentAnswer, currentOrder) {
         console.error("Error updating FAQ:", error);
         showNotification('Error updating FAQ.', true);
     }
-}
+};
 
 // Delete FAQ
-async function deleteFAQ(faqId) {
+window.deleteFAQ = async function(faqId) {
     if (!confirm("Are you sure you want to delete this FAQ?")) return;
     
     try {
@@ -630,7 +532,8 @@ async function deleteFAQ(faqId) {
         console.error("Error deleting FAQ:", error);
         showNotification('Error deleting FAQ.', true);
     }
-}
+};
+
 // === INITIALIZE ===
 document.addEventListener('DOMContentLoaded', () => {
     initAdmin();
