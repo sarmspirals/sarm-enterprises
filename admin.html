@@ -167,18 +167,26 @@
     </div>
 
     <!-- Add this new card to your admin.html -->
+<!-- Replace the entire "Customer Feedback Manager" card with this: -->
 <div class="form-card">
     <h3><i class="fas fa-comments"></i> Customer Feedback Manager</h3>
     <p>Review and manage testimonials submitted by customers.</p>
     
     <div class="admin-actions" style="margin-bottom: 1.5rem;">
-        <button class="btn-primary" onclick="loadPendingFeedback()">
+        <button class="btn-primary" id="refreshPendingBtn">
             <i class="fas fa-sync-alt"></i> Refresh Pending List
         </button>
-        <button class="btn-secondary" onclick="loadAllFeedback()">
+        <button class="btn-secondary" id="viewAllBtn">
             <i class="fas fa-list"></i> View All
         </button>
     </div>
+    
+    <h4>Pending Review</h4>
+    <div id="pendingFeedbackList">
+        <!-- Pending feedback cards will be loaded here -->
+        <p><i>Click "Refresh Pending List" to load submissions.</i></p>
+    </div>
+</div>
     
     <h4>Pending Review</h4>
     <div id="pendingFeedbackList">
