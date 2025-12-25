@@ -1,6 +1,6 @@
 // === IMPORTS ===
 import { auth, db, showNotification } from './app.js';
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, getDoc, setDocquery, where, orderBy  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
 // === DOM ELEMENTS ===
 const productForm = document.getElementById('productForm');
