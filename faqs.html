@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQs - SARM ENTERPRISES</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .faq-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .faq-question {
+            padding: 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+        .faq-question:hover {
+            background: #eef2f7;
+        }
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            border-top: 1px solid #f0f0f0;
+        }
+        .faq-item.active .faq-answer {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+        .faq-toggle {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        .faq-item.active .faq-toggle {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img id="logo" src="assets/logo/logo.png" alt="SARM ENTERPRISES Logo" class="logo-img" onerror="this.src='https://images.unsplash.com/photo-1567446537710-0c5ff5a6ac32?ixlib=rb-4.0.3'">
+                <div>
+                    <h1>SARM ENTERPRISES</h1>
+                    <p class="tagline">Quality Pages for Quality Thoughts</p>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="index.html#products"><i class="fas fa-book"></i> Products</a>
+                <a href="index.html#contact"><i class="fas fa-phone"></i> Contact</a>
+                <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+                <a href="feedback.html"><i class="fas fa-comment-dots"></i> Feedback</a>
+                <a href="faqs.html" class="active"><i class="fas fa-question-circle"></i> FAQs</a>
+                <a href="admin-login.html" class="btn-login"><i class="fas fa-user-shield"></i> Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top: 100px;">
+        <section class="form-card">
+            <h2><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+            <p>Find quick answers to common questions about our products, delivery, and services.</p>
+            
+            <div id="faqsContainer">
+                <!-- FAQs will be loaded here -->
+                <p style="text-align: center; padding: 3rem;"><i>Loading FAQs...</i></p>
+            </div>
+            
+            <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee;">
+                <h3>Still have questions?</h3>
+                <p>Can't find what you're looking for? Feel free to <a href="index.html#contact">contact us directly</a> via WhatsApp, phone, or email. We're here to help!</p>
+                <a href="index.html#contact" class="btn-primary" style="margin-top: 1rem;">
+                    <i class="fas fa-headset"></i> Contact Support
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-book"></i> SARM ENTERPRISES</h3>
+                    <p>KAWOOSA KHALISA, NARBAL, BADGAM</p>
+                    <p>Pincode: 193411 | Phone: 7006927825</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="index.html">Home</a>
+                    <a href="faqs.html">FAQs</a>
+                    <a href="feedback.html">Feedback</a>
+                    <a href="about.html">About Us</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 SARM ENTERPRISES. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- FAQ System JavaScript -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+        // Your Firebase config (same as app.js)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZe6bywYSgnMFZsef1xgfPFQBkw4y7tco",
+            authDomain: "sarm-enterprises.firebaseapp.com",
+            projectId: "sarm-enterprises",
+            storageBucket: "sarm-enterprises.firebasestorage.app",
+            messagingSenderId: "790231205096",
+            appId: "1:790231205096:web:656c5fc47c6a675e1ef55d",
+            measurementId: "G-5M1ZM089KH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Load and display FAQs
+        async function loadFAQs() {
+            try {
+                const q = query(collection(db, "faqs"), orderBy("order", "asc"));
+                const querySnapshot = await getDocs(q);
+                
+                const container = document.getElementById('faqsContainer');
+                container.innerHTML = '';
+                
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p style="text-align: center; padding: 3rem; color: #666;">No FAQs have been added yet. Please check back later.</p>';
+                    return;
+                }
+                
+                querySnapshot.forEach((doc) => {
+                    const faq = doc.data();
+                    const faqItem = document.createElement('div');
+                    faqItem.className = 'faq-item';
+                    faqItem.innerHTML = `
+                        <div class="faq-question">
+                            <span>${faq.question}</span>
+                            <i class="fas fa-chevron-down faq-toggle"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>${faq.answer}</p>
+                        </div>
+                    `;
+                    
+                    // Add click toggle functionality
+                    faqItem.querySelector('.faq-question').addEventListener('click', () => {
+                        faqItem.classList.toggle('active');
+                    });
+                    
+                    container.appendChild(faqItem);
+                });
+                
+            } catch (error) {
+                console.error("Error loading FAQs:", error);
+                document.getElementById('faqsContainer').innerHTML = 
+                    '<p style="color: #e74c3c; text-align: center;">Error loading FAQs. Please try again later.</p>';
+            }
+        }
+
+        // Load FAQs when page loads
+        document.addEventListener('DOMContentLoaded', loadFAQs);
+    </script>
+</body>
+</html>
