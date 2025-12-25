@@ -296,6 +296,106 @@ function updateStockChart(productsData) {
     });
 }
 
+// ======================================================
+// NEW FUNCTIONS FOR FEEDBACK MANAGEMENT IN ADMIN PANEL
+// ======================================================
+
+// Function to load pending feedback submissions for admin review
+async function loadPendingFeedback() {
+    try {
+        // Query the 'feedback_submissions' collection for items with status "pending"
+        const q = query(
+            collection(db, "feedback_submissions"),
+            where("status", "==", "pending"),
+            orderBy("createdAt", "desc") // Show newest first
+        );
+        const querySnapshot = await getDocs(q);
+
+        const container = document.getElementById('pendingFeedbackList');
+        if (!container) return; // Exit if the container doesn't exist on this page
+
+        container.innerHTML = ''; // Clear previous content
+
+        if (querySnapshot.empty) {
+            container.innerHTML = '<p style="text-align: center; padding: 2rem;">No pending feedback to review. Great job!</p>';
+            return;
+        }
+
+        // Loop through each pending submission and create a display card
+        querySnapshot.forEach((doc) => {
+            const feedback = doc.data();
+            const item = document.createElement('div');
+            item.className = 'form-card';
+            item.style.marginBottom = '1rem';
+            item.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <h4 style="margin: 0;">${feedback.customerName}</h4>
+                    <div style="color: #f39c12; font-size: 1.2rem;">
+                        ${'★'.repeat(feedback.rating)}${'☆'.repeat(5 - feedback.rating)}
+                    </div>
+                </div>
+                <p><strong>Submitted:</strong> ${new Date(feedback.createdAt).toLocaleString()}</p>
+                <p style="background: #f1f8ff; padding: 1rem; border-radius: 5px; border-left: 3px solid #3498db;">
+                    "${feedback.message}"
+                </p>
+                <div style="display: flex; gap: 10px; margin-top: 1rem;">
+                    <button class="btn-primary" onclick="approveFeedback('${doc.id}')">
+                        <i class="fas fa-check-circle"></i> Approve & Publish
+                    </button>
+                    <button class="btn-secondary" onclick="rejectFeedback('${doc.id}')">
+                        <i class="fas fa-times-circle"></i> Reject
+                    </button>
+                </div>
+            `;
+            container.appendChild(item);
+        });
+
+    } catch (error) {
+        console.error("Error loading pending feedback:", error);
+        const container = document.getElementById('pendingFeedbackList');
+        if (container) {
+            container.innerHTML = '<p style="color: #e74c3c;">Error loading feedback. Check console.</p>';
+        }
+    }
+}
+
+// Function for admin to approve a feedback submission
+async function approveFeedback(feedbackId) {
+    if (!confirm("Approve this testimonial to publish it on the website?")) return;
+
+    try {
+        await updateDoc(doc(db, "feedback_submissions", feedbackId), {
+            status: "approved"
+        });
+        showNotification('Feedback approved and published on the website!');
+        loadPendingFeedback(); // Refresh the list
+    } catch (error) {
+        console.error("Error approving feedback:", error);
+        showNotification('Error approving feedback.', true);
+    }
+}
+
+// Function for admin to reject a feedback submission
+async function rejectFeedback(feedbackId) {
+    if (!confirm("Reject this submission? It will be deleted.")) return;
+
+    try {
+        await deleteDoc(doc(db, "feedback_submissions", feedbackId));
+        showNotification('Feedback submission rejected and deleted.');
+        loadPendingFeedback(); // Refresh the list
+    } catch (error) {
+        console.error("Error rejecting feedback:", error);
+        showNotification('Error rejecting feedback.', true);
+    }
+}
+
+// Function to load ALL feedback for admin viewing (optional)
+async function loadAllFeedback() {
+    // Similar to loadPendingFeedback but fetches all documents
+    const q = query(collection(db, "feedback_submissions"), orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+    // ... (display logic similar to above)
+}
 // === INITIALIZE ===
 document.addEventListener('DOMContentLoaded', () => {
     initAdmin();
