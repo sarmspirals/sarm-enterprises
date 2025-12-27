@@ -1,7 +1,6 @@
 // === IMPORTS ===
 import { auth, db, showNotification } from './app.js';
-// Fixed import: 'setDocquery' was invalid; replaced with correct 'setDoc' and 'query'
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, getDoc, setDoc, query, where, orderBy  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
 // === DOM ELEMENTS ===
 const productForm = document.getElementById('productForm');
@@ -10,8 +9,7 @@ const logoutBtn = document.getElementById('logoutBtn');
 const submitBtn = document.getElementById('submitBtn');
 const cancelEdit = document.getElementById('cancelEdit');
 const editProductId = document.getElementById('editProductId');
-const imagePreview = document.getElementById('imagePreview');
-const imageInfo = document.getElementById('imageInfo');
+// Note: 'imagePreview' and 'imageInfo' are still used but referenced by ID
 
 // Chart variable
 let stockChart;
@@ -32,9 +30,8 @@ async function setupAdmin() {
     logoutBtn.addEventListener('click', handleLogout);
     loadProducts();
     loadQuotes();
-    // --- FIX: Initialize feedback and FAQ loading ---
-    loadPendingFeedback(); // Load pending feedback on admin page
-    loadFAQsAdmin();       // Load FAQs for management
+    loadPendingFeedback();
+    loadFAQsAdmin();
 
     if (productForm) {
         productForm.addEventListener('submit', handleProductSubmit);
@@ -46,10 +43,14 @@ async function setupAdmin() {
     if (addQuoteBtn) {
         addQuoteBtn.addEventListener('click', addQuote);
     }
-    // Show static path info instead of upload UI
-    if (imageInfo) {
-        imageInfo.innerHTML = '<div><strong>Local Image</strong><br><small>Image will be selected automatically by page count (e.g., 200.jpg for 200 pages).</small></div>';
-    }
+    
+    // Add event listeners for image preview on the 4 text inputs
+    ['productImage1', 'productImage2', 'productImage3', 'productImage4'].forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.addEventListener('input', previewImagesFromInputs);
+        }
+    });
 }
 
 async function handleLogout() {
@@ -62,37 +63,124 @@ async function handleLogout() {
     }
 }
 
-// === CORE PRODUCT FUNCTIONS (MODIFIED FOR LOCAL ASSETS) ===
+// === NEW: Function to preview images from text inputs ===
+function previewImagesFromInputs() {
+    const previewContainer = document.getElementById('multipleImagePreview');
+    const imageInfo = document.getElementById('imageInfo');
+    if (!previewContainer || !imageInfo) return;
+    
+    previewContainer.innerHTML = '';
+    
+    // Collect filenames from all 4 inputs
+    const imageFilenames = [];
+    for (let i = 1; i <= 4; i++) {
+        const input = document.getElementById(`productImage${i}`);
+        if (input && input.value.trim()) {
+            imageFilenames.push(input.value.trim());
+        }
+    }
+    
+    // Show previews
+    if (imageFilenames.length > 0) {
+        imageInfo.innerHTML = `<strong>✅ ${imageFilenames.length} image(s) configured</strong><br>
+                               <small>Image 1 will be the main thumbnail. Make sure files exist in <code>assets/products/</code>.</small>`;
+        
+        imageFilenames.forEach((filename, index) => {
+            const imgContainer = document.createElement('div');
+            imgContainer.style.cssText = `
+                position: relative;
+                width: 100px;
+                margin: 5px;
+            `;
+            
+            // Create image element
+            const img = document.createElement('img');
+            // Construct the full local path for preview
+            img.src = `assets/products/${filename}`;
+            img.alt = `Preview ${index + 1}`;
+            img.style.cssText = `
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+                border-radius: 5px;
+                border: 2px solid ${index === 0 ? '#3498db' : '#ddd'};
+            `;
+            // Handle missing image files gracefully
+            img.onerror = function() {
+                this.style.borderColor = '#e74c3c';
+                this.style.opacity = '0.7';
+            };
+            
+            // Add caption
+            const caption = document.createElement('div');
+            caption.textContent = `Img ${index + 1}`;
+            caption.style.cssText = `
+                font-size: 0.7rem;
+                text-align: center;
+                margin-top: 5px;
+                color: #666;
+            `;
+            
+            imgContainer.appendChild(img);
+            imgContainer.appendChild(caption);
+            previewContainer.appendChild(imgContainer);
+        });
+    } else {
+        // No filenames entered yet
+        imageInfo.innerHTML = `<strong>📝 Image Guidelines:</strong><br>
+                               1. Upload images to <code>assets/products/</code> folder first.<br>
+                               2. Enter exact filenames above.<br>
+                               3. Image 1 is the main thumbnail.`;
+    }
+}
+
+// === UPDATED: Main product submission function ===
 async function handleProductSubmit(e) {
     e.preventDefault();
     
-    // 1. DETERMINE LOCAL IMAGE PATH BASED ON PAGE COUNT
-    const pages = parseInt(document.getElementById('productPages').value);
-    let imagePath = 'assets/products/default-notebook.jpg';
+    // 1. Collect images from the 4 text inputs
+    const imageFilenames = [];
+    for (let i = 1; i <= 4; i++) {
+        const input = document.getElementById(`productImage${i}`);
+        if (input && input.value.trim()) {
+            imageFilenames.push(input.value.trim());
+        }
+    }
     
-    if (pages === 200) imagePath = 'assets/products/200.jpg';
-    else if (pages === 250) imagePath = 'assets/products/250.jpg';
-    else if (pages === 300) imagePath = 'assets/products/300.jpg';
-    else if (pages === 400) imagePath = 'assets/products/400.jpg';
-    else if (pages === 500) imagePath = 'assets/products/500.jpg';
+    // Validate at least one image
+    if (imageFilenames.length === 0) {
+        showNotification('Please enter at least one image filename (Image 1 is required).', true);
+        return;
+    }
     
-    // 2. BUILD PRODUCT DATA WITH LOCAL PATH
+    // 2. Build array of full local paths
+    const imagePaths = imageFilenames.map(filename => `assets/products/${filename}`);
+    
+    // 3. Get pages value - can be empty for stationery
+    const pagesInput = document.getElementById('productPages');
+    const pagesValue = pagesInput.value.trim();
+    
+    // 4. Create the product data object
     const productData = {
         name: document.getElementById('productName').value,
-        pages: pages,
+        // Store pages as a number if provided, otherwise as `null`
+        pages: pagesValue ? parseInt(pagesValue) : null,
         price: parseFloat(document.getElementById('productPrice').value),
         stock: parseInt(document.getElementById('productStock').value),
-        imagePath: imagePath, // <-- Using local path, NOT a URL
         description: document.getElementById('productDescription').value || '',
+        // Store the array of image paths
+        images: imagePaths,
         updatedAt: new Date().toISOString()
     };
     
-    // 3. SAVE TO FIRESTORE
+    // 5. Save to Firestore
     try {
         if (editProductId.value) {
+            // Update existing product
             await updateDoc(doc(db, "products", editProductId.value), productData);
             showNotification('Product updated successfully!');
         } else {
+            // Add new product
             productData.createdAt = new Date().toISOString();
             await addDoc(collection(db, "products"), productData);
             showNotification('Product added successfully!');
@@ -104,13 +192,14 @@ async function handleProductSubmit(e) {
     }
 }
 
+// === UPDATED: Product display function for admin panel ===
 function createProductListItem(product, id) {
     const productItem = document.createElement('div');
     productItem.className = 'product-card';
     
+    // Stock status logic
     let stockClass = 'stock-in';
     let stockText = 'In Stock';
-    
     if (product.stock <= 0) {
         stockClass = 'stock-out';
         stockText = 'Out of Stock';
@@ -119,17 +208,59 @@ function createProductListItem(product, id) {
         stockText = 'Low Stock';
     }
     
-    // USING imagePath FROM PRODUCT DATA
+    // --- IMAGE HANDLING: Supports old and new format ---
+    let productImages = [];
+    let imageCount = 0;
+    let mainImageUrl = 'assets/products/default-notebook.jpg';
+    
+    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+        // NEW FORMAT: Product has an 'images' array
+        productImages = product.images;
+        imageCount = productImages.length;
+        mainImageUrl = productImages[0];
+    } else if (product.imagePath) {
+        // OLD FORMAT (Backward Compatibility): Product has single 'imagePath'
+        productImages = [product.imagePath];
+        imageCount = 1;
+        mainImageUrl = product.imagePath;
+    } else {
+        // No image defined, use default
+        productImages = ['assets/products/default-notebook.jpg'];
+        imageCount = 1;
+    }
+    
+    // --- PAGES DISPLAY: Different label for notebooks vs stationery ---
+    let pagesOrTypeHtml = '';
+    if (product.pages) {
+        pagesOrTypeHtml = `<p><i class="fas fa-file-alt"></i> ${product.pages} Pages</p>`;
+    } else {
+        // Product has no pages (like a pen or umbrella)
+        pagesOrTypeHtml = `<p><i class="fas fa-tag"></i> Stationery Item</p>`;
+    }
+    
     productItem.innerHTML = `
-        <img src="${product.imagePath || 'assets/products/default-notebook.jpg'}" 
-             alt="${product.name}" 
-             class="product-image">
+        <div style="position: relative;">
+            <img src="${mainImageUrl}" 
+                 alt="${product.name}" 
+                 class="product-image"
+                 style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px;"
+                 onerror="this.src='assets/products/default-notebook.jpg'">
+            
+            ${imageCount > 1 ? `
+                <div style="position: absolute; top: 10px; right: 10px; 
+                            background: rgba(0,0,0,0.7); color: white; 
+                            padding: 3px 8px; border-radius: 10px; font-size: 0.8rem;">
+                    <i class="fas fa-images"></i> ${imageCount}
+                </div>
+            ` : ''}
+        </div>
         <div class="product-info">
             <h3 class="product-title">${product.name}</h3>
             <div class="product-price">₹${product.price}</div>
             <span class="product-stock ${stockClass}">
                 <i class="fas fa-box"></i> ${stockText} (${product.stock})
             </span>
+            ${pagesOrTypeHtml}
             <p>${product.description || 'No description'}</p>
             <div class="admin-actions" style="display: flex; gap: 10px; margin-top: 10px;">
                 <button class="btn-primary edit-btn" data-id="${id}">
@@ -146,30 +277,56 @@ function createProductListItem(product, id) {
         productsList.appendChild(productItem);
     }
     
-    // Add event listeners
+    // Add event listeners for edit and delete
     productItem.querySelector('.edit-btn')?.addEventListener('click', () => editProduct(id, product));
     productItem.querySelector('.delete-btn')?.addEventListener('click', () => deleteProduct(id, product.name));
 }
 
+// === UPDATED: Edit product function ===
 function editProduct(id, product) {
+    // Fill basic fields
     document.getElementById('productName').value = product.name;
-    document.getElementById('productPages').value = product.pages;
+    document.getElementById('productPages').value = product.pages || '';
     document.getElementById('productPrice').value = product.price;
     document.getElementById('productStock').value = product.stock;
     document.getElementById('productDescription').value = product.description || '';
     editProductId.value = id;
     
-    // Show local path preview
-    if (imagePreview) {
-        imagePreview.src = product.imagePath || 'assets/products/default-notebook.jpg';
-    }
-    if (imageInfo) {
-        imageInfo.innerHTML = `<div><strong>Local Image: ${product.imagePath?.split('/').pop() || 'default'}</strong></div>`;
+    // --- Populate the 4 image text inputs ---
+    // First, clear all 4 inputs
+    for (let i = 1; i <= 4; i++) {
+        const input = document.getElementById(`productImage${i}`);
+        if (input) input.value = '';
     }
     
+    // Determine which images to load (support old and new format)
+    let imagesToLoad = [];
+    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+        imagesToLoad = product.images;
+    } else if (product.imagePath) {
+        imagesToLoad = [product.imagePath];
+    }
+    
+    // Fill the inputs with just the filename (strip the path)
+    imagesToLoad.forEach((fullPath, index) => {
+        if (index < 4) { // Only fill first 4 inputs
+            const input = document.getElementById(`productImage${index + 1}`);
+            if (input) {
+                // Extract "filename.jpg" from "assets/products/filename.jpg"
+                const filename = fullPath.replace('assets/products/', '');
+                input.value = filename;
+            }
+        }
+    });
+    
+    // Trigger the preview to update
+    previewImagesFromInputs();
+    
+    // Update UI for edit mode
     if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Product';
     if (cancelEdit) cancelEdit.style.display = 'inline-block';
     
+    // Scroll to the form
     const formCard = document.querySelector('.form-card');
     if (formCard) formCard.scrollIntoView({ behavior: 'smooth' });
 }
@@ -186,18 +343,28 @@ async function deleteProduct(id, productName) {
     }
 }
 
+// === UPDATED: Reset form function ===
 function resetForm() {
     if (productForm) productForm.reset();
     editProductId.value = '';
-    if (imagePreview) imagePreview.src = '';
+    
+    // Clear image previews and reset info text
+    const previewContainer = document.getElementById('multipleImagePreview');
+    const imageInfo = document.getElementById('imageInfo');
+    
+    if (previewContainer) previewContainer.innerHTML = '';
     if (imageInfo) {
-        imageInfo.innerHTML = '<div><strong>Local Image</strong><br><small>Image auto-selected by page count.</small></div>';
+        imageInfo.innerHTML = `<strong>📝 Image Guidelines:</strong><br>
+                               1. Upload images to <code>assets/products/</code> folder first.<br>
+                               2. Enter exact filenames above.<br>
+                               3. Image 1 is the main thumbnail.`;
     }
+    
     if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-save"></i> Add Product';
     if (cancelEdit) cancelEdit.style.display = 'none';
 }
 
-// === OTHER FUNCTIONS (UNCHANGED) ===
+// === OTHER ADMIN FUNCTIONS (Mostly unchanged) ===
 function loadProducts() {
     onSnapshot(collection(db, "products"), (snapshot) => {
         if (productsList) productsList.innerHTML = '';
@@ -301,17 +468,15 @@ function updateStockChart(productsData) {
 }
 
 // ======================================================
-// FEEDBACK MANAGEMENT FUNCTIONS (Single, Corrected Set)
+// FEEDBACK MANAGEMENT FUNCTIONS
 // ======================================================
 
-// Function to load pending feedback submissions for admin review
 async function loadPendingFeedback() {
     try {
-        // Query the 'feedback_submissions' collection for items with status "pending"
         const q = query(
             collection(db, "feedback_submissions"),
             where("status", "==", "pending"),
-            orderBy("createdAt", "desc") // Show newest first
+            orderBy("createdAt", "desc")
         );
         const querySnapshot = await getDocs(q);
 
@@ -320,15 +485,11 @@ async function loadPendingFeedback() {
             console.log('Feedback container not found on this page');
             return;
         }
-
-        container.innerHTML = ''; // Clear previous content
-
+        container.innerHTML = '';
         if (querySnapshot.empty) {
             container.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No pending feedback to review.</p>';
             return;
         }
-
-        // Loop through each pending submission and create a display card
         querySnapshot.forEach((doc) => {
             const feedback = doc.data();
             const item = document.createElement('div');
@@ -356,7 +517,6 @@ async function loadPendingFeedback() {
             `;
             container.appendChild(item);
         });
-
     } catch (error) {
         console.error("Error loading pending feedback:", error);
         const container = document.getElementById('pendingFeedbackList');
@@ -366,68 +526,45 @@ async function loadPendingFeedback() {
     }
 }
 
-// Function for admin to approve a feedback submission
 window.approveFeedback = async function(feedbackId) {
     if (!confirm("Approve this testimonial to publish it on the website?")) return;
-
     try {
-        await updateDoc(doc(db, "feedback_submissions", feedbackId), {
-            status: "approved"
-        });
+        await updateDoc(doc(db, "feedback_submissions", feedbackId), { status: "approved" });
         showNotification('Feedback approved and published on the website!');
-        loadPendingFeedback(); // Refresh the list
+        loadPendingFeedback();
     } catch (error) {
         console.error("Error approving feedback:", error);
         showNotification('Error approving feedback.', true);
     }
 };
 
-// Function for admin to reject a feedback submission
 window.rejectFeedback = async function(feedbackId) {
     if (!confirm("Reject this submission? It will be deleted.")) return;
-
     try {
         await deleteDoc(doc(db, "feedback_submissions", feedbackId));
         showNotification('Feedback submission rejected and deleted.');
-        loadPendingFeedback(); // Refresh the list
+        loadPendingFeedback();
     } catch (error) {
         console.error("Error rejecting feedback:", error);
         showNotification('Error rejecting feedback.', true);
     }
 };
 
-// Function to load approved feedback for homepage (optional - for later)
-async function loadApprovedTestimonials() {
-    // You'll use this function on your homepage later
-    const querySnapshot = await getDocs(
-        query(collection(db, "feedback_submissions"), 
-              where("status", "==", "approved"),
-              orderBy("createdAt", "desc"))
-    );
-    // Return data for homepage display
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-}
-
 // ============================================
 // FAQ MANAGEMENT FUNCTIONS
 // ============================================
 
-// Load FAQs for admin panel
 async function loadFAQsAdmin() {
     try {
         const q = query(collection(db, "faqs"), orderBy("order", "asc"));
         const querySnapshot = await getDocs(q);
-        
         const container = document.getElementById('faqsListAdmin');
         if (!container) return;
-        
         container.innerHTML = '';
-        
         if (querySnapshot.empty) {
             container.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No FAQs added yet.</p>';
             return;
         }
-        
         querySnapshot.forEach((doc) => {
             const faq = doc.data();
             const item = document.createElement('div');
@@ -450,7 +587,6 @@ async function loadFAQsAdmin() {
             `;
             container.appendChild(item);
         });
-        
     } catch (error) {
         console.error("Error loading FAQs for admin:", error);
         const container = document.getElementById('faqsListAdmin');
@@ -460,17 +596,14 @@ async function loadFAQsAdmin() {
     }
 }
 
-// Add new FAQ
 window.addFAQ = async function() {
     const question = document.getElementById('faqQuestion').value.trim();
     const answer = document.getElementById('faqAnswer').value.trim();
     const order = parseInt(document.getElementById('faqOrder').value) || 1;
-    
     if (!question || !answer) {
         showNotification('Please enter both question and answer.', true);
         return;
     }
-    
     try {
         await addDoc(collection(db, "faqs"), {
             question: question,
@@ -478,56 +611,44 @@ window.addFAQ = async function() {
             order: order,
             createdAt: new Date().toISOString()
         });
-        
         showNotification('FAQ added successfully!');
         document.getElementById('faqQuestion').value = '';
         document.getElementById('faqAnswer').value = '';
         document.getElementById('faqOrder').value = '';
-        
-        loadFAQsAdmin(); // Refresh the list
-        
+        loadFAQsAdmin();
     } catch (error) {
         console.error("Error adding FAQ:", error);
         showNotification('Error adding FAQ.', true);
     }
 };
 
-// Edit existing FAQ
 window.editFAQ = async function(faqId, currentQuestion, currentAnswer, currentOrder) {
     const newQuestion = prompt("Edit question:", currentQuestion);
-    if (newQuestion === null) return; // User cancelled
-    
+    if (newQuestion === null) return;
     const newAnswer = prompt("Edit answer:", currentAnswer);
     if (newAnswer === null) return;
-    
     const newOrder = prompt("Edit display order (lower numbers show first):", currentOrder);
     if (newOrder === null) return;
-    
     try {
         await updateDoc(doc(db, "faqs", faqId), {
             question: newQuestion,
             answer: newAnswer,
             order: parseInt(newOrder) || 1
         });
-        
         showNotification('FAQ updated successfully!');
-        loadFAQsAdmin(); // Refresh the list
-        
+        loadFAQsAdmin();
     } catch (error) {
         console.error("Error updating FAQ:", error);
         showNotification('Error updating FAQ.', true);
     }
 };
 
-// Delete FAQ
 window.deleteFAQ = async function(faqId) {
     if (!confirm("Are you sure you want to delete this FAQ?")) return;
-    
     try {
         await deleteDoc(doc(db, "faqs", faqId));
         showNotification('FAQ deleted successfully!');
-        loadFAQsAdmin(); // Refresh the list
-        
+        loadFAQsAdmin();
     } catch (error) {
         console.error("Error deleting FAQ:", error);
         showNotification('Error deleting FAQ.', true);
