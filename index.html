@@ -8,19 +8,13 @@
     <meta name="keywords" content="notebooks, stationery, Kashmir, SARM ENTERPRISES, notebooks shop, writing materials">
     <meta name="author" content="SARM ENTERPRISES">
     
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="SARM ENTERPRISES - Premium Notebooks">
-    <meta property="og:description" content="Quality Pages for Quality Thoughts">
-    <meta property="og:type" content="website">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     
-    <!-- Multi-Image Product Gallery Styles -->
     <style>
-        /* ⭐ Multi-Image Product Gallery Styles */
+        /* Multi-Image Gallery Styles */
         .product-image-container {
             position: relative;
             width: 100%;
@@ -105,33 +99,6 @@
             z-index: 2;
         }
         
-        /* Product Details */
-        .product-pages {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #666;
-            margin: 8px 0;
-            font-size: 0.95rem;
-        }
-        
-        .product-pages i {
-            color: #3498db;
-        }
-        
-        .stationery-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #666;
-            margin: 8px 0;
-            font-size: 0.95rem;
-        }
-        
-        .stationery-item i {
-            color: #e74c3c;
-        }
-        
         /* Cart Styles */
         .cart-count {
             background: #e74c3c;
@@ -155,7 +122,6 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
             z-index: 1000;
-            overflow-y: auto;
         }
         
         .cart-content {
@@ -176,11 +142,7 @@
             border-bottom: 1px solid #eee;
         }
         
-        .cart-item-details {
-            flex: 1;
-        }
-        
-        .cart-item-controls {
+        .quantity-controls {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -193,20 +155,9 @@
             height: 30px;
             border-radius: 50%;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         
-        .quantity-input {
-            width: 40px;
-            text-align: center;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 5px;
-        }
-        
-        .remove-item {
+        .remove-btn {
             background: #ff6b6b;
             color: white;
             border: none;
@@ -215,22 +166,15 @@
             cursor: pointer;
         }
         
-        .cart-total {
-            text-align: right;
-            margin-top: 20px;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-        
-        /* Quantity Selector in Product Card */
-        .quantity-selector {
+        /* Quantity Selector in Products */
+        .product-quantity {
             display: flex;
             align-items: center;
             gap: 10px;
             margin: 15px 0;
         }
         
-        .quantity-selector button {
+        .qty-btn {
             width: 35px;
             height: 35px;
             border-radius: 50%;
@@ -240,185 +184,34 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
         }
         
-        .quantity-selector button:hover {
-            background: #3498db;
-            color: white;
-        }
-        
-        .quantity-selector input {
+        .qty-input {
             width: 50px;
             text-align: center;
             border: 1px solid #ddd;
             border-radius: 4px;
             padding: 8px;
-            font-size: 1rem;
         }
         
-        /* Testimonials */
-        .testimonials {
-            background: #f8f9fa;
-            padding: 80px 0;
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            z-index: 9999;
+            display: none;
         }
         
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .testimonial-card {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        
-        .testimonial-card i.fa-quote-left {
-            color: #3498db;
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
-        
-        .testimonial-card p {
-            font-style: italic;
-            line-height: 1.6;
-            color: #555;
-            margin-bottom: 20px;
-        }
-        
-        .customer {
-            font-weight: bold;
-            color: #333;
-            text-align: right;
-        }
-        
-        /* Search and Filter */
-        .search-filter-container {
-            display: flex;
-            gap: 20px;
-            margin: 30px 0;
-            flex-wrap: wrap;
-        }
-        
-        .search-box {
-            flex: 1;
-            min-width: 250px;
-            position: relative;
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 12px 20px;
-            padding-right: 50px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            font-size: 1rem;
-        }
-        
-        .search-box button {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #666;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-        
-        .filter-dropdown {
-            min-width: 200px;
-        }
-        
-        .filter-dropdown select {
-            width: 100%;
-            padding: 12px 20px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            font-size: 1rem;
-            background: white;
-            cursor: pointer;
-        }
-        
-        /* Mobile Optimization */
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .product-image-container {
                 height: 200px;
             }
-            
-            .cart-content {
-                margin: 20px auto;
-                width: 95%;
-                padding: 15px;
-            }
-            
-            .cart-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            
-            .cart-item-controls {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .search-filter-container {
-                flex-direction: column;
-            }
-        }
-        
-        /* About Section */
-        .about-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .about-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        
-        .about-content h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-        
-        .about-content p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        
-        .stat-label {
-            font-size: 1.1rem;
-            opacity: 0.9;
         }
     </style>
 </head>
@@ -435,8 +228,6 @@
             <div class="nav-menu">
                 <a href="#home"><i class="fas fa-home"></i> Home</a>
                 <a href="#products"><i class="fas fa-book"></i> Products</a>
-                <a href="#about"><i class="fas fa-info-circle"></i> About</a>
-                <a href="#testimonials"><i class="fas fa-star"></i> Reviews</a>
                 <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
                 <a href="faqs.html"><i class="fas fa-question-circle"></i> FAQs</a>
                 <!-- Cart Link -->
@@ -444,7 +235,7 @@
                     <i class="fas fa-shopping-cart"></i> Cart 
                     <span id="cartCount" class="cart-count">0</span>
                 </a>
-                <!-- Admin link hidden by default, shown only to logged in users -->
+                <!-- Admin link hidden by default -->
                 <a href="admin.html" id="adminLink" style="display: none;">
                     <i class="fas fa-user-shield"></i> Admin
                 </a>
@@ -455,12 +246,8 @@
         </div>
     </nav>
 
-    <!-- Add login button only for admin access -->
-    <div id="adminAccess" style="display: none; text-align: center; padding: 10px;">
-        <button onclick="window.location.href='admin.html'" class="btn-primary">
-            <i class="fas fa-user-shield"></i> Admin Panel
-        </button>
-    </div>
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
@@ -481,122 +268,59 @@
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="about-section">
-        <div class="container">
-            <div class="about-content">
-                <h2>About SARM ENTERPRISES</h2>
-                <p>Established in 2024, SARM ENTERPRISES has been serving the Kashmir region with premium quality notebooks and stationery. We believe in providing the best writing experience for students, professionals, and creative minds alike.</p>
-                <p>Our commitment to quality, customer satisfaction, and timely delivery has made us the trusted choice for thousands of customers across the valley.</p>
-                
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-number">14+</div>
-                        <div class="stat-label">months Experience</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">100+</div>
-                        <div class="stat-label">Happy Customers</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">5+</div>
-                        <div class="stat-label">Products</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">24/7</div>
-                        <div class="stat-label">Support</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Products Section -->
     <section id="products" class="products-section">
         <div class="container">
             <h2 class="section-title">Our Premium Notebook Collection</h2>
             <p class="section-subtitle">Choose from our wide range of spiral notebooks for all your writing needs</p>
             
-            <!-- Search and Filter -->
-            <div class="search-filter-container">
-                <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="Search products...">
-                    <button id="searchButton"><i class="fas fa-search"></i></button>
-                </div>
-                <div class="filter-dropdown">
-                    <select id="sortSelect">
-                        <option value="name">Sort by Name</option>
-                        <option value="price-low">Price: Low to High</option>
-                        <option value="price-high">Price: High to Low</option>
-                        <option value="stock">Availability</option>
-                    </select>
-                </div>
-            </div>
-            
-            <!-- ⭐ UPDATED: Products Grid with Multi-Image Support -->
+            <!-- Products Grid -->
             <div class="products-grid" id="productsContainer">
-                <!-- Products will be loaded from Firestore with multi-image support -->
+                <!-- Products will be loaded here -->
             </div>
             
-            <!-- ⭐ Product Template (Hidden) -->
+            <!-- Product Template -->
             <template id="productTemplate">
-                <div class="product-card">
+                <div class="product-card" data-product-id="">
                     <div class="product-image-container">
                         <img class="product-main-image" src="" alt="Product Image">
-                        
-                        <!-- Image count badge (shown only if multiple images) -->
-                        <div class="image-count-badge" style="display: none;">
-                            <i class="fas fa-images"></i> <span class="image-count">1</span>
+                        <div class="image-count-badge">
+                            <i class="fas fa-images"></i> <span class="image-count">0</span>
                         </div>
-                        
-                        <!-- Navigation dots -->
                         <div class="product-image-dots"></div>
-                        
-                        <!-- Navigation arrows -->
-                        <button class="product-image-nav nav-prev" style="display: none;">
+                        <button class="product-image-nav nav-prev">
                             <i class="fas fa-chevron-left"></i>
                         </button>
-                        <button class="product-image-nav nav-next" style="display: none;">
+                        <button class="product-image-nav nav-next">
                             <i class="fas fa-chevron-right"></i>
                         </button>
                     </div>
                     
                     <div class="product-info">
                         <h3 class="product-name"></h3>
-                        
-                        <!-- ⭐ Pages info OR Stationery label -->
-                        <div class="product-pages" style="display: none;">
-                            <i class="fas fa-file-alt"></i>
-                            <span class="pages-count"></span> Pages
-                        </div>
-                        <div class="stationery-item" style="display: none;">
-                            <i class="fas fa-tag"></i>
-                            <span>Stationery Item</span>
-                        </div>
-                        
                         <div class="product-price">₹<span class="price-amount"></span></div>
-                        
-                        <div class="product-stock-container">
-                            <span class="product-stock stock-in">
-                                <i class="fas fa-box"></i> <span class="stock-text">In Stock</span>
-                                (<span class="stock-quantity"></span>)
-                            </span>
+                        <div class="product-stock">
+                            <i class="fas fa-box"></i> <span class="stock-text"></span>
+                            (<span class="stock-quantity"></span>)
                         </div>
-                        
                         <p class="product-description"></p>
                         
                         <!-- Quantity Selector -->
-                        <div class="quantity-selector">
-                            <button class="qty-minus"><i class="fas fa-minus"></i></button>
+                        <div class="product-quantity">
+                            <button class="qty-btn minus-btn">
+                                <i class="fas fa-minus"></i>
+                            </button>
                             <input type="number" class="qty-input" value="1" min="1" max="10">
-                            <button class="qty-plus"><i class="fas fa-plus"></i></button>
+                            <button class="qty-btn plus-btn">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
                         
                         <div class="product-actions">
                             <button class="btn-primary add-to-cart-btn">
                                 <i class="fas fa-cart-plus"></i> Add to Cart
                             </button>
-                            <button class="btn-secondary whatsapp-order-btn">
+                            <button class="btn-secondary whatsapp-btn">
                                 <i class="fab fa-whatsapp"></i> Order Now
                             </button>
                         </div>
@@ -625,11 +349,6 @@
                     <h3>24/7 Support</h3>
                     <p>Always available to assist you</p>
                 </div>
-                <div class="feature-card">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>Secure Ordering</h3>
-                    <p>Safe and secure transactions</p>
-                </div>
             </div>
         </div>
     </section>
@@ -654,39 +373,23 @@
                     
                     <h3><i class="fas fa-qrcode"></i> UPI ID</h3>
                     <p class="upi-id">7006927825@pz</p>
-                    
-                    <div class="business-hours">
-                        <h3><i class="fas fa-clock"></i> Business Hours</h3>
-                        <p>Monday - Saturday: 9:00 AM - 8:00 PM</p>
-                        <p>Sunday: 10:00 AM - 6:00 PM</p>
-                    </div>
                 </div>
                 
                 <div class="contact-options">
                     <h3>Order Now</h3>
                     <div class="contact-buttons">
                         <button onclick="openCart()" class="btn-whatsapp">
-                            <i class="fas fa-shopping-cart"></i> View Cart & Order
+                            <i class="fas fa-shopping-cart"></i> View Cart
                         </button>
                         
                         <a href="https://wa.me/917006927825?text=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
                            class="btn-whatsapp" target="_blank">
-                            <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                            <i class="fab fa-whatsapp"></i> WhatsApp Order
                         </a>
                         
                         <a href="tel:+917006927825" class="btn-phone">
                             <i class="fas fa-phone"></i> Call Us
                         </a>
-                        
-                        <a href="mailto:sarmenterprises786@gmail.com?subject=Order%20Inquiry&body=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
-                           class="btn-email">
-                            <i class="fas fa-envelope"></i> Email Us
-                        </a>
-                    </div>
-                    
-                    <div class="quote-card">
-                        <i class="fas fa-quote-right"></i>
-                        <p>"Your ideas are precious. We provide the perfect canvas to preserve them."</p>
                     </div>
                 </div>
             </div>
@@ -700,55 +403,39 @@
                 <div class="footer-brand">
                     <h3><i class="fas fa-book"></i> SARM ENTERPRISES</h3>
                     <p>Quality Notebooks Since 2010</p>
-                    <p class="footer-quote">"Writing transforms thoughts into treasures"</p>
                 </div>
                 <div class="footer-links">
                     <h4>Quick Links</h4>
                     <a href="#home">Home</a>
                     <a href="#products">Products</a>
-                    <a href="#about">About Us</a>
-                    <a href="#testimonials">Reviews</a>
                     <a href="#contact">Contact</a>
                     <a href="#" id="adminLoginLink">Admin Login</a>
                 </div>
-                <div class="footer-social">
-                    <h4>Connect With Us</h4>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    </div>
-                </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 SARM ENTERPRISES. All rights reserved. | Crafted with <i class="fas fa-heart"></i> in Kashmir</p>
+                <p>&copy; 2024 SARM ENTERPRISES. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Shopping Cart Modal -->
+    <!-- Cart Modal -->
     <div id="cartModal" class="cart-modal">
         <div class="cart-content">
             <span class="close-modal" onclick="closeCart()">&times;</span>
-            <h2><i class="fas fa-shopping-cart"></i> Your Shopping Cart</h2>
+            <h2><i class="fas fa-shopping-cart"></i> Your Cart</h2>
             
-            <div id="cartItemsContainer">
-                <!-- Cart items will be loaded here -->
-                <p id="emptyCartMessage" style="text-align: center; padding: 40px; color: #666;">
-                    Your cart is empty. Add some products!
+            <div id="cartItems">
+                <p style="text-align: center; padding: 40px; color: #666;">
+                    Your cart is empty
                 </p>
             </div>
             
-            <div class="cart-total">
-                Total: ₹<span id="cartTotal">0.00</span>
-            </div>
-            
-            <div class="cart-actions" style="display: none;" id="cartActions">
-                <button onclick="checkout()" class="btn-whatsapp" style="width: 100%; padding: 15px;">
-                    <i class="fab fa-whatsapp"></i> Proceed to Checkout on WhatsApp
+            <div class="cart-total" style="display: none;">
+                <h3>Total: ₹<span id="cartTotal">0</span></h3>
+                <button onclick="checkout()" class="btn-whatsapp" style="width: 100%; margin-top: 15px;">
+                    <i class="fab fa-whatsapp"></i> Checkout on WhatsApp
                 </button>
-                <button onclick="clearCart()" class="btn-secondary" style="margin-top: 10px;">
+                <button onclick="clearCart()" class="btn-secondary" style="width: 100%; margin-top: 10px;">
                     <i class="fas fa-trash"></i> Clear Cart
                 </button>
             </div>
@@ -770,27 +457,51 @@
                     <input type="password" id="password" required>
                 </div>
                 <button type="submit" class="btn-primary">Login</button>
-                <p id="loginError" class="error-message"></p>
             </form>
         </div>
     </div>
 
     <!-- Firebase SDK -->
-    <script type="module" src="app.js"></script>
-    
-    <!-- Main JavaScript -->
-    <script>
-        // Shopping Cart System
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD6T2k0fE2R4gF7QY4V6q6Z4Qv0X1W2Y3Z4",
+            authDomain: "sarm-enterprises.firebaseapp.com",
+            projectId: "sarm-enterprises",
+            storageBucket: "sarm-enterprises.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Cart System
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        
-        // Update cart count in navbar
+
+        // Update cart count
         function updateCartCount() {
-            const count = cart.reduce((total, item) => total + item.quantity, 0);
-            document.getElementById('cartCount').textContent = count;
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
             localStorage.setItem('cart', JSON.stringify(cart));
         }
-        
-        // Add to cart function
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Add to cart
         function addToCart(product, quantity) {
             const existingItem = cart.find(item => item.id === product.id);
             
@@ -801,42 +512,41 @@
                     id: product.id,
                     name: product.name,
                     price: product.price,
-                    quantity: quantity,
                     image: product.images ? product.images[0] : '',
-                    stock: product.stock
+                    quantity: quantity
                 });
             }
             
             updateCartCount();
-            showNotification('Product added to cart!');
+            showNotification('Added to cart!');
         }
-        
+
         // Remove from cart
         function removeFromCart(productId) {
             cart = cart.filter(item => item.id !== productId);
             updateCartCount();
             renderCart();
         }
-        
+
         // Update quantity
-        function updateQuantity(productId, quantity) {
+        function updateCartQuantity(productId, quantity) {
             const item = cart.find(item => item.id === productId);
             if (item) {
-                item.quantity = Math.max(1, quantity);
+                item.quantity = quantity;
                 updateCartCount();
                 renderCart();
             }
         }
-        
-        // Render cart items
+
+        // Render cart
         function renderCart() {
-            const container = document.getElementById('cartItemsContainer');
-            const cartActions = document.getElementById('cartActions');
-            const emptyCartMessage = document.getElementById('emptyCartMessage');
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const cartTotalDiv = document.querySelector('.cart-total');
             
             if (cart.length === 0) {
-                container.innerHTML = '<p id="emptyCartMessage" style="text-align: center; padding: 40px; color: #666;">Your cart is empty. Add some products!</p>';
-                cartActions.style.display = 'none';
+                cartItems.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">Your cart is empty</p>';
+                cartTotalDiv.style.display = 'none';
                 return;
             }
             
@@ -849,43 +559,37 @@
                 
                 html += `
                     <div class="cart-item">
-                        <div class="cart-item-details">
+                        <div>
                             <h4>${item.name}</h4>
                             <p>₹${item.price} × ${item.quantity}</p>
-                            <p class="item-total">Total: ₹${itemTotal}</p>
                         </div>
-                        <div class="cart-item-controls">
-                            <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
-                            <input type="number" class="quantity-input" value="${item.quantity}" min="1" max="${item.stock}" onchange="updateQuantity('${item.id}', this.value)">
-                            <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
-                            <button class="remove-item" onclick="removeFromCart('${item.id}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                            <button class="remove-btn" onclick="removeFromCart('${item.id}')">Remove</button>
                         </div>
                     </div>
                 `;
             });
             
-            container.innerHTML = html;
-            document.getElementById('cartTotal').textContent = total.toFixed(2);
-            cartActions.style.display = 'block';
-            emptyCartMessage.style.display = 'none';
+            cartItems.innerHTML = html;
+            cartTotal.textContent = total;
+            cartTotalDiv.style.display = 'block';
         }
-        
-        // Open cart modal
+
+        // Open cart
         function openCart() {
             document.getElementById('cartModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
             renderCart();
         }
-        
-        // Close cart modal
+
+        // Close cart
         function closeCart() {
             document.getElementById('cartModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
         }
-        
-        // Checkout function
+
+        // Checkout
         function checkout() {
             if (cart.length === 0) {
                 alert('Your cart is empty!');
@@ -899,342 +603,204 @@
             });
             
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            message += `\nTotal: ₹${total.toFixed(2)}`;
+            message += `\nTotal: ₹${total}`;
             message += "\n\nPlease confirm availability and delivery details.";
             
             const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
         }
-        
+
         // Clear cart
         function clearCart() {
-            if (confirm('Are you sure you want to clear your cart?')) {
+            if (confirm('Clear all items from cart?')) {
                 cart = [];
                 updateCartCount();
                 renderCart();
-                showNotification('Cart cleared!');
             }
         }
-        
-        // Show notification
-        function showNotification(message) {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #27ae60;
-                color: white;
-                padding: 15px 20px;
-                border-radius: 5px;
-                z-index: 9999;
-                animation: slideIn 0.3s ease;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            `;
-            notification.textContent = message;
-            
-            document.body.appendChild(notification);
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => document.body.removeChild(notification), 300);
-            }, 3000);
-        }
-        
-        // Add CSS for animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Initialize cart count on page load
-        updateCartCount();
-        
-        // Multi-Image Product Display System
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize cart link
-            document.getElementById('cartLink').addEventListener('click', function(e) {
-                e.preventDefault();
-                openCart();
-            });
-        });
-        
-        // Function to create product element with multi-image support
-        function createProductElement(product) {
-            const template = document.getElementById('productTemplate');
-            const clone = template.content.cloneNode(true);
-            
-            const productCard = clone.querySelector('.product-card');
-            productCard.dataset.productId = product.id;
-            
-            const productName = clone.querySelector('.product-name');
-            const productImage = clone.querySelector('.product-main-image');
-            const imageCountBadge = clone.querySelector('.image-count-badge');
-            const imageCountSpan = clone.querySelector('.image-count');
-            const imageDots = clone.querySelector('.product-image-dots');
-            const navPrev = clone.querySelector('.nav-prev');
-            const navNext = clone.querySelector('.nav-next');
-            const pagesInfo = clone.querySelector('.product-pages');
-            const pagesCount = clone.querySelector('.pages-count');
-            const stationeryInfo = clone.querySelector('.stationery-item');
-            const priceAmount = clone.querySelector('.price-amount');
-            const stockQuantity = clone.querySelector('.stock-quantity');
-            const stockText = clone.querySelector('.stock-text');
-            const stockContainer = clone.querySelector('.product-stock');
-            const productDescription = clone.querySelector('.product-description');
-            const qtyMinus = clone.querySelector('.qty-minus');
-            const qtyPlus = clone.querySelector('.qty-plus');
-            const qtyInput = clone.querySelector('.qty-input');
-            const addToCartBtn = clone.querySelector('.add-to-cart-btn');
-            const whatsappBtn = clone.querySelector('.whatsapp-order-btn');
-            
-            // Set basic product info
-            productName.textContent = product.name;
-            priceAmount.textContent = product.price;
-            stockQuantity.textContent = product.stock;
-            productDescription.textContent = product.description || 'Premium quality product';
-            
-            // ⭐ Handle stock status
-            if (product.stock <= 0) {
-                stockContainer.className = 'product-stock stock-out';
-                stockText.textContent = 'Out of Stock';
-                qtyInput.disabled = true;
-                addToCartBtn.disabled = true;
-                addToCartBtn.innerHTML = '<i class="fas fa-times"></i> Out of Stock';
-                addToCartBtn.style.opacity = '0.6';
-            } else if (product.stock <= 10) {
-                stockContainer.className = 'product-stock stock-low';
-                stockText.textContent = 'Low Stock';
-                qtyInput.max = product.stock;
-            } else {
-                stockContainer.className = 'product-stock stock-in';
-                stockText.textContent = 'In Stock';
-                qtyInput.max = Math.min(product.stock, 20);
-            }
-            
-            // ⭐ Handle pages vs stationery
-            if (product.pages) {
-                pagesInfo.style.display = 'flex';
-                pagesCount.textContent = product.pages;
-                stationeryInfo.style.display = 'none';
-            } else {
-                pagesInfo.style.display = 'none';
-                stationeryInfo.style.display = 'flex';
-            }
-            
-            // ⭐ Handle product images
-            let productImages = [];
-            
-            // Check for new images array first, then old imagePath for backward compatibility
-            if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-                productImages = product.images;
-            } else if (product.imagePath) {
-                productImages = [product.imagePath];
-            } else {
-                productImages = ['https://via.placeholder.com/400x300?text=Notebook'];
-            }
-            
-            // Set first image
-            productImage.src = productImages[0];
-            productImage.alt = product.name;
-            
-            // Handle image loading errors
-            productImage.onerror = function() {
-                this.src = 'https://via.placeholder.com/400x300?text=Notebook';
-            };
-            
-            // ⭐ Setup image gallery if multiple images
-            if (productImages.length > 1) {
-                // Show image count badge
-                imageCountBadge.style.display = 'block';
-                imageCountSpan.textContent = productImages.length;
+
+        // Load products
+        async function loadProducts() {
+            try {
+                const productsContainer = document.getElementById('productsContainer');
+                const template = document.getElementById('productTemplate');
                 
-                // Create navigation dots
-                imageDots.innerHTML = '';
-                productImages.forEach((_, index) => {
-                    const dot = document.createElement('div');
-                    dot.className = `image-dot ${index === 0 ? 'active' : ''}`;
-                    dot.dataset.index = index;
-                    dot.addEventListener('click', function() {
-                        switchProductImage(productCard, index, productImages);
-                    });
-                    imageDots.appendChild(dot);
-                });
+                productsContainer.innerHTML = '<p style="text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin"></i> Loading products...</p>';
                 
-                // Show navigation arrows
-                navPrev.style.display = 'flex';
-                navNext.style.display = 'flex';
+                const querySnapshot = await getDocs(collection(db, "products"));
                 
-                // Add navigation event listeners
-                let currentImageIndex = 0;
-                
-                navPrev.addEventListener('click', function() {
-                    currentImageIndex = (currentImageIndex - 1 + productImages.length) % productImages.length;
-                    switchProductImage(productCard, currentImageIndex, productImages);
-                });
-                
-                navNext.addEventListener('click', function() {
-                    currentImageIndex = (currentImageIndex + 1) % productImages.length;
-                    switchProductImage(productCard, currentImageIndex, productImages);
-                });
-                
-                // Add auto-rotate for images (optional)
-                setupImageAutoRotate(productCard, productImages);
-            }
-            
-            // ⭐ Quantity selector functionality
-            qtyMinus.addEventListener('click', function() {
-                const currentValue = parseInt(qtyInput.value);
-                if (currentValue > 1) {
-                    qtyInput.value = currentValue - 1;
+                if (querySnapshot.empty) {
+                    productsContainer.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available.</p>';
+                    return;
                 }
-            });
-            
-            qtyPlus.addEventListener('click', function() {
-                const currentValue = parseInt(qtyInput.value);
-                const maxValue = parseInt(qtyInput.max);
-                if (currentValue < maxValue) {
-                    qtyInput.value = currentValue + 1;
-                }
-            });
-            
-            // ⭐ Add to cart functionality
-            addToCartBtn.addEventListener('click', function() {
-                const quantity = parseInt(qtyInput.value);
-                addToCart(product, quantity);
-            });
-            
-            // ⭐ WhatsApp order button
-            whatsappBtn.addEventListener('click', function() {
-                const quantity = parseInt(qtyInput.value);
-                const message = `Hello SARM ENTERPRISES, I would like to order:\n\nProduct: ${product.name}\nQuantity: ${quantity}\nPrice: ₹${product.price}\nTotal: ₹${product.price * quantity}\n\nPlease let me know about availability.`;
-                const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
-                window.open(whatsappUrl, '_blank');
-            });
-            
-            return productCard;
+                
+                productsContainer.innerHTML = '';
+                
+                querySnapshot.forEach((doc) => {
+                    const product = doc.data();
+                    product.id = doc.id;
+                    
+                    // Create product element
+                    const clone = template.content.cloneNode(true);
+                    const productCard = clone.querySelector('.product-card');
+                    productCard.dataset.productId = product.id;
+                    
+                    // Set product info
+                    productCard.querySelector('.product-name').textContent = product.name;
+                    productCard.querySelector('.price-amount').textContent = product.price;
+                    productCard.querySelector('.stock-quantity').textContent = product.stock;
+                    productCard.querySelector('.product-description').textContent = product.description || '';
+                    
+                    // Set stock status
+                    const stockElement = productCard.querySelector('.stock-text');
+                    if (product.stock <= 0) {
+                        stockElement.textContent = 'Out of Stock';
+                        stockElement.style.color = '#e74c3c';
+                        productCard.querySelector('.add-to-cart-btn').disabled = true;
+                    } else if (product.stock <= 10) {
+                        stockElement.textContent = 'Low Stock';
+                        stockElement.style.color = '#f39c12';
+                    } else {
+                        stockElement.textContent = 'In Stock';
+                        stockElement.style.color = '#27ae60';
+                    }
+                    
+                    // Handle product images
+                    let productImages = [];
+                    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+                        productImages = product.images;
+                    } else if (product.imagePath) {
+                        productImages = [product.imagePath];
+                    } else {
+                        productImages = ['https://via.placeholder.com/400x300?text=Notebook'];
+                    }
+                    
+                    // Set first image
+                    const mainImage = productCard.querySelector('.product-main-image');
+                    mainImage.src = productImages[0];
+                    mainImage.alt = product.name;
+                    
+                    // Set image count badge
+                    const imageCount = productCard.querySelector('.image-count');
+                    imageCount.textContent = productImages.length;
+                    
+                    // Setup image gallery if multiple images
+                    if (productImages.length > 1) {
+                        const dotsContainer = productCard.querySelector('.product-image-dots');
+                        dotsContainer.innerHTML = '';
+                        
+                        productImages.forEach((_, index) => {
+                            const dot = document.createElement('div');
+                            dot.className = `image-dot ${index === 0 ? 'active' : ''}`;
+                            dot.onclick = () => switchProductImage(productCard, index, productImages);
+                            dotsContainer.appendChild(dot);
+                        });
+                        
+                        // Setup navigation
+                        let currentIndex = 0;
+                        
+                        productCard.querySelector('.nav-prev').onclick = () => {
+                            currentIndex = (currentIndex - 1 + productImages.length) % productImages.length;
+                            switchProductImage(productCard, currentIndex, productImages);
+                        };
+                        
+                        productCard.querySelector('.nav-next').onclick = () => {
+                            currentIndex = (currentIndex + 1) % productImages.length;
+                            switchProductImage(productCard, currentIndex, productImages);
+                        };
+                    } else {
+                        productCard.querySelector('.image-count-badge').style.display = 'none';
+                        productCard.querySelector('.nav-prev').style.display = 'none';
+                        productCard.querySelector('.nav-next').style.display = 'none';
+                    }
+                    
+                    // Setup quantity controls
+                    const qtyInput = productCard.querySelector('.qty-input');
+                    qtyInput.max = product.stock;
+                    
+                    productCard.querySelector('.minus-btn').onclick = () => {
+                        const value = parseInt(qtyInput.value);
+                        if (value > 1) qtyInput.value = value - 1;
+                    };
+                    
+                    productCard.querySelector('.plus-btn').onclick = () => {
+                        const value = parseInt(qtyInput.value);
+                        const max = parseInt(qtyInput.max);
+                        if (value < max) qtyInput.value = value + 1;
+                    };
+                    
+                    // Setup add to cart button
+                    productCard.querySelector('.add-to-cart-btn').onclick = () => {
+                        const quantity = parseInt(qtyInput.value);
+                        addToCart(product, quantity);
+                    };
+                    
+                    // Setup WhatsApp order button
+                    productCard.querySelector('.whatsapp-btn').onclick = () => {
+                        const quantity = parseInt(qtyInput.value);
+                        const message = `Hello SARM ENTERPRISES, I want to order:\n\n${product.name}\nQuantity: ${quantity}\nPrice: ₹${product.price}\nTotal: ₹${product.price * quantity}\n\nPlease confirm availability.`;
+                        const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
+                        window.open(whatsappUrl, '_blank');
+                    };
+                    
+                    productsContainer.appendChild(clone);
+                });
+                
+            } catch (error) {
+                console.error("Error loading products:", error);
+                document.getElementById('productsContainer').innerHTML = 
+                    '<p style="color: #e74c3c; text-align: center;">Error loading products.</p>';
+            }
         }
-        
-        // Function to switch product image
+
+        // Switch product image
         function switchProductImage(productCard, index, images) {
             const mainImage = productCard.querySelector('.product-main-image');
             const dots = productCard.querySelectorAll('.image-dot');
             
-            // Update image
             mainImage.style.opacity = '0';
             setTimeout(() => {
                 mainImage.src = images[index];
+                mainImage.alt = `Product Image ${index + 1}`;
                 mainImage.style.opacity = '1';
                 
-                // Update active dot
-                dots.forEach(dot => dot.classList.remove('active'));
-                dots[index].classList.add('active');
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
             }, 150);
         }
+
+        // Initialize cart count
+        updateCartCount();
         
-        // Function to setup auto-rotate for images
-        function setupImageAutoRotate(productCard, images) {
-            if (images.length <= 1) return;
+        // Load products when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
             
-            let currentIndex = 0;
-            const rotateInterval = setInterval(() => {
-                currentIndex = (currentIndex + 1) % images.length;
-                switchProductImage(productCard, currentIndex, images);
-            }, 5000); // Change image every 5 seconds
+            // Setup cart link
+            document.getElementById('cartLink').onclick = (e) => {
+                e.preventDefault();
+                openCart();
+            };
             
-            // Stop auto-rotate when user hovers over image
-            const imageContainer = productCard.querySelector('.product-image-container');
-            imageContainer.addEventListener('mouseenter', () => {
-                clearInterval(rotateInterval);
-            });
-            
-            imageContainer.addEventListener('mouseleave', () => {
-                setupImageAutoRotate(productCard, images);
-            });
-        }
-        
-        // Search and Filter functionality
-        document.getElementById('searchButton').addEventListener('click', searchProducts);
-        document.getElementById('searchInput').addEventListener('keyup', function(e) {
-            if (e.key === 'Enter') searchProducts();
-        });
-        
-        document.getElementById('sortSelect').addEventListener('change', sortProducts);
-        
-        function searchProducts() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const productCards = document.querySelectorAll('.product-card');
-            
-            productCards.forEach(card => {
-                const productName = card.querySelector('.product-name').textContent.toLowerCase();
-                const description = card.querySelector('.product-description').textContent.toLowerCase();
-                
-                if (productName.includes(searchTerm) || description.includes(searchTerm)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
+            // Close modal when clicking outside
+            window.onclick = (e) => {
+                const cartModal = document.getElementById('cartModal');
+                if (e.target === cartModal) {
+                    closeCart();
                 }
-            });
-        }
-        
-        function sortProducts() {
-            const sortBy = document.getElementById('sortSelect').value;
-            const productsContainer = document.getElementById('productsContainer');
-            const productCards = Array.from(productsContainer.querySelectorAll('.product-card'));
-            
-            productCards.sort((a, b) => {
-                const priceA = parseFloat(a.querySelector('.price-amount').textContent);
-                const priceB = parseFloat(b.querySelector('.price-amount').textContent);
-                const nameA = a.querySelector('.product-name').textContent;
-                const nameB = b.querySelector('.product-name').textContent;
-                const stockA = parseInt(a.querySelector('.stock-quantity').textContent);
-                const stockB = parseInt(b.querySelector('.stock-quantity').textContent);
-                
-                switch(sortBy) {
-                    case 'price-low':
-                        return priceA - priceB;
-                    case 'price-high':
-                        return priceB - priceA;
-                    case 'stock':
-                        return stockB - stockA;
-                    default:
-                        return nameA.localeCompare(nameB);
-                }
-            });
-            
-            // Reorder products
-            productCards.forEach(card => productsContainer.appendChild(card));
-        }
-        
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const cartModal = document.getElementById('cartModal');
-            if (event.target === cartModal) {
-                closeCart();
-            }
-            
-            const loginModal = document.getElementById('loginModal');
-            if (event.target === loginModal) {
-                closeModal();
-            }
-        };
-        
-        // Close cart with ESC key
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeCart();
-            }
+            };
         });
+
+        // Make functions globally available
+        window.addToCart = addToCart;
+        window.removeFromCart = removeFromCart;
+        window.updateCartQuantity = updateCartQuantity;
+        window.openCart = openCart;
+        window.closeCart = closeCart;
+        window.checkout = checkout;
+        window.clearCart = clearCart;
+        window.switchProductImage = switchProductImage;
     </script>
 </body>
 </html>
