@@ -39,12 +39,15 @@
                     <div class="form-group">
                         <label for="productName"><i class="fas fa-tag"></i> Product Name</label>
                         <input type="text" id="productName" required 
-                               placeholder="e.g., Spiral Notebook 200 Pages">
+                               placeholder="e.g., Spiral Notebook 200 Pages or Blue Pen">
                     </div>
                     <div class="form-group">
-                        <label for="productPages"><i class="fas fa-file-alt"></i> Number of Pages</label>
-                        <input type="number" id="productPages" required 
-                               placeholder="e.g., 200">
+                        <label for="productPages">
+                            <i class="fas fa-file-alt"></i> Number of Pages
+                            <span style="color: #777; font-weight: normal; font-size: 0.9em;"> (Leave blank for pens, umbrellas, etc.)</span>
+                        </label>
+                        <input type="number" id="productPages" 
+                               placeholder="e.g., 200 (or leave blank for stationery)">
                     </div>
                 </div>
                 
@@ -61,20 +64,68 @@
                     </div>
                 </div>
                 
+                <!-- UPDATED: Product Images Section (1-4 local images) -->
                 <div class="form-group">
-                    <label for="productImage"><i class="fas fa-image"></i> Product Image</label>
-                    <div class="file-input-wrapper">
-                        <button type="button" class="btn-upload">
-                            <i class="fas fa-upload"></i> Choose Image
-                        </button>
-                        <input type="file" id="productImage" accept="image/*">
+                    <label for="productImage1"><i class="fas fa-images"></i> Product Images (Enter 1-4 filenames)</label>
+                    
+                    <div style="margin: 10px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; border-left: 4px solid #3498db;">
+                        <p style="margin: 0 0 10px 0; font-weight: 500;">
+                            📸 <strong>Manual Image Setup</strong>
+                        </p>
+                        <p style="margin: 0 0 15px 0; font-size: 0.9rem; color: #555;">
+                            <strong>Steps:</strong><br>
+                            1. First, upload your images to the <code>assets/products/</code> folder on your website.<br>
+                            2. Then, enter the exact filenames below (e.g., <code>notebook-1.jpg</code>, <code>pen-1.jpg</code>).<br>
+                            3. The first image is the main thumbnail.
+                        </p>
+                        
+                        <!-- 4 Image Input Fields -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
+                            <div>
+                                <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
+                                    <strong>Image 1</strong> (Required)
+                                </label>
+                                <input type="text" id="productImage1" placeholder="e.g., product-1.jpg" 
+                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" required>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
+                                    Image 2 (Optional)
+                                </label>
+                                <input type="text" id="productImage2" placeholder="e.g., product-2.jpg" 
+                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
+                                    Image 3 (Optional)
+                                </label>
+                                <input type="text" id="productImage3" placeholder="e.g., product-3.jpg" 
+                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
+                                    Image 4 (Optional)
+                                </label>
+                                <input type="text" id="productImage4" placeholder="e.g., product-4.jpg" 
+                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                        </div>
                     </div>
-                    <div id="imagePreviewContainer" class="image-preview-container">
-                        <img id="imagePreview" class="image-preview" src="" alt="Image Preview">
-                        <div id="imageInfo"></div>
-                    </div>
-                    <div id="uploadProgress" class="upload-progress" style="display: none;">
-                        <div id="uploadProgressBar" class="upload-progress-bar"></div>
+                    
+                    <!-- Image Preview Area -->
+                    <div id="imagePreviewContainer" style="margin-top: 15px;">
+                        <!-- Container for multiple image previews -->
+                        <div id="multipleImagePreview" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; min-height: 50px;">
+                            <!-- Selected image previews will appear here dynamically -->
+                        </div>
+                        
+                        <!-- Image info/instructions -->
+                        <div id="imageInfo" style="margin-top: 10px; padding: 10px; background: #f0f8ff; border-radius: 5px; font-size: 0.9rem;">
+                            <strong>📝 Image Guidelines:</strong><br>
+                            1. Upload images to <code>assets/products/</code> folder first.<br>
+                            2. Enter exact filenames above (include extension like .jpg, .png).<br>
+                            3. Image 1 will be the main thumbnail shown in product listings.
+                        </div>
                     </div>
                 </div>
                 
@@ -94,35 +145,11 @@
             </form>
         </div>
 
-        <!-- Logo Management -->
+        <!-- Logo Management (REMOVED file upload, kept for future if needed) -->
         <div class="form-card">
             <h3><i class="fas fa-image"></i> Logo Management</h3>
             <div class="form-group">
-                <label for="logoUpload">Upload New Logo</label>
-                <div class="file-input-wrapper">
-                    <button type="button" class="btn-upload">
-                        <i class="fas fa-upload"></i> Choose Logo
-                    </button>
-                    <input type="file" id="logoUpload" accept="image/*">
-                </div>
-                <div id="logoPreviewContainer" class="image-preview-container">
-                    <img id="logoPreview" class="image-preview" src="" alt="Logo Preview">
-                    <div id="logoInfo"></div>
-                </div>
-                <div id="logoUploadProgress" class="upload-progress" style="display: none;">
-                    <div id="logoUploadProgressBar" class="upload-progress-bar"></div>
-                </div>
-                <button type="button" class="btn-primary" id="uploadLogoBtn" style="margin-top: 10px;">
-                    <i class="fas fa-upload"></i> Upload Logo
-                </button>
-            </div>
-        </div>
-
-        <!-- Image Gallery -->
-        <div class="form-card">
-            <h3><i class="fas fa-images"></i> Image Gallery</h3>
-            <div id="imageGallery" class="image-gallery">
-                <!-- Images will be loaded here -->
+                <p>To update the website logo, replace the file <code>assets/logo/logo.png</code> manually.</p>
             </div>
         </div>
 
@@ -156,86 +183,65 @@
                 <canvas id="stockChart"></canvas>
             </div>
         </div>
+    </div>
 
-        <!-- Orders Management -->
-        <div class="form-card">
-            <h3><i class="fas fa-shopping-cart"></i> Recent Orders</h3>
-            <div id="ordersList">
-                <p>No orders yet</p>
+    <!-- Customer Feedback Manager -->
+    <div class="form-card">
+        <h3><i class="fas fa-comments"></i> Customer Feedback Manager</h3>
+        <p>Review and manage testimonials submitted by customers.</p>
+        
+        <div class="admin-actions" style="margin-bottom: 1.5rem;">
+            <button class="btn-primary" id="refreshPendingBtn">
+                <i class="fas fa-sync-alt"></i> Refresh Pending List
+            </button>
+        </div>
+        
+        <h4>Pending Review</h4>
+        <div id="pendingFeedbackList">
+            <!-- Pending feedback cards will be loaded here -->
+            <p><i>Click "Refresh Pending List" to load submissions.</i></p>
+        </div>
+    </div>
+
+    <!-- FAQ MANAGEMENT -->
+    <div class="form-card">
+        <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
+        <p>Manage Frequently Asked Questions shown on the FAQ page.</p>
+        
+        <!-- Add New FAQ Form -->
+        <h4>Add New FAQ</h4>
+        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+            <div class="form-group">
+                <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
+                <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
             </div>
+            <div class="form-group">
+                <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
+                <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
+                <input type="number" id="faqOrder" placeholder="1" value="1">
+                <small>Lower numbers appear first on the FAQ page.</small>
+            </div>
+            <button class="btn-primary" id="addFaqBtn">
+                <i class="fas fa-plus-circle"></i> Add FAQ
+            </button>
+        </div>
+        
+        <!-- Existing FAQs List -->
+        <h4>Existing FAQs</h4>
+        <button class="btn-secondary" id="refreshFaqsBtn" style="margin-bottom: 1rem;">
+            <i class="fas fa-sync-alt"></i> Refresh List
+        </button>
+        <div id="faqsListAdmin">
+            <!-- FAQs will be loaded here -->
+            <p style="text-align: center; padding: 2rem; color: #999;">
+                Click "Refresh List" to load existing FAQs.
+            </p>
         </div>
     </div>
 
-    <!-- Add this new card to your admin.html -->
-<!-- Replace the entire "Customer Feedback Manager" card with this: -->
-<div class="form-card">
-    <h3><i class="fas fa-comments"></i> Customer Feedback Manager</h3>
-    <p>Review and manage testimonials submitted by customers.</p>
-    
-    <div class="admin-actions" style="margin-bottom: 1.5rem;">
-        <button class="btn-primary" id="refreshPendingBtn">
-            <i class="fas fa-sync-alt"></i> Refresh Pending List
-        </button>
-        <button class="btn-secondary" id="viewAllBtn">
-            <i class="fas fa-list"></i> View All
-        </button>
-    </div>
-    
-    <h4>Pending Review</h4>
-    <div id="pendingFeedbackList">
-        <!-- Pending feedback cards will be loaded here -->
-        <p><i>Click "Refresh Pending List" to load submissions.</i></p>
-    </div>
-</div>
-    
-    <h4>Pending Review</h4>
-    <div id="pendingFeedbackList">
-        <!-- Pending feedback cards will be loaded here -->
-        <p><i>Click "Refresh Pending List" to load submissions.</i></p>
-    </div>
-</div>
-
-    <!-- ============================================ -->
-<!-- FAQ MANAGEMENT -->
-<!-- ============================================ -->
-<!-- Replace the entire "FAQ Management" card with this: -->
-<div class="form-card">
-    <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
-    <p>Manage Frequently Asked Questions shown on the FAQ page.</p>
-    
-    <!-- Add New FAQ Form -->
-    <h4>Add New FAQ</h4>
-    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
-        <div class="form-group">
-            <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
-            <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
-        </div>
-        <div class="form-group">
-            <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
-            <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
-        </div>
-        <div class="form-group">
-            <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
-            <input type="number" id="faqOrder" placeholder="1" value="1">
-            <small>Lower numbers appear first on the FAQ page.</small>
-        </div>
-        <button class="btn-primary" id="addFaqBtn">
-            <i class="fas fa-plus-circle"></i> Add FAQ
-        </button>
-    </div>
-    
-    <!-- Existing FAQs List -->
-    <h4>Existing FAQs</h4>
-    <button class="btn-secondary" id="refreshFaqsBtn" style="margin-bottom: 1rem;">
-        <i class="fas fa-sync-alt"></i> Refresh List
-    </button>
-    <div id="faqsListAdmin">
-        <!-- FAQs will be loaded here -->
-        <p style="text-align: center; padding: 2rem; color: #999;">
-            Click "Refresh List" to load existing FAQs.
-        </p>
-    </div>
-</div>
     <!-- Success Message -->
     <div id="successMessage" style="display: none;" class="modal">
         <div class="modal-content" style="text-align: center;">
@@ -251,5 +257,12 @@
     <!-- Firebase SDK -->
     <script type="module" src="admin.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Helper function to preview images from text inputs (called from admin.js)
+        window.previewImagesFromInputs = function() {
+            // This function is defined in admin.js
+        };
+    </script>
 </body>
 </html>
