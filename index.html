@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SARM ENTERPRISES - Premium Notebooks</title>
-    <meta name="description" content="Premium quality notebooks and stationery from SARM ENTERPRISES Kashmir. Order notebooks, diaries, and writing materials.">
-    <meta name="keywords" content="notebooks, stationery, Kashmir, SARM ENTERPRISES, notebooks shop, writing materials">
+    <title>SARM ENTERPRISES - Premium Notebooks & Stationery</title>
+    <meta name="description" content="Premium quality notebooks and stationery from SARM ENTERPRISES Kashmir. Order notebooks, diaries, pens, and writing materials.">
+    <meta name="keywords" content="notebooks, stationery, Kashmir, SARM ENTERPRISES, notebooks shop, writing materials, pens, diaries">
     <meta name="author" content="SARM ENTERPRISES">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -24,6 +24,107 @@
             background: white;
             padding: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* Moving Quotes Carousel */
+        .hero-quotes-container {
+            position: relative;
+            height: 80px;
+            margin: 25px 0;
+            overflow: hidden;
+        }
+        
+        .quote-slide {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        
+        .quote-slide.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .quote {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .quote i {
+            color: #3498db;
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+        
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .category-tab {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .category-tab:hover {
+            background: #e9ecef;
+        }
+        
+        .category-tab.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        /* Category Sections */
+        .category-section {
+            margin-bottom: 50px;
+            display: none;
+        }
+        
+        .category-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .category-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .category-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #3498db;
+            border-radius: 2px;
         }
         
         /* Multi-Image Gallery Styles */
@@ -217,6 +318,17 @@
             border-radius: 5px;
             z-index: 9999;
             display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
         }
         
         /* Mobile Responsive */
@@ -230,6 +342,31 @@
             .product-image-container {
                 height: 200px;
             }
+            
+            .category-tabs {
+                gap: 5px;
+            }
+            
+            .category-tab {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .hero-quotes-container {
+                height: 100px;
+            }
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+        
+        .loading-spinner i {
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -237,7 +374,6 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <!-- Logo will be set from local storage -->
                 <img id="logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%233498db' rx='8'/%3E%3Ctext x='30' y='35' font-family='Arial, sans-serif' font-size='24' fill='white' text-anchor='middle' font-weight='bold'%3ESARM%3C/text%3E%3C/svg%3E" 
                      alt="SARM ENTERPRISES Logo" class="logo-img">
                 <div>
@@ -274,16 +410,35 @@
         <div class="hero-content">
             <h2>Capture Your Thoughts with Our Premium Notebooks</h2>
             <p>Experience the perfect blend of quality paper, durable binding, and elegant design. Your ideas deserve the best.</p>
-            <div class="hero-quotes">
-                <div class="quote">
-                    <i class="fas fa-quote-left"></i>
-                    <p>Where Thoughts Find Their Perfect Home</p>
+            
+            <!-- Moving Quotes Carousel -->
+            <div class="hero-quotes-container">
+                <div class="quote-slide active">
+                    <div class="quote">
+                        <i class="fas fa-quote-left"></i>
+                        <p>Where Thoughts Find Their Perfect Home</p>
+                    </div>
                 </div>
-                <div class="quote">
-                    <i class="fas fa-quote-left"></i>
-                    <p>Quality Pages for Lifelong Memories</p>
+                <div class="quote-slide">
+                    <div class="quote">
+                        <i class="fas fa-quote-left"></i>
+                        <p>Quality Pages for Lifelong Memories</p>
+                    </div>
+                </div>
+                <div class="quote-slide">
+                    <div class="quote">
+                        <i class="fas fa-quote-left"></i>
+                        <p>Writing Transforms Thoughts into Treasures</p>
+                    </div>
+                </div>
+                <div class="quote-slide">
+                    <div class="quote">
+                        <i class="fas fa-quote-left"></i>
+                        <p>Your Ideas Deserve the Perfect Canvas</p>
+                    </div>
                 </div>
             </div>
+            
             <a href="#products" class="btn-primary">Shop Now</a>
         </div>
     </section>
@@ -291,13 +446,28 @@
     <!-- Products Section -->
     <section id="products" class="products-section">
         <div class="container">
-            <h2 class="section-title">Our Premium Notebook Collection</h2>
-            <p class="section-subtitle">Choose from our wide range of spiral notebooks for all your writing needs</p>
+            <h2 class="section-title">Our Premium Collection</h2>
+            <p class="section-subtitle">Browse through our wide range of quality products</p>
             
-            <!-- Products Grid -->
-            <div class="products-grid" id="productsContainer">
-                <!-- Products will be loaded here -->
+            <!-- Category Tabs -->
+            <div class="category-tabs" id="categoryTabs">
+                <!-- Tabs will be generated dynamically -->
             </div>
+            
+            <!-- Category Sections Container -->
+            <div id="categorySections">
+                <!-- Category sections will be loaded here -->
+            </div>
+            
+            <!-- Category Template -->
+            <template id="categoryTemplate">
+                <div class="category-section" data-category="">
+                    <h3 class="category-title"></h3>
+                    <div class="products-grid">
+                        <!-- Products for this category will be loaded here -->
+                    </div>
+                </div>
+            </template>
             
             <!-- Product Template -->
             <template id="productTemplate">
@@ -483,11 +653,11 @@
 
     <!-- Main JavaScript -->
     <script type="module">
-        // Import Firebase only for products, not for logo
+        // Import Firebase only for products
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-        // Your Firebase configuration (only for products)
+        // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyD6T2k0fE2R4gF7QY4V6q6Z4Qv0X1W2Y3Z4",
             authDomain: "sarm-enterprises.firebaseapp.com",
@@ -505,21 +675,17 @@
         // Load logo from localStorage (Base64 string)
         function loadLogo() {
             try {
-                console.log("Loading logo from localStorage...");
                 const savedLogo = localStorage.getItem('sarmLogo');
                 
                 if (savedLogo) {
                     const logoImg = document.getElementById('logo');
                     logoImg.src = savedLogo;
-                    console.log("Logo loaded from localStorage");
                     
                     // Handle logo loading error
                     logoImg.onerror = () => {
-                        console.log("Local storage logo failed to load, using default");
                         setDefaultLogo();
                     };
                 } else {
-                    console.log("No logo in localStorage, using default");
                     setDefaultLogo();
                 }
             } catch (error) {
@@ -534,23 +700,27 @@
             logoImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%233498db' rx='8'/%3E%3Ctext x='30' y='35' font-family='Arial, sans-serif' font-size='24' fill='white' text-anchor='middle' font-weight='bold'%3ESARM%3C/text%3E%3C/svg%3E";
         }
 
-        // Save logo to localStorage (this function should be called from admin panel)
-        function saveLogoToLocalStorage(base64String) {
-            try {
-                localStorage.setItem('sarmLogo', base64String);
-                console.log("Logo saved to localStorage");
+        // ==================== MOVING QUOTES CAROUSEL ====================
+        function initQuotesCarousel() {
+            const quotes = document.querySelectorAll('.quote-slide');
+            let currentQuote = 0;
+            
+            if (quotes.length === 0) return;
+            
+            // Show first quote
+            quotes[currentQuote].classList.add('active');
+            
+            // Change quote every 5 seconds
+            setInterval(() => {
+                // Remove active class from current quote
+                quotes[currentQuote].classList.remove('active');
                 
-                // Update logo on current page
-                const logoImg = document.getElementById('logo');
-                if (logoImg) {
-                    logoImg.src = base64String;
-                }
+                // Move to next quote
+                currentQuote = (currentQuote + 1) % quotes.length;
                 
-                return true;
-            } catch (error) {
-                console.error("Error saving logo to localStorage:", error);
-                return false;
-            }
+                // Add active class to next quote
+                quotes[currentQuote].classList.add('active');
+            }, 5000); // Change every 5 seconds
         }
 
         // ==================== CART SYSTEM ====================
@@ -568,8 +738,13 @@
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.style.display = 'block';
+            
             setTimeout(() => {
-                notification.style.display = 'none';
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                    notification.style.animation = 'slideIn 0.3s ease';
+                }, 300);
             }, 3000);
         }
 
@@ -585,7 +760,8 @@
                     name: product.name,
                     price: product.price,
                     image: product.images ? product.images[0] : '',
-                    quantity: quantity
+                    quantity: quantity,
+                    category: product.category || 'General'
                 });
             }
             
@@ -629,28 +805,45 @@
             let html = '';
             let total = 0;
             
+            // Group cart items by category
+            const itemsByCategory = {};
             cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                
-                html += `
-                    <div class="cart-item">
-                        <div>
-                            <h4>${item.name}</h4>
-                            <p>₹${item.price} × ${item.quantity}</p>
-                            <p style="font-weight: bold;">Item Total: ₹${itemTotal}</p>
-                        </div>
-                        <div class="quantity-controls">
-                            <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.quantity - 1})">-</button>
-                            <span style="min-width: 30px; text-align: center;">${item.quantity}</span>
-                            <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.quantity + 1})">+</button>
-                            <button class="remove-btn" onclick="removeFromCart('${item.id}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
+                const category = item.category || 'General';
+                if (!itemsByCategory[category]) {
+                    itemsByCategory[category] = [];
+                }
+                itemsByCategory[category].push(item);
             });
+            
+            // Display by category
+            for (const category in itemsByCategory) {
+                html += `<div style="margin-bottom: 20px;"><h4 style="color: #3498db; border-bottom: 1px solid #eee; padding-bottom: 10px;">${category}</h4>`;
+                
+                itemsByCategory[category].forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    
+                    html += `
+                        <div class="cart-item">
+                            <div>
+                                <h4>${item.name}</h4>
+                                <p>₹${item.price} × ${item.quantity}</p>
+                                <p style="font-weight: bold;">Item Total: ₹${itemTotal}</p>
+                            </div>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                                <span style="min-width: 30px; text-align: center;">${item.quantity}</span>
+                                <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                                <button class="remove-btn" onclick="removeFromCart('${item.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            }
             
             cartItems.innerHTML = html;
             cartTotal.textContent = total;
@@ -677,14 +870,30 @@
             
             let message = "Hello SARM ENTERPRISES,\n\nI would like to place an order:\n\n";
             
-            cart.forEach((item, index) => {
-                message += `${index + 1}. ${item.name} - ${item.quantity} × ₹${item.price} = ₹${item.price * item.quantity}\n`;
+            // Group items by category for better organization
+            const itemsByCategory = {};
+            cart.forEach(item => {
+                const category = item.category || 'General';
+                if (!itemsByCategory[category]) {
+                    itemsByCategory[category] = [];
+                }
+                itemsByCategory[category].push(item);
             });
             
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            message += `\n📦 **Order Summary:**\n`;
-            message += `Total Items: ${cart.reduce((sum, item) => sum + item.quantity, 0)}\n`;
-            message += `Total Amount: ₹${total}\n\n`;
+            for (const category in itemsByCategory) {
+                message += `📦 **${category}:**\n`;
+                itemsByCategory[category].forEach((item, index) => {
+                    message += `  ${index + 1}. ${item.name} - ${item.quantity} × ₹${item.price} = ₹${item.price * item.quantity}\n`;
+                });
+                message += '\n';
+            }
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            message += `📊 **Order Summary:**\n`;
+            message += `Total Items: ${totalItems}\n`;
+            message += `Total Amount: ₹${totalAmount}\n\n`;
             message += `Please confirm availability and delivery details.\n\nThank you!`;
             
             const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
@@ -701,147 +910,232 @@
             }
         }
 
-        // ==================== PRODUCT LOADING ====================
-        async function loadProducts() {
+        // ==================== PRODUCT CATEGORIES SYSTEM ====================
+        async function loadProductsByCategory() {
             try {
-                const productsContainer = document.getElementById('productsContainer');
-                const template = document.getElementById('productTemplate');
+                const categoryTabs = document.getElementById('categoryTabs');
+                const categorySections = document.getElementById('categorySections');
+                const categoryTemplate = document.getElementById('categoryTemplate');
+                const productTemplate = document.getElementById('productTemplate');
                 
-                productsContainer.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</div>';
+                // Show loading
+                categorySections.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</div>';
                 
                 const querySnapshot = await getDocs(collection(db, "products"));
                 
                 if (querySnapshot.empty) {
-                    productsContainer.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available at the moment.</p>';
+                    categorySections.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available at the moment.</p>';
                     return;
                 }
                 
-                productsContainer.innerHTML = '';
+                // Clear containers
+                categoryTabs.innerHTML = '';
+                categorySections.innerHTML = '';
+                
+                // Group products by category
+                const productsByCategory = {};
                 
                 querySnapshot.forEach((doc) => {
                     const product = doc.data();
                     product.id = doc.id;
                     
-                    // Create product element
-                    const clone = template.content.cloneNode(true);
-                    const productCard = clone.querySelector('.product-card');
-                    productCard.dataset.productId = product.id;
+                    // Default category if not specified
+                    const category = product.category || 'Notebooks';
                     
-                    // Set product info
-                    productCard.querySelector('.product-name').textContent = product.name;
-                    productCard.querySelector('.price-amount').textContent = product.price;
-                    productCard.querySelector('.stock-quantity').textContent = product.stock;
-                    productCard.querySelector('.product-description').textContent = product.description || 'Premium quality notebook';
-                    
-                    // Set stock status
-                    const stockElement = productCard.querySelector('.stock-text');
-                    if (product.stock <= 0) {
-                        stockElement.textContent = 'Out of Stock';
-                        stockElement.style.color = '#e74c3c';
-                        productCard.querySelector('.add-to-cart-btn').disabled = true;
-                        productCard.querySelector('.add-to-cart-btn').innerHTML = '<i class="fas fa-times"></i> Out of Stock';
-                    } else if (product.stock <= 10) {
-                        stockElement.textContent = 'Low Stock';
-                        stockElement.style.color = '#f39c12';
-                    } else {
-                        stockElement.textContent = 'In Stock';
-                        stockElement.style.color = '#27ae60';
+                    if (!productsByCategory[category]) {
+                        productsByCategory[category] = [];
                     }
                     
-                    // Handle product images
-                    let productImages = [];
-                    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-                        productImages = product.images;
-                    } else if (product.imagePath) {
-                        productImages = [product.imagePath];
-                    } else {
-                        productImages = ['https://via.placeholder.com/400x300?text=Notebook'];
-                    }
+                    productsByCategory[category].push(product);
+                });
+                
+                // Get category list and sort alphabetically
+                const categories = Object.keys(productsByCategory).sort();
+                
+                // Create tabs for each category
+                categories.forEach((category, index) => {
+                    // Create tab button
+                    const tabButton = document.createElement('button');
+                    tabButton.className = `category-tab ${index === 0 ? 'active' : ''}`;
+                    tabButton.textContent = category;
+                    tabButton.dataset.category = category;
+                    tabButton.onclick = () => switchCategory(category);
+                    categoryTabs.appendChild(tabButton);
                     
-                    // Set first image
-                    const mainImage = productCard.querySelector('.product-main-image');
-                    mainImage.src = productImages[0];
-                    mainImage.alt = product.name;
+                    // Create category section
+                    const categoryClone = categoryTemplate.content.cloneNode(true);
+                    const categorySection = categoryClone.querySelector('.category-section');
+                    categorySection.dataset.category = category;
+                    categorySection.classList.toggle('active', index === 0);
                     
-                    // Handle image loading error
-                    mainImage.onerror = function() {
-                        this.src = 'https://via.placeholder.com/400x300?text=Notebook';
-                    };
+                    const categoryTitle = categoryClone.querySelector('.category-title');
+                    categoryTitle.textContent = category;
                     
-                    // Set image count badge
-                    const imageCount = productCard.querySelector('.image-count');
-                    imageCount.textContent = productImages.length;
+                    const productsGrid = categoryClone.querySelector('.products-grid');
                     
-                    // Setup image gallery if multiple images
-                    if (productImages.length > 1) {
-                        const dotsContainer = productCard.querySelector('.product-image-dots');
-                        dotsContainer.innerHTML = '';
-                        
-                        productImages.forEach((_, index) => {
-                            const dot = document.createElement('div');
-                            dot.className = `image-dot ${index === 0 ? 'active' : ''}`;
-                            dot.onclick = () => switchProductImage(productCard, index, productImages);
-                            dotsContainer.appendChild(dot);
-                        });
-                        
-                        // Setup navigation
-                        let currentIndex = 0;
-                        
-                        productCard.querySelector('.nav-prev').onclick = () => {
-                            currentIndex = (currentIndex - 1 + productImages.length) % productImages.length;
-                            switchProductImage(productCard, currentIndex, productImages);
-                        };
-                        
-                        productCard.querySelector('.nav-next').onclick = () => {
-                            currentIndex = (currentIndex + 1) % productImages.length;
-                            switchProductImage(productCard, currentIndex, productImages);
-                        };
-                    } else {
-                        productCard.querySelector('.image-count-badge').style.display = 'none';
-                        productCard.querySelector('.nav-prev').style.display = 'none';
-                        productCard.querySelector('.nav-next').style.display = 'none';
-                    }
+                    // Add products to this category
+                    productsByCategory[category].forEach(product => {
+                        const productElement = createProductElement(product, productTemplate);
+                        productsGrid.appendChild(productElement);
+                    });
                     
-                    // Setup quantity controls
-                    const qtyInput = productCard.querySelector('.qty-input');
-                    const maxStock = Math.min(product.stock, 20);
-                    qtyInput.max = maxStock;
-                    
-                    productCard.querySelector('.minus-btn').onclick = () => {
-                        const value = parseInt(qtyInput.value);
-                        if (value > 1) qtyInput.value = value - 1;
-                    };
-                    
-                    productCard.querySelector('.plus-btn').onclick = () => {
-                        const value = parseInt(qtyInput.value);
-                        const max = parseInt(qtyInput.max);
-                        if (value < max) qtyInput.value = value + 1;
-                    };
-                    
-                    // Setup add to cart button
-                    productCard.querySelector('.add-to-cart-btn').onclick = () => {
-                        const quantity = parseInt(qtyInput.value);
-                        if (quantity > 0 && product.stock > 0) {
-                            addToCart(product, quantity);
-                        }
-                    };
-                    
-                    // Setup WhatsApp order button
-                    productCard.querySelector('.whatsapp-btn').onclick = () => {
-                        const quantity = parseInt(qtyInput.value);
-                        const message = `Hello SARM ENTERPRISES,\n\nI want to order:\n\n📓 Product: ${product.name}\n📦 Quantity: ${quantity}\n💰 Price: ₹${product.price}\n💵 Total: ₹${product.price * quantity}\n\nPlease confirm availability and delivery time.\n\nThank you!`;
-                        const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
-                        window.open(whatsappUrl, '_blank');
-                    };
-                    
-                    productsContainer.appendChild(clone);
+                    categorySections.appendChild(categoryClone);
                 });
                 
             } catch (error) {
                 console.error("Error loading products:", error);
-                document.getElementById('productsContainer').innerHTML = 
-                    '<p style="color: #e74c3c; text-align: center; padding: 2rem;">Error loading products. Please refresh the page or try again later.</p>';
+                document.getElementById('categorySections').innerHTML = 
+                    '<p style="color: #e74c3c; text-align: center; padding: 2rem;">Error loading products. Please refresh the page.</p>';
             }
+        }
+
+        // Switch between categories
+        function switchCategory(category) {
+            // Update active tab
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.category === category);
+            });
+            
+            // Show selected category section
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.toggle('active', section.dataset.category === category);
+            });
+            
+            // Smooth scroll to products section
+            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Create product element
+        function createProductElement(product, template) {
+            const clone = template.content.cloneNode(true);
+            const productCard = clone.querySelector('.product-card');
+            productCard.dataset.productId = product.id;
+            
+            // Set product info
+            productCard.querySelector('.product-name').textContent = product.name;
+            productCard.querySelector('.price-amount').textContent = product.price;
+            productCard.querySelector('.stock-quantity').textContent = product.stock;
+            productCard.querySelector('.product-description').textContent = product.description || 'Premium quality product';
+            
+            // Set stock status
+            const stockElement = productCard.querySelector('.stock-text');
+            if (product.stock <= 0) {
+                stockElement.textContent = 'Out of Stock';
+                stockElement.style.color = '#e74c3c';
+                productCard.querySelector('.add-to-cart-btn').disabled = true;
+                productCard.querySelector('.add-to-cart-btn').innerHTML = '<i class="fas fa-times"></i> Out of Stock';
+                productCard.querySelector('.add-to-cart-btn').style.opacity = '0.6';
+            } else if (product.stock <= 10) {
+                stockElement.textContent = 'Low Stock';
+                stockElement.style.color = '#f39c12';
+            } else {
+                stockElement.textContent = 'In Stock';
+                stockElement.style.color = '#27ae60';
+            }
+            
+            // Handle product images
+            let productImages = [];
+            if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+                productImages = product.images;
+            } else if (product.imagePath) {
+                productImages = [product.imagePath];
+            } else {
+                productImages = ['https://via.placeholder.com/400x300?text=' + encodeURIComponent(product.name)];
+            }
+            
+            // Set first image
+            const mainImage = productCard.querySelector('.product-main-image');
+            mainImage.src = productImages[0];
+            mainImage.alt = product.name;
+            
+            // Handle image loading error
+            mainImage.onerror = function() {
+                this.src = 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(product.name);
+            };
+            
+            // Set image count badge
+            const imageCount = productCard.querySelector('.image-count');
+            imageCount.textContent = productImages.length;
+            
+            // Setup image gallery if multiple images
+            if (productImages.length > 1) {
+                const dotsContainer = productCard.querySelector('.product-image-dots');
+                dotsContainer.innerHTML = '';
+                
+                productImages.forEach((_, index) => {
+                    const dot = document.createElement('div');
+                    dot.className = `image-dot ${index === 0 ? 'active' : ''}`;
+                    dot.onclick = () => switchProductImage(productCard, index, productImages);
+                    dotsContainer.appendChild(dot);
+                });
+                
+                // Setup navigation
+                let currentIndex = 0;
+                
+                productCard.querySelector('.nav-prev').onclick = () => {
+                    currentIndex = (currentIndex - 1 + productImages.length) % productImages.length;
+                    switchProductImage(productCard, currentIndex, productImages);
+                };
+                
+                productCard.querySelector('.nav-next').onclick = () => {
+                    currentIndex = (currentIndex + 1) % productImages.length;
+                    switchProductImage(productCard, currentIndex, productImages);
+                };
+                
+                // Auto-rotate images every 5 seconds
+                const autoRotate = setInterval(() => {
+                    currentIndex = (currentIndex + 1) % productImages.length;
+                    switchProductImage(productCard, currentIndex, productImages);
+                }, 5000);
+                
+                // Stop auto-rotate on hover
+                const imageContainer = productCard.querySelector('.product-image-container');
+                imageContainer.addEventListener('mouseenter', () => clearInterval(autoRotate));
+                imageContainer.addEventListener('mouseleave', () => {
+                    setInterval(() => {
+                        currentIndex = (currentIndex + 1) % productImages.length;
+                        switchProductImage(productCard, currentIndex, productImages);
+                    }, 5000);
+                });
+            } else {
+                productCard.querySelector('.image-count-badge').style.display = 'none';
+                productCard.querySelector('.nav-prev').style.display = 'none';
+                productCard.querySelector('.nav-next').style.display = 'none';
+            }
+            
+            // Setup quantity controls
+            const qtyInput = productCard.querySelector('.qty-input');
+            const maxStock = Math.min(product.stock, 20);
+            qtyInput.max = maxStock;
+            
+            productCard.querySelector('.minus-btn').onclick = () => {
+                const value = parseInt(qtyInput.value);
+                if (value > 1) qtyInput.value = value - 1;
+            };
+            
+            productCard.querySelector('.plus-btn').onclick = () => {
+                const value = parseInt(qtyInput.value);
+                const max = parseInt(qtyInput.max);
+                if (value < max) qtyInput.value = value + 1;
+            };
+            
+            // Setup add to cart button
+            productCard.querySelector('.add-to-cart-btn').onclick = () => {
+                const quantity = parseInt(qtyInput.value);
+                if (quantity > 0 && product.stock > 0) {
+                    addToCart(product, quantity);
+                }
+            };
+            
+            // Setup WhatsApp order button
+            productCard.querySelector('.whatsapp-btn').onclick = () => {
+                const quantity = parseInt(qtyInput.value);
+                const message = `Hello SARM ENTERPRISES,\n\nI want to order:\n\n📓 Product: ${product.name}\n📦 Quantity: ${quantity}\n💰 Price: ₹${product.price}\n💵 Total: ₹${product.price * quantity}\n\nPlease confirm availability and delivery time.\n\nThank you!`;
+                const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            };
+            
+            return productCard;
         }
 
         // Switch product image
@@ -869,10 +1163,11 @@
                 openCart();
             };
             
-            // Load logo and products
+            // Load logo, quotes carousel, and products
             loadLogo();
+            initQuotesCarousel();
             updateCartCount();
-            loadProducts();
+            loadProductsByCategory();
             
             // Close modal when clicking outside
             window.onclick = (e) => {
@@ -899,21 +1194,8 @@
         window.checkout = checkout;
         window.clearCart = clearCart;
         window.switchProductImage = switchProductImage;
+        window.switchCategory = switchCategory;
         window.saveLogoToLocalStorage = saveLogoToLocalStorage;
     </script>
-
-    <!-- Add to style.css -->
-    <style>
-        .loading-spinner {
-            text-align: center;
-            padding: 2rem;
-            color: #666;
-            grid-column: 1 / -1;
-        }
-        
-        .loading-spinner i {
-            margin-right: 10px;
-        }
-    </style>
 </body>
 </html>
