@@ -14,6 +14,18 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     
     <style>
+        /* Logo Styling */
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-right: 15px;
+            background: white;
+            padding: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
         /* Multi-Image Gallery Styles */
         .product-image-container {
             position: relative;
@@ -209,6 +221,12 @@
         
         /* Mobile Responsive */
         @media (max-width: 768px) {
+            .logo-img {
+                width: 50px;
+                height: 50px;
+                margin-right: 10px;
+            }
+            
             .product-image-container {
                 height: 200px;
             }
@@ -219,7 +237,9 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <img id="logo" src="" alt="SARM ENTERPRISES Logo" class="logo-img">
+                <!-- Logo will be set from local storage -->
+                <img id="logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%233498db' rx='8'/%3E%3Ctext x='30' y='35' font-family='Arial, sans-serif' font-size='24' fill='white' text-anchor='middle' font-weight='bold'%3ESARM%3C/text%3E%3C/svg%3E" 
+                     alt="SARM ENTERPRISES Logo" class="logo-img">
                 <div>
                     <h1>SARM ENTERPRISES</h1>
                     <p class="tagline">Quality Pages for Quality Thoughts</p>
@@ -461,13 +481,13 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Main JavaScript -->
     <script type="module">
-        // Import Firebase
+        // Import Firebase only for products, not for logo
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-        // Your Firebase configuration
+        // Your Firebase configuration (only for products)
         const firebaseConfig = {
             apiKey: "AIzaSyD6T2k0fE2R4gF7QY4V6q6Z4Qv0X1W2Y3Z4",
             authDomain: "sarm-enterprises.firebaseapp.com",
@@ -481,14 +501,66 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Cart System
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        // ==================== LOGO SYSTEM ====================
+        // Load logo from localStorage (Base64 string)
+        function loadLogo() {
+            try {
+                console.log("Loading logo from localStorage...");
+                const savedLogo = localStorage.getItem('sarmLogo');
+                
+                if (savedLogo) {
+                    const logoImg = document.getElementById('logo');
+                    logoImg.src = savedLogo;
+                    console.log("Logo loaded from localStorage");
+                    
+                    // Handle logo loading error
+                    logoImg.onerror = () => {
+                        console.log("Local storage logo failed to load, using default");
+                        setDefaultLogo();
+                    };
+                } else {
+                    console.log("No logo in localStorage, using default");
+                    setDefaultLogo();
+                }
+            } catch (error) {
+                console.error("Error loading logo:", error);
+                setDefaultLogo();
+            }
+        }
+
+        // Set default logo
+        function setDefaultLogo() {
+            const logoImg = document.getElementById('logo');
+            logoImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%233498db' rx='8'/%3E%3Ctext x='30' y='35' font-family='Arial, sans-serif' font-size='24' fill='white' text-anchor='middle' font-weight='bold'%3ESARM%3C/text%3E%3C/svg%3E";
+        }
+
+        // Save logo to localStorage (this function should be called from admin panel)
+        function saveLogoToLocalStorage(base64String) {
+            try {
+                localStorage.setItem('sarmLogo', base64String);
+                console.log("Logo saved to localStorage");
+                
+                // Update logo on current page
+                const logoImg = document.getElementById('logo');
+                if (logoImg) {
+                    logoImg.src = base64String;
+                }
+                
+                return true;
+            } catch (error) {
+                console.error("Error saving logo to localStorage:", error);
+                return false;
+            }
+        }
+
+        // ==================== CART SYSTEM ====================
+        let cart = JSON.parse(localStorage.getItem('sarmCart')) || [];
 
         // Update cart count
         function updateCartCount() {
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             document.getElementById('cartCount').textContent = totalItems;
-            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('sarmCart', JSON.stringify(cart));
         }
 
         // Show notification
@@ -532,9 +604,13 @@
         function updateCartQuantity(productId, quantity) {
             const item = cart.find(item => item.id === productId);
             if (item) {
-                item.quantity = quantity;
-                updateCartCount();
-                renderCart();
+                if (quantity < 1) {
+                    removeFromCart(productId);
+                } else {
+                    item.quantity = quantity;
+                    updateCartCount();
+                    renderCart();
+                }
             }
         }
 
@@ -562,12 +638,15 @@
                         <div>
                             <h4>${item.name}</h4>
                             <p>₹${item.price} × ${item.quantity}</p>
+                            <p style="font-weight: bold;">Item Total: ₹${itemTotal}</p>
                         </div>
                         <div class="quantity-controls">
                             <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.quantity - 1})">-</button>
-                            <span>${item.quantity}</span>
+                            <span style="min-width: 30px; text-align: center;">${item.quantity}</span>
                             <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.quantity + 1})">+</button>
-                            <button class="remove-btn" onclick="removeFromCart('${item.id}')">Remove</button>
+                            <button class="remove-btn" onclick="removeFromCart('${item.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -596,15 +675,17 @@
                 return;
             }
             
-            let message = "Hello SARM ENTERPRISES, I would like to order:\n\n";
+            let message = "Hello SARM ENTERPRISES,\n\nI would like to place an order:\n\n";
             
             cart.forEach((item, index) => {
                 message += `${index + 1}. ${item.name} - ${item.quantity} × ₹${item.price} = ₹${item.price * item.quantity}\n`;
             });
             
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            message += `\nTotal: ₹${total}`;
-            message += "\n\nPlease confirm availability and delivery details.";
+            message += `\n📦 **Order Summary:**\n`;
+            message += `Total Items: ${cart.reduce((sum, item) => sum + item.quantity, 0)}\n`;
+            message += `Total Amount: ₹${total}\n\n`;
+            message += `Please confirm availability and delivery details.\n\nThank you!`;
             
             const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
@@ -612,25 +693,26 @@
 
         // Clear cart
         function clearCart() {
-            if (confirm('Clear all items from cart?')) {
+            if (confirm('Are you sure you want to clear your cart?')) {
                 cart = [];
                 updateCartCount();
                 renderCart();
+                showNotification('Cart cleared!');
             }
         }
 
-        // Load products
+        // ==================== PRODUCT LOADING ====================
         async function loadProducts() {
             try {
                 const productsContainer = document.getElementById('productsContainer');
                 const template = document.getElementById('productTemplate');
                 
-                productsContainer.innerHTML = '<p style="text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin"></i> Loading products...</p>';
+                productsContainer.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</div>';
                 
                 const querySnapshot = await getDocs(collection(db, "products"));
                 
                 if (querySnapshot.empty) {
-                    productsContainer.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available.</p>';
+                    productsContainer.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available at the moment.</p>';
                     return;
                 }
                 
@@ -649,7 +731,7 @@
                     productCard.querySelector('.product-name').textContent = product.name;
                     productCard.querySelector('.price-amount').textContent = product.price;
                     productCard.querySelector('.stock-quantity').textContent = product.stock;
-                    productCard.querySelector('.product-description').textContent = product.description || '';
+                    productCard.querySelector('.product-description').textContent = product.description || 'Premium quality notebook';
                     
                     // Set stock status
                     const stockElement = productCard.querySelector('.stock-text');
@@ -657,6 +739,7 @@
                         stockElement.textContent = 'Out of Stock';
                         stockElement.style.color = '#e74c3c';
                         productCard.querySelector('.add-to-cart-btn').disabled = true;
+                        productCard.querySelector('.add-to-cart-btn').innerHTML = '<i class="fas fa-times"></i> Out of Stock';
                     } else if (product.stock <= 10) {
                         stockElement.textContent = 'Low Stock';
                         stockElement.style.color = '#f39c12';
@@ -679,6 +762,11 @@
                     const mainImage = productCard.querySelector('.product-main-image');
                     mainImage.src = productImages[0];
                     mainImage.alt = product.name;
+                    
+                    // Handle image loading error
+                    mainImage.onerror = function() {
+                        this.src = 'https://via.placeholder.com/400x300?text=Notebook';
+                    };
                     
                     // Set image count badge
                     const imageCount = productCard.querySelector('.image-count');
@@ -716,7 +804,8 @@
                     
                     // Setup quantity controls
                     const qtyInput = productCard.querySelector('.qty-input');
-                    qtyInput.max = product.stock;
+                    const maxStock = Math.min(product.stock, 20);
+                    qtyInput.max = maxStock;
                     
                     productCard.querySelector('.minus-btn').onclick = () => {
                         const value = parseInt(qtyInput.value);
@@ -732,13 +821,15 @@
                     // Setup add to cart button
                     productCard.querySelector('.add-to-cart-btn').onclick = () => {
                         const quantity = parseInt(qtyInput.value);
-                        addToCart(product, quantity);
+                        if (quantity > 0 && product.stock > 0) {
+                            addToCart(product, quantity);
+                        }
                     };
                     
                     // Setup WhatsApp order button
                     productCard.querySelector('.whatsapp-btn').onclick = () => {
                         const quantity = parseInt(qtyInput.value);
-                        const message = `Hello SARM ENTERPRISES, I want to order:\n\n${product.name}\nQuantity: ${quantity}\nPrice: ₹${product.price}\nTotal: ₹${product.price * quantity}\n\nPlease confirm availability.`;
+                        const message = `Hello SARM ENTERPRISES,\n\nI want to order:\n\n📓 Product: ${product.name}\n📦 Quantity: ${quantity}\n💰 Price: ₹${product.price}\n💵 Total: ₹${product.price * quantity}\n\nPlease confirm availability and delivery time.\n\nThank you!`;
                         const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
                         window.open(whatsappUrl, '_blank');
                     };
@@ -749,7 +840,7 @@
             } catch (error) {
                 console.error("Error loading products:", error);
                 document.getElementById('productsContainer').innerHTML = 
-                    '<p style="color: #e74c3c; text-align: center;">Error loading products.</p>';
+                    '<p style="color: #e74c3c; text-align: center; padding: 2rem;">Error loading products. Please refresh the page or try again later.</p>';
             }
         }
 
@@ -761,7 +852,7 @@
             mainImage.style.opacity = '0';
             setTimeout(() => {
                 mainImage.src = images[index];
-                mainImage.alt = `Product Image ${index + 1}`;
+                mainImage.alt = `${productCard.querySelector('.product-name').textContent} - Image ${index + 1}`;
                 mainImage.style.opacity = '1';
                 
                 dots.forEach((dot, i) => {
@@ -770,18 +861,18 @@
             }, 150);
         }
 
-        // Initialize cart count
-        updateCartCount();
-        
-        // Load products when page loads
+        // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', () => {
-            loadProducts();
-            
             // Setup cart link
             document.getElementById('cartLink').onclick = (e) => {
                 e.preventDefault();
                 openCart();
             };
+            
+            // Load logo and products
+            loadLogo();
+            updateCartCount();
+            loadProducts();
             
             // Close modal when clicking outside
             window.onclick = (e) => {
@@ -790,6 +881,13 @@
                     closeCart();
                 }
             };
+            
+            // Close cart with ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeCart();
+                }
+            });
         });
 
         // Make functions globally available
@@ -801,6 +899,21 @@
         window.checkout = checkout;
         window.clearCart = clearCart;
         window.switchProductImage = switchProductImage;
+        window.saveLogoToLocalStorage = saveLogoToLocalStorage;
     </script>
+
+    <!-- Add to style.css -->
+    <style>
+        .loading-spinner {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+        
+        .loading-spinner i {
+            margin-right: 10px;
+        }
+    </style>
 </body>
 </html>
