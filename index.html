@@ -42,7 +42,7 @@
         
         .hero-quotes-container {
             display: flex;
-            transition: transform 10s ease-in-out; /* SLOWER transition */
+            transition: transform 1s fade In; /* SLOWER transition */
             width: 600%; /* 6 quotes, each 100% */
         }
         
@@ -871,7 +871,7 @@
             
             let currentQuote = 0;
             const totalQuotes = quotes.length;
-            const SLIDE_INTERVAL = 18000; // 18SECONDS - SLOWER
+            const SLIDE_INTERVAL = 5000; // 5 SECONDS - SLOWER
             
             // Function to move to a specific quote
             function goToQuote(index) {
