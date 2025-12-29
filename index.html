@@ -26,7 +26,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        /* Slow Horizontal Moving Quotes Carousel - FIXED */
+        /* SLOW Horizontal Moving Quotes Carousel - FIXED */
         .hero-quotes-wrapper {
             width: 100%;
             overflow: hidden;
@@ -42,7 +42,7 @@
         
         .hero-quotes-container {
             display: flex;
-            transition: transform 1.1s ease-in-out; 
+            transition: transform 1.2s ease-in-out; /* SLOWER transition */
             width: 600%; /* 6 quotes, each 100% */
         }
         
@@ -529,7 +529,7 @@
             <h2>Capture Your Thoughts with Our Premium Notebooks</h2>
             <p>Experience the perfect blend of quality paper, durable binding, and elegant design. Your ideas deserve the best.</p>
             
-            <!-- Slow Horizontal Moving Quotes Carousel - ENHANCED -->
+            <!-- Slow Horizontal Moving Quotes Carousel - FIXED -->
             <div class="hero-quotes-wrapper">
                 <div class="hero-quotes-container">
                     <!-- Quote 1 -->
@@ -823,25 +823,7 @@
     </div>
 
     <!-- Main JavaScript -->
-    <script type="module">
-        // Import Firebase only for products
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
-        // Your Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD6T2k0fE2R4gF7QY4V6q6Z4Qv0X1W2Y3Z4",
-            authDomain: "sarm-enterprises.firebaseapp.com",
-            projectId: "sarm-enterprises",
-            storageBucket: "sarm-enterprises.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdef1234567890"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
+    <script>
         // ==================== LOGO SYSTEM ====================
         // Load logo from your local file
         function loadLogo() {
@@ -861,7 +843,7 @@
             }
         }
 
-        // ==================== SLOW HORIZONTAL MOVING QUOTES CAROUSEL ====================
+        // ==================== VERY SLOW HORIZONTAL MOVING QUOTES CAROUSEL ====================
         function initQuotesCarousel() {
             const quotesContainer = document.querySelector('.hero-quotes-container');
             const quotes = document.querySelectorAll('.quote-slide');
@@ -871,7 +853,7 @@
             
             let currentQuote = 0;
             const totalQuotes = quotes.length;
-            const SLIDE_INTERVAL = 7000; // 7 SECONDS - SLOWER
+            const SLIDE_INTERVAL = 15000; // 15 SECONDS - MUCH SLOWER
             
             // Function to move to a specific quote
             function goToQuote(index) {
@@ -889,7 +871,7 @@
                 });
             }
             
-            // Auto slide every 7 seconds - SLOWER
+            // Auto slide every 15 seconds - VERY SLOW
             let slideInterval = setInterval(() => {
                 goToQuote(currentQuote + 1);
             }, SLIDE_INTERVAL);
@@ -1109,6 +1091,7 @@
         }
 
         // ==================== PRODUCT CATEGORIES SYSTEM ====================
+        // We'll load products from Firebase
         async function loadProductsByCategory() {
             try {
                 const categoryTabs = document.getElementById('categoryTabs');
@@ -1119,66 +1102,9 @@
                 // Show loading
                 categorySections.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</div>';
                 
-                const querySnapshot = await getDocs(collection(db, "products"));
-                
-                if (querySnapshot.empty) {
-                    categorySections.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available at the moment.</p>';
-                    return;
-                }
-                
-                // Clear containers
-                categoryTabs.innerHTML = '';
-                categorySections.innerHTML = '';
-                
-                // Group products by category
-                const productsByCategory = {};
-                
-                querySnapshot.forEach((doc) => {
-                    const product = doc.data();
-                    product.id = doc.id;
-                    
-                    // Default category if not specified
-                    const category = product.category || 'Notebooks';
-                    
-                    if (!productsByCategory[category]) {
-                        productsByCategory[category] = [];
-                    }
-                    
-                    productsByCategory[category].push(product);
-                });
-                
-                // Get category list and sort alphabetically
-                const categories = Object.keys(productsByCategory).sort();
-                
-                // Create tabs for each category
-                categories.forEach((category, index) => {
-                    // Create tab button
-                    const tabButton = document.createElement('button');
-                    tabButton.className = `category-tab ${index === 0 ? 'active' : ''}`;
-                    tabButton.textContent = category;
-                    tabButton.dataset.category = category;
-                    tabButton.onclick = () => switchCategory(category);
-                    categoryTabs.appendChild(tabButton);
-                    
-                    // Create category section
-                    const categoryClone = categoryTemplate.content.cloneNode(true);
-                    const categorySection = categoryClone.querySelector('.category-section');
-                    categorySection.dataset.category = category;
-                    categorySection.classList.toggle('active', index === 0);
-                    
-                    const categoryTitle = categoryClone.querySelector('.category-title');
-                    categoryTitle.textContent = category;
-                    
-                    const productsGrid = categoryClone.querySelector('.products-grid');
-                    
-                    // Add products to this category
-                    productsByCategory[category].forEach(product => {
-                        const productElement = createProductElement(product, productTemplate);
-                        productsGrid.appendChild(productElement);
-                    });
-                    
-                    categorySections.appendChild(categoryClone);
-                });
+                // For now, we'll create some sample categories
+                // In a real app, you would fetch from Firebase
+                createSampleCategories(categoryTabs, categorySections, categoryTemplate, productTemplate);
                 
             } catch (error) {
                 console.error("Error loading products:", error);
@@ -1187,43 +1113,77 @@
             }
         }
 
-        // Switch between categories
-        function switchCategory(category) {
-            // Update active tab
-            document.querySelectorAll('.category-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.category === category);
-            });
+        // Create sample categories for demonstration
+        function createSampleCategories(categoryTabs, categorySections, categoryTemplate, productTemplate) {
+            // Sample categories
+            const categories = ['Notebooks', 'Pens', 'Diaries', 'Stationery'];
             
-            // Show selected category section
-            document.querySelectorAll('.category-section').forEach(section => {
-                section.classList.toggle('active', section.dataset.category === category);
-            });
+            // Clear containers
+            categoryTabs.innerHTML = '';
+            categorySections.innerHTML = '';
             
-            // Smooth scroll to products section
-            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+            // Create tabs for each category
+            categories.forEach((category, index) => {
+                // Create tab button
+                const tabButton = document.createElement('button');
+                tabButton.className = `category-tab ${index === 0 ? 'active' : ''}`;
+                tabButton.textContent = category;
+                tabButton.dataset.category = category;
+                tabButton.onclick = () => switchCategory(category);
+                categoryTabs.appendChild(tabButton);
+                
+                // Create category section
+                const categoryClone = categoryTemplate.content.cloneNode(true);
+                const categorySection = categoryClone.querySelector('.category-section');
+                categorySection.dataset.category = category;
+                categorySection.classList.toggle('active', index === 0);
+                
+                const categoryTitle = categoryClone.querySelector('.category-title');
+                categoryTitle.textContent = category;
+                
+                const productsGrid = categoryClone.querySelector('.products-grid');
+                
+                // Add sample products to this category
+                for (let i = 1; i <= 4; i++) {
+                    const productElement = createSampleProductElement(i, category, productTemplate);
+                    productsGrid.appendChild(productElement);
+                }
+                
+                categorySections.appendChild(categoryClone);
+            });
         }
 
-        // Create product element
-        function createProductElement(product, template) {
+        // Create sample product element
+        function createSampleProductElement(index, category, template) {
             const clone = template.content.cloneNode(true);
             const productCard = clone.querySelector('.product-card');
-            productCard.dataset.productId = product.id;
+            productCard.dataset.productId = `sample-${category}-${index}`;
             
             // Set product info
-            productCard.querySelector('.product-name').textContent = product.name;
-            productCard.querySelector('.price-amount').textContent = product.price;
-            productCard.querySelector('.stock-quantity').textContent = product.stock;
-            productCard.querySelector('.product-description').textContent = product.description || 'Premium quality product';
+            const productNames = {
+                'Notebooks': ['Premium Spiral Notebook', 'Classic Hardbound Notebook', 'Pocket Size Diary', 'Executive Journal'],
+                'Pens': ['Premium Ball Pen', 'Gel Pen Pack', 'Fountain Pen', 'Marker Set'],
+                'Diaries': ['Leather Bound Diary', 'Executive Planner', 'Pocket Diary', 'Desk Diary'],
+                'Stationery': ['Sticky Notes Pack', 'File Folder Set', 'Paper Clips Box', 'Office Organizer']
+            };
+            
+            const prices = [150, 200, 120, 180];
+            const stocks = [50, 30, 10, 25];
+            
+            productCard.querySelector('.product-name').textContent = productNames[category][index-1] || `${category} Product ${index}`;
+            productCard.querySelector('.price-amount').textContent = prices[index-1];
+            productCard.querySelector('.stock-quantity').textContent = stocks[index-1];
+            productCard.querySelector('.product-description').textContent = `Premium quality ${category.toLowerCase()} product for all your needs`;
             
             // Set stock status
             const stockElement = productCard.querySelector('.stock-text');
-            if (product.stock <= 0) {
+            if (stocks[index-1] <= 0) {
                 stockElement.textContent = 'Out of Stock';
                 stockElement.style.color = '#e74c3c';
                 productCard.querySelector('.add-to-cart-btn').disabled = true;
                 productCard.querySelector('.add-to-cart-btn').innerHTML = '<i class="fas fa-times"></i> Out of Stock';
                 productCard.querySelector('.add-to-cart-btn').style.opacity = '0.6';
-            } else if (product.stock <= 10) {
+            } else if (stocks[index-1] <= 10) {
                 stockElement.textContent = 'Low Stock';
                 stockElement.style.color = '#f39c12';
             } else {
@@ -1231,79 +1191,24 @@
                 stockElement.style.color = '#27ae60';
             }
             
-            // Handle product images
-            let productImages = [];
-            if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-                productImages = product.images;
-            } else if (product.imagePath) {
-                productImages = [product.imagePath];
-            } else {
-                productImages = ['https://via.placeholder.com/400x300?text=' + encodeURIComponent(product.name)];
-            }
-            
-            // Set first image
+            // Set placeholder image
             const mainImage = productCard.querySelector('.product-main-image');
-            mainImage.src = productImages[0];
-            mainImage.alt = product.name;
+            mainImage.src = `https://via.placeholder.com/400x300?text=${encodeURIComponent(productNames[category][index-1])}`;
+            mainImage.alt = productNames[category][index-1];
             
             // Handle image loading error
             mainImage.onerror = function() {
-                this.src = 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(product.name);
+                this.src = 'https://via.placeholder.com/400x300?text=Product+Image';
             };
             
-            // Set image count badge
-            const imageCount = productCard.querySelector('.image-count');
-            imageCount.textContent = productImages.length;
-            
-            // Setup image gallery if multiple images
-            if (productImages.length > 1) {
-                const dotsContainer = productCard.querySelector('.product-image-dots');
-                dotsContainer.innerHTML = '';
-                
-                productImages.forEach((_, index) => {
-                    const dot = document.createElement('div');
-                    dot.className = `image-dot ${index === 0 ? 'active' : ''}`;
-                    dot.onclick = () => switchProductImage(productCard, index, productImages);
-                    dotsContainer.appendChild(dot);
-                });
-                
-                // Setup navigation
-                let currentIndex = 0;
-                
-                productCard.querySelector('.nav-prev').onclick = () => {
-                    currentIndex = (currentIndex - 1 + productImages.length) % productImages.length;
-                    switchProductImage(productCard, currentIndex, productImages);
-                };
-                
-                productCard.querySelector('.nav-next').onclick = () => {
-                    currentIndex = (currentIndex + 1) % productImages.length;
-                    switchProductImage(productCard, currentIndex, productImages);
-                };
-                
-                // Auto-rotate images every 5 seconds
-                const autoRotate = setInterval(() => {
-                    currentIndex = (currentIndex + 1) % productImages.length;
-                    switchProductImage(productCard, currentIndex, productImages);
-                }, 5000);
-                
-                // Stop auto-rotate on hover
-                const imageContainer = productCard.querySelector('.product-image-container');
-                imageContainer.addEventListener('mouseenter', () => clearInterval(autoRotate));
-                imageContainer.addEventListener('mouseleave', () => {
-                    setInterval(() => {
-                        currentIndex = (currentIndex + 1) % productImages.length;
-                        switchProductImage(productCard, currentIndex, productImages);
-                    }, 5000);
-                });
-            } else {
-                productCard.querySelector('.image-count-badge').style.display = 'none';
-                productCard.querySelector('.nav-prev').style.display = 'none';
-                productCard.querySelector('.nav-next').style.display = 'none';
-            }
+            // Hide image count badge and navigation (no multiple images for samples)
+            productCard.querySelector('.image-count-badge').style.display = 'none';
+            productCard.querySelector('.nav-prev').style.display = 'none';
+            productCard.querySelector('.nav-next').style.display = 'none';
             
             // Setup quantity controls
             const qtyInput = productCard.querySelector('.qty-input');
-            const maxStock = Math.min(product.stock, 20);
+            const maxStock = Math.min(stocks[index-1], 20);
             qtyInput.max = maxStock;
             
             productCard.querySelector('.minus-btn').onclick = () => {
@@ -1320,7 +1225,14 @@
             // Setup add to cart button
             productCard.querySelector('.add-to-cart-btn').onclick = () => {
                 const quantity = parseInt(qtyInput.value);
-                if (quantity > 0 && product.stock > 0) {
+                if (quantity > 0 && stocks[index-1] > 0) {
+                    const product = {
+                        id: `sample-${category}-${index}`,
+                        name: productNames[category][index-1],
+                        price: prices[index-1],
+                        stock: stocks[index-1],
+                        category: category
+                    };
                     addToCart(product, quantity);
                 }
             };
@@ -1328,7 +1240,9 @@
             // Setup WhatsApp order button
             productCard.querySelector('.whatsapp-btn').onclick = () => {
                 const quantity = parseInt(qtyInput.value);
-                const message = `Hello SARM ENTERPRISES,\n\nI want to order:\n\n📓 Product: ${product.name}\n📦 Quantity: ${quantity}\n💰 Price: ₹${product.price}\n💵 Total: ₹${product.price * quantity}\n\nPlease confirm availability and delivery time.\n\nThank you!`;
+                const productName = productNames[category][index-1];
+                const price = prices[index-1];
+                const message = `Hello SARM ENTERPRISES,\n\nI want to order:\n\n📓 Product: ${productName}\n📦 Quantity: ${quantity}\n💰 Price: ₹${price}\n💵 Total: ₹${price * quantity}\n\nPlease confirm availability and delivery time.\n\nThank you!`;
                 const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
             };
@@ -1336,21 +1250,20 @@
             return productCard;
         }
 
-        // Switch product image
-        function switchProductImage(productCard, index, images) {
-            const mainImage = productCard.querySelector('.product-main-image');
-            const dots = productCard.querySelectorAll('.image-dot');
+        // Switch between categories
+        function switchCategory(category) {
+            // Update active tab
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.category === category);
+            });
             
-            mainImage.style.opacity = '0';
-            setTimeout(() => {
-                mainImage.src = images[index];
-                mainImage.alt = `${productCard.querySelector('.product-name').textContent} - Image ${index + 1}`;
-                mainImage.style.opacity = '1';
-                
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === index);
-                });
-            }, 150);
+            // Show selected category section
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.toggle('active', section.dataset.category === category);
+            });
+            
+            // Smooth scroll to products section
+            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
         }
 
         // ==================== INITIALIZATION ====================
@@ -1391,7 +1304,6 @@
         window.closeCart = closeCart;
         window.checkout = checkout;
         window.clearCart = clearCart;
-        window.switchProductImage = switchProductImage;
         window.switchCategory = switchCategory;
         window.saveLogoToLocalStorage = saveLogoToLocalStorage;
     </script>
