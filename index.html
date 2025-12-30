@@ -26,76 +26,113 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        /* Horizontal Moving Quotes Carousel - FIXED */
+        /* Horizontal Moving Quotes Carousel - UPDATED for smooth left-to-right movement */
         .hero-quotes-wrapper {
             width: 100%;
             overflow: hidden;
             position: relative;
             margin: 30px 0;
-            min-height: 80px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .hero-quotes-container {
             display: flex;
-            transition: transform 7s ease-in-out;
-            width: 400%; /* 4 quotes, each 100% */
+            width: calc(400% + 400px); /* Extra width for smooth continuous movement */
+            animation: moveQuotes 40s linear infinite; /* Slower continuous movement */
+            padding-left: 20px;
         }
         
         .quote-slide {
-            flex: 0 0 100%;
-            width: 100%;
+            flex: 0 0 25%; /* Each quote takes 25% of container width */
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px 20px;
+            padding: 0 20px;
+            min-width: 300px;
         }
         
         .quote {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 20px 40px;
+            background: rgba(0, 0, 0, 0.7); /* Darker background for better readability */
+            padding: 25px 40px;
             border-radius: 15px;
             text-align: center;
-            min-width: 300px;
-            max-width: 600px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            min-width: 280px;
+            max-width: 550px;
+            width: 100%;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .quote:hover {
+            background: rgba(0, 0, 0, 0.85);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
         }
         
         .quote i {
             color: #3498db;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             margin-right: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
         
         .quote p {
-            font-size: 1.3rem;
-            font-weight: 500;
-            color: white;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
             margin: 0;
-            line-height: 1.5;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+            font-family: 'Poppins', sans-serif;
         }
         
-        /* Quote Navigation Dots */
+        /* Continuous animation for left-to-right movement */
+        @keyframes moveQuotes {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-100% + 100vw)); /* Move all the way */
+            }
+        }
+        
+        /* Pause animation on hover for better readability */
+        .hero-quotes-container:hover {
+            animation-play-state: paused;
+        }
+        
+        /* Quote Navigation Dots - Updated for better visibility */
         .quote-dots {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 30px;
         }
         
         .quote-dot {
-            width: 12px;
-            height: 12px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.7);
             cursor: pointer;
             transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
         }
         
         .quote-dot.active {
             background: #3498db;
+            transform: scale(1.4);
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
+        }
+        
+        .quote-dot:hover {
+            background: #2980b9;
             transform: scale(1.3);
         }
         
@@ -378,16 +415,20 @@
             }
             
             .quote {
-                padding: 15px 25px;
+                padding: 20px 30px;
                 min-width: 250px;
             }
             
             .quote p {
-                font-size: 1.1rem;
+                font-size: 1.3rem;
             }
             
             .hero-quotes-wrapper {
-                min-height: 100px;
+                min-height: 120px;
+            }
+            
+            .hero-quotes-container {
+                animation: moveQuotes 35s linear infinite; /* Slightly faster on mobile */
             }
             
             .product-image-container {
@@ -406,17 +447,22 @@
         
         @media (max-width: 480px) {
             .quote {
-                padding: 12px 20px;
-                min-width: 200px;
+                padding: 18px 25px;
+                min-width: 220px;
             }
             
             .quote p {
-                font-size: 1rem;
+                font-size: 1.1rem;
+                font-weight: 500;
             }
             
             .quote i {
-                font-size: 1.2rem;
+                font-size: 1.4rem;
                 margin-right: 10px;
+            }
+            
+            .hero-quotes-container {
+                animation: moveQuotes 30s linear infinite; /* Faster on small screens */
             }
         }
         
@@ -474,9 +520,10 @@
             <h2>Capture Your Thoughts with Our Premium Notebooks</h2>
             <p>Experience the perfect blend of quality paper, durable binding, and elegant design. Your ideas deserve the best.</p>
             
-            <!-- Horizontal Moving Quotes Carousel - FIXED -->
+            <!-- Horizontal Moving Quotes Carousel - UPDATED -->
             <div class="hero-quotes-wrapper">
                 <div class="hero-quotes-container">
+                    <!-- Duplicate quotes for seamless continuous loop -->
                     <div class="quote-slide">
                         <div class="quote">
                             <i class="fas fa-quote-left"></i>
@@ -499,6 +546,19 @@
                         <div class="quote">
                             <i class="fas fa-quote-left"></i>
                             <p>Your Ideas Deserve the Perfect Canvas</p>
+                        </div>
+                    </div>
+                    <!-- Repeat for seamless loop -->
+                    <div class="quote-slide">
+                        <div class="quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Where Thoughts Find Their Perfect Home</p>
+                        </div>
+                    </div>
+                    <div class="quote-slide">
+                        <div class="quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Quality Pages for Lifelong Memories</p>
                         </div>
                     </div>
                 </div>
@@ -773,63 +833,54 @@
             logoImg.src = "assets/logo/logo.png";
         }
 
-        // ==================== HORIZONTAL MOVING QUOTES CAROUSEL - FIXED ====================
+        // ==================== HORIZONTAL MOVING QUOTES CAROUSEL - UPDATED ====================
         function initQuotesCarousel() {
             const quotesContainer = document.querySelector('.hero-quotes-container');
-            const quotes = document.querySelectorAll('.quote-slide');
             const dots = document.querySelectorAll('.quote-dot');
             
-            if (quotes.length === 0) return;
+            if (!quotesContainer) return;
             
-            let currentQuote = 0;
-            const totalQuotes = quotes.length;
+            let currentActive = 0;
+            const totalDots = dots.length;
             
-            // Function to move to a specific quote
-            function goToQuote(index) {
-                if (index < 0) index = totalQuotes - 1;
-                if (index >= totalQuotes) index = 0;
+            // Update active dot based on position in animation
+            function updateActiveDot() {
+                // Calculate which quote should be "active" based on animation progress
+                // This is approximate since we're using CSS animation
+                const containerWidth = quotesContainer.offsetWidth;
+                const translateX = getTranslateX(quotesContainer);
+                const progress = Math.abs(translateX) / containerWidth * 100;
                 
-                currentQuote = index;
+                // Rough estimate of which quote is centered
+                const estimatedIndex = Math.floor(progress / 25) % totalDots;
                 
-                // Move container horizontally
-                quotesContainer.style.transform = `translateX(-${currentQuote * 100}%)`;
-                
-                // Update active dot
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === currentQuote);
-                });
+                if (estimatedIndex !== currentActive) {
+                    currentActive = estimatedIndex;
+                    dots.forEach((dot, i) => {
+                        dot.classList.toggle('active', i === currentActive);
+                    });
+                }
             }
             
-            // Auto slide every 2 seconds
-            let slideInterval = setInterval(() => {
-                goToQuote(currentQuote + 1);
-            }, 2000);
+            // Helper function to get translateX value
+            function getTranslateX(element) {
+                const style = window.getComputedStyle(element);
+                const matrix = new DOMMatrixReadOnly(style.transform);
+                return matrix.m41;
+            }
             
-            // Click on dots to navigate
+            // Update dots periodically to sync with animation
+            setInterval(updateActiveDot, 1000);
+            
+            // Click on dots to navigate (for manual control)
             dots.forEach((dot, index) => {
                 dot.addEventListener('click', () => {
-                    clearInterval(slideInterval);
-                    goToQuote(index);
-                    // Restart auto slide
-                    slideInterval = setInterval(() => {
-                        goToQuote(currentQuote + 1);
-                    }, 2000);
+                    // Note: With continuous animation, clicking dots won't jump
+                    // but we can highlight the selected quote
+                    dots.forEach(d => d.classList.remove('active'));
+                    dot.classList.add('active');
                 });
             });
-            
-            // Pause on hover
-            quotesContainer.addEventListener('mouseenter', () => {
-                clearInterval(slideInterval);
-            });
-            
-            quotesContainer.addEventListener('mouseleave', () => {
-                slideInterval = setInterval(() => {
-                    goToQuote(currentQuote + 1);
-                }, 5000);
-            });
-            
-            // Initialize first position
-            quotesContainer.style.transform = 'translateX(0%)';
         }
 
         // ==================== CART SYSTEM ====================
