@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SARM ENTERPRISES - Premium Notebooks & Stationery</title>
-    <meta name="description" content="Premium quality notebooks and stationery from SARM ENTERPRISES Kashmir. Order notebooks, diaries, pens, and writing materials.">
-    <meta name="keywords" content="notebooks, stationery, Kashmir, SARM ENTERPRISES, notebooks shop, writing materials, pens, diaries">
+    <meta name="description" content="Premium quality notebooks and stationery from SARM ENTERPRISES Kashmir. Order notebooks, diaries,ream, pens, and writing materials.">
+    <meta name="keywords" content="notebooks, stationery, Kashmir, SARM ENTERPRISES, notebooks shop, writing materials,ream, pens, diaries">
     <meta name="author" content="SARM ENTERPRISES">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -37,7 +37,7 @@
         
         .hero-quotes-container {
             display: flex;
-            transition: transform 0.8s ease-in-out;
+            transition: transform 7s ease-in-out;
             width: 400%; /* 4 quotes, each 100% */
         }
         
@@ -437,7 +437,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <img id="logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%233498db' rx='8'/%3E%3Ctext x='30' y='35' font-family='Arial, sans-serif' font-size='24' fill='white' text-anchor='middle' font-weight='bold'%3ESARM%3C/text%3E%3C/svg%3E" 
+                <img id="logo" src="assets/logo/logo.png" 
                      alt="SARM ENTERPRISES Logo" class="logo-img">
                 <div>
                     <h1>SARM ENTERPRISES</h1>
@@ -665,7 +665,7 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <h3><i class="fas fa-book"></i> SARM ENTERPRISES</h3>
-                    <p>Quality Notebooks Since 2010</p>
+                    <p>Quality Notebooks Since 2024</p>
                 </div>
                 <div class="footer-links">
                     <h4>Quick Links</h4>
@@ -770,7 +770,7 @@
         // Set default logo
         function setDefaultLogo() {
             const logoImg = document.getElementById('logo');
-            logoImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%233498db' rx='8'/%3E%3Ctext x='30' y='35' font-family='Arial, sans-serif' font-size='24' fill='white' text-anchor='middle' font-weight='bold'%3ESARM%3C/text%3E%3C/svg%3E";
+            logoImg.src = "assets/logo/logo.png";
         }
 
         // ==================== HORIZONTAL MOVING QUOTES CAROUSEL - FIXED ====================
@@ -800,10 +800,10 @@
                 });
             }
             
-            // Auto slide every 5 seconds
+            // Auto slide every 2 seconds
             let slideInterval = setInterval(() => {
                 goToQuote(currentQuote + 1);
-            }, 5000);
+            }, 2000);
             
             // Click on dots to navigate
             dots.forEach((dot, index) => {
@@ -813,7 +813,7 @@
                     // Restart auto slide
                     slideInterval = setInterval(() => {
                         goToQuote(currentQuote + 1);
-                    }, 5000);
+                    }, 2000);
                 });
             });
             
