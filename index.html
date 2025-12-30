@@ -41,7 +41,7 @@
         .hero-quotes-container {
             display: flex;
             width: calc(400% + 400px); /* Extra width for smooth continuous movement */
-            animation: moveQuotes 25s linear infinite; /* Slower continuous movement */
+            animation: moveQuotes 17s linear infinite; /* Slower continuous movement */
             padding-left: 20px;
         }
         
@@ -1081,6 +1081,27 @@
                 // Show loading
                 categorySections.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</div>';
                 
+                // First, try to load categories from the 'categories' collection
+                let categories = [];
+                try {
+                    const categoriesSnapshot = await getDocs(collection(db, "categories"));
+                    if (!categoriesSnapshot.empty) {
+                        categoriesSnapshot.forEach((doc) => {
+                            const categoryData = doc.data();
+                            categories.push({
+                                id: doc.id,
+                                name: categoryData.name,
+                                description: categoryData.description || '',
+                                order: categoryData.order || 999
+                            });
+                        });
+                        // Sort categories by order
+                        categories.sort((a, b) => a.order - b.order);
+                    }
+                } catch (error) {
+                    console.log("No categories collection found, will extract from products");
+                }
+                
                 const querySnapshot = await getDocs(collection(db, "products"));
                 
                 if (querySnapshot.empty) {
@@ -1109,11 +1130,23 @@
                     productsByCategory[category].push(product);
                 });
                 
-                // Get category list and sort alphabetically
-                const categories = Object.keys(productsByCategory).sort();
+                // If we have predefined categories, use them
+                // Otherwise, extract categories from products
+                let categoriesToUse = [];
+                if (categories.length > 0) {
+                    categoriesToUse = categories.map(c => c.name);
+                } else {
+                    // Get category list from products and sort alphabetically
+                    categoriesToUse = Object.keys(productsByCategory).sort();
+                }
                 
                 // Create tabs for each category
-                categories.forEach((category, index) => {
+                categoriesToUse.forEach((category, index) => {
+                    // Skip if category has no products
+                    if (!productsByCategory[category] || productsByCategory[category].length === 0) {
+                        return;
+                    }
+                    
                     // Create tab button
                     const tabButton = document.createElement('button');
                     tabButton.className = `category-tab ${index === 0 ? 'active' : ''}`;
@@ -1141,6 +1174,11 @@
                     
                     categorySections.appendChild(categoryClone);
                 });
+                
+                // If no tabs were created (no products in any category)
+                if (categoryTabs.children.length === 0) {
+                    categorySections.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available in any category.</p>';
+                }
                 
             } catch (error) {
                 console.error("Error loading products:", error);
