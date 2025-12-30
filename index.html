@@ -26,24 +26,19 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        /* SLOW Horizontal Moving Quotes Carousel - FIXED */
+        /* Horizontal Moving Quotes Carousel - FIXED */
         .hero-quotes-wrapper {
             width: 100%;
             overflow: hidden;
             position: relative;
-            margin: 40px 0;
-            min-height: 120px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin: 30px 0;
+            min-height: 80px;
         }
         
         .hero-quotes-container {
             display: flex;
-            transition: transform 1.2s ease-in-out; /* SLOWER transition */
-            width: 600%; /* 6 quotes, each 100% */
+            transition: transform 0.8s ease-in-out;
+            width: 400%; /* 4 quotes, each 100% */
         }
         
         .quote-slide {
@@ -52,87 +47,56 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px 30px;
+            padding: 10px 20px;
         }
         
-        .quote-box {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-            padding: 30px 50px;
-            border-radius: 20px;
+        .quote {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px 40px;
+            border-radius: 15px;
             text-align: center;
             min-width: 300px;
-            max-width: 800px;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            position: relative;
-            overflow: hidden;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
         }
         
-        .quote-box:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #3498db, #2ecc71, #e74c3c, #f39c12);
-            border-radius: 20px 20px 0 0;
-        }
-        
-        .quote i.fa-quote-left {
+        .quote i {
             color: #3498db;
-            font-size: 2.5rem;
-            margin-right: 20px;
-            opacity: 0.8;
-        }
-        
-        .quote i.fa-quote-right {
-            color: #3498db;
-            font-size: 2.5rem;
-            margin-left: 20px;
-            opacity: 0.8;
+            font-size: 1.5rem;
+            margin-right: 15px;
         }
         
         .quote p {
-            font-size: 1.8rem;
-            font-weight: 600;
+            font-size: 1.3rem;
+            font-weight: 500;
             color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
             margin: 0;
-            line-height: 1.4;
-            font-style: italic;
-            letter-spacing: 0.5px;
+            line-height: 1.5;
         }
         
         /* Quote Navigation Dots */
         .quote-dots {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 25px;
+            gap: 10px;
+            margin-top: 20px;
         }
         
         .quote-dot {
-            width: 15px;
-            height: 15px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.5);
             cursor: pointer;
-            transition: all 0.5s ease;
-            border: 2px solid transparent;
-        }
-        
-        .quote-dot:hover {
-            background: rgba(255, 255, 255, 0.7);
-            transform: scale(1.2);
+            transition: all 0.3s ease;
         }
         
         .quote-dot.active {
             background: #3498db;
             transform: scale(1.3);
-            border-color: white;
-            box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
         }
         
         /* Category Tabs */
@@ -157,14 +121,12 @@
         
         .category-tab:hover {
             background: #e9ecef;
-            transform: translateY(-2px);
         }
         
         .category-tab.active {
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: #3498db;
             color: white;
             border-color: #3498db;
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
         }
         
         /* Category Sections */
@@ -197,9 +159,9 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(90deg, #3498db, #2ecc71);
+            width: 80px;
+            height: 3px;
+            background: #3498db;
             border-radius: 2px;
         }
         
@@ -415,24 +377,17 @@
                 margin-right: 10px;
             }
             
-            .quote-box {
-                padding: 20px 30px;
+            .quote {
+                padding: 15px 25px;
                 min-width: 250px;
             }
             
             .quote p {
-                font-size: 1.4rem;
-            }
-            
-            .quote i.fa-quote-left,
-            .quote i.fa-quote-right {
-                font-size: 2rem;
+                font-size: 1.1rem;
             }
             
             .hero-quotes-wrapper {
-                min-height: 140px;
-                padding: 15px;
-                margin: 30px 0;
+                min-height: 100px;
             }
             
             .product-image-container {
@@ -450,28 +405,18 @@
         }
         
         @media (max-width: 480px) {
-            .quote-box {
-                padding: 15px 20px;
+            .quote {
+                padding: 12px 20px;
                 min-width: 200px;
             }
             
             .quote p {
+                font-size: 1rem;
+            }
+            
+            .quote i {
                 font-size: 1.2rem;
-            }
-            
-            .quote i.fa-quote-left,
-            .quote i.fa-quote-right {
-                font-size: 1.5rem;
-                margin: 0 10px;
-            }
-            
-            .quote-dots {
-                gap: 10px;
-            }
-            
-            .quote-dot {
-                width: 12px;
-                height: 12px;
+                margin-right: 10px;
             }
         }
         
@@ -492,8 +437,8 @@
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <!-- Logo will be loaded from assets/products/logo.png -->
-                <img id="logo" src="assets/products/logo.png" alt="SARM ENTERPRISES Logo" class="logo-img">
+                <img id="logo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%233498db' rx='8'/%3E%3Ctext x='30' y='35' font-family='Arial, sans-serif' font-size='24' fill='white' text-anchor='middle' font-weight='bold'%3ESARM%3C/text%3E%3C/svg%3E" 
+                     alt="SARM ENTERPRISES Logo" class="logo-img">
                 <div>
                     <h1>SARM ENTERPRISES</h1>
                     <p class="tagline">Quality Pages for Quality Thoughts</p>
@@ -529,72 +474,31 @@
             <h2>Capture Your Thoughts with Our Premium Notebooks</h2>
             <p>Experience the perfect blend of quality paper, durable binding, and elegant design. Your ideas deserve the best.</p>
             
-            <!-- Slow Horizontal Moving Quotes Carousel - FIXED -->
+            <!-- Horizontal Moving Quotes Carousel - FIXED -->
             <div class="hero-quotes-wrapper">
                 <div class="hero-quotes-container">
-                    <!-- Quote 1 -->
                     <div class="quote-slide">
-                        <div class="quote-box">
-                            <div class="quote">
-                                <i class="fas fa-quote-left"></i>
-                                <p>Where Great Thoughts Find Their Perfect Home</p>
-                                <i class="fas fa-quote-right"></i>
-                            </div>
+                        <div class="quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Where Thoughts Find Their Perfect Home</p>
                         </div>
                     </div>
-                    
-                    <!-- Quote 2 -->
                     <div class="quote-slide">
-                        <div class="quote-box">
-                            <div class="quote">
-                                <i class="fas fa-quote-left"></i>
-                                <p>Quality Pages Preserve Lifelong Memories</p>
-                                <i class="fas fa-quote-right"></i>
-                            </div>
+                        <div class="quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Quality Pages for Lifelong Memories</p>
                         </div>
                     </div>
-                    
-                    <!-- Quote 3 -->
                     <div class="quote-slide">
-                        <div class="quote-box">
-                            <div class="quote">
-                                <i class="fas fa-quote-left"></i>
-                                <p>Writing Transforms Thoughts into Precious Treasures</p>
-                                <i class="fas fa-quote-right"></i>
-                            </div>
+                        <div class="quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Writing Transforms Thoughts into Treasures</p>
                         </div>
                     </div>
-                    
-                    <!-- Quote 4 -->
                     <div class="quote-slide">
-                        <div class="quote-box">
-                            <div class="quote">
-                                <i class="fas fa-quote-left"></i>
-                                <p>Your Brilliant Ideas Deserve the Perfect Canvas</p>
-                                <i class="fas fa-quote-right"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Quote 5 - NEW -->
-                    <div class="quote-slide">
-                        <div class="quote-box">
-                            <div class="quote">
-                                <i class="fas fa-quote-left"></i>
-                                <p>Every Page is a New Beginning for Your Imagination</p>
-                                <i class="fas fa-quote-right"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Quote 6 - NEW -->
-                    <div class="quote-slide">
-                        <div class="quote-box">
-                            <div class="quote">
-                                <i class="fas fa-quote-left"></i>
-                                <p>Where Creativity Meets Quality, Magic Happens</p>
-                                <i class="fas fa-quote-right"></i>
-                            </div>
+                        <div class="quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Your Ideas Deserve the Perfect Canvas</p>
                         </div>
                     </div>
                 </div>
@@ -606,8 +510,6 @@
                 <span class="quote-dot" data-index="1"></span>
                 <span class="quote-dot" data-index="2"></span>
                 <span class="quote-dot" data-index="3"></span>
-                <span class="quote-dot" data-index="4"></span>
-                <span class="quote-dot" data-index="5"></span>
             </div>
             
             <a href="#products" class="btn-primary">Shop Now</a>
@@ -823,27 +725,55 @@
     </div>
 
     <!-- Main JavaScript -->
-    <script>
+    <script type="module">
+        // Import Firebase only for products
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD6T2k0fE2R4gF7QY4V6q6Z4Qv0X1W2Y3Z4",
+            authDomain: "sarm-enterprises.firebaseapp.com",
+            projectId: "sarm-enterprises",
+            storageBucket: "sarm-enterprises.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         // ==================== LOGO SYSTEM ====================
-        // Load logo from your local file
+        // Load logo from localStorage (Base64 string)
         function loadLogo() {
-            const logoImg = document.getElementById('logo');
-            
-            // Handle logo loading error - fallback to default
-            logoImg.onerror = function() {
-                console.log("Logo not found at assets/products/logo.png, using default");
-                this.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%233498db' rx='8'/%3E%3Ctext x='30' y='35' font-family='Arial, sans-serif' font-size='24' fill='white' text-anchor='middle' font-weight='bold'%3ESARM%3C/text%3E%3C/svg%3E";
-            };
-            
-            // Try to load from localStorage as backup
-            const savedLogo = localStorage.getItem('sarmLogo');
-            if (savedLogo) {
-                logoImg.onload = null; // Remove error handler
-                logoImg.src = savedLogo;
+            try {
+                const savedLogo = localStorage.getItem('sarmLogo');
+                
+                if (savedLogo) {
+                    const logoImg = document.getElementById('logo');
+                    logoImg.src = savedLogo;
+                    
+                    // Handle logo loading error
+                    logoImg.onerror = () => {
+                        setDefaultLogo();
+                    };
+                } else {
+                    setDefaultLogo();
+                }
+            } catch (error) {
+                console.error("Error loading logo:", error);
+                setDefaultLogo();
             }
         }
 
-        // ==================== VERY SLOW HORIZONTAL MOVING QUOTES CAROUSEL ====================
+        // Set default logo
+        function setDefaultLogo() {
+            const logoImg = document.getElementById('logo');
+            logoImg.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Crect width='60' height='60' fill='%233498db' rx='8'/%3E%3Ctext x='30' y='35' font-family='Arial, sans-serif' font-size='24' fill='white' text-anchor='middle' font-weight='bold'%3ESARM%3C/text%3E%3C/svg%3E";
+        }
+
+        // ==================== HORIZONTAL MOVING QUOTES CAROUSEL - FIXED ====================
         function initQuotesCarousel() {
             const quotesContainer = document.querySelector('.hero-quotes-container');
             const quotes = document.querySelectorAll('.quote-slide');
@@ -853,7 +783,6 @@
             
             let currentQuote = 0;
             const totalQuotes = quotes.length;
-            const SLIDE_INTERVAL = 15000; // 15 SECONDS - MUCH SLOWER
             
             // Function to move to a specific quote
             function goToQuote(index) {
@@ -862,7 +791,7 @@
                 
                 currentQuote = index;
                 
-                // Move container horizontally (left to right only)
+                // Move container horizontally
                 quotesContainer.style.transform = `translateX(-${currentQuote * 100}%)`;
                 
                 // Update active dot
@@ -871,10 +800,10 @@
                 });
             }
             
-            // Auto slide every 15 seconds - VERY SLOW
+            // Auto slide every 5 seconds
             let slideInterval = setInterval(() => {
                 goToQuote(currentQuote + 1);
-            }, SLIDE_INTERVAL);
+            }, 5000);
             
             // Click on dots to navigate
             dots.forEach((dot, index) => {
@@ -884,7 +813,7 @@
                     // Restart auto slide
                     slideInterval = setInterval(() => {
                         goToQuote(currentQuote + 1);
-                    }, SLIDE_INTERVAL);
+                    }, 5000);
                 });
             });
             
@@ -896,7 +825,7 @@
             quotesContainer.addEventListener('mouseleave', () => {
                 slideInterval = setInterval(() => {
                     goToQuote(currentQuote + 1);
-                }, SLIDE_INTERVAL);
+                }, 5000);
             });
             
             // Initialize first position
@@ -1091,7 +1020,6 @@
         }
 
         // ==================== PRODUCT CATEGORIES SYSTEM ====================
-        // We'll load products from Firebase
         async function loadProductsByCategory() {
             try {
                 const categoryTabs = document.getElementById('categoryTabs');
@@ -1102,152 +1030,72 @@
                 // Show loading
                 categorySections.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</div>';
                 
-                // For now, we'll create some sample categories
-                // In a real app, you would fetch from Firebase
-                createSampleCategories(categoryTabs, categorySections, categoryTemplate, productTemplate);
+                const querySnapshot = await getDocs(collection(db, "products"));
+                
+                if (querySnapshot.empty) {
+                    categorySections.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available at the moment.</p>';
+                    return;
+                }
+                
+                // Clear containers
+                categoryTabs.innerHTML = '';
+                categorySections.innerHTML = '';
+                
+                // Group products by category
+                const productsByCategory = {};
+                
+                querySnapshot.forEach((doc) => {
+                    const product = doc.data();
+                    product.id = doc.id;
+                    
+                    // Default category if not specified
+                    const category = product.category || 'Notebooks';
+                    
+                    if (!productsByCategory[category]) {
+                        productsByCategory[category] = [];
+                    }
+                    
+                    productsByCategory[category].push(product);
+                });
+                
+                // Get category list and sort alphabetically
+                const categories = Object.keys(productsByCategory).sort();
+                
+                // Create tabs for each category
+                categories.forEach((category, index) => {
+                    // Create tab button
+                    const tabButton = document.createElement('button');
+                    tabButton.className = `category-tab ${index === 0 ? 'active' : ''}`;
+                    tabButton.textContent = category;
+                    tabButton.dataset.category = category;
+                    tabButton.onclick = () => switchCategory(category);
+                    categoryTabs.appendChild(tabButton);
+                    
+                    // Create category section
+                    const categoryClone = categoryTemplate.content.cloneNode(true);
+                    const categorySection = categoryClone.querySelector('.category-section');
+                    categorySection.dataset.category = category;
+                    categorySection.classList.toggle('active', index === 0);
+                    
+                    const categoryTitle = categoryClone.querySelector('.category-title');
+                    categoryTitle.textContent = category;
+                    
+                    const productsGrid = categoryClone.querySelector('.products-grid');
+                    
+                    // Add products to this category
+                    productsByCategory[category].forEach(product => {
+                        const productElement = createProductElement(product, productTemplate);
+                        productsGrid.appendChild(productElement);
+                    });
+                    
+                    categorySections.appendChild(categoryClone);
+                });
                 
             } catch (error) {
                 console.error("Error loading products:", error);
                 document.getElementById('categorySections').innerHTML = 
                     '<p style="color: #e74c3c; text-align: center; padding: 2rem;">Error loading products. Please refresh the page.</p>';
             }
-        }
-
-        // Create sample categories for demonstration
-        function createSampleCategories(categoryTabs, categorySections, categoryTemplate, productTemplate) {
-            // Sample categories
-            const categories = ['Notebooks', 'Pens', 'Diaries', 'Stationery'];
-            
-            // Clear containers
-            categoryTabs.innerHTML = '';
-            categorySections.innerHTML = '';
-            
-            // Create tabs for each category
-            categories.forEach((category, index) => {
-                // Create tab button
-                const tabButton = document.createElement('button');
-                tabButton.className = `category-tab ${index === 0 ? 'active' : ''}`;
-                tabButton.textContent = category;
-                tabButton.dataset.category = category;
-                tabButton.onclick = () => switchCategory(category);
-                categoryTabs.appendChild(tabButton);
-                
-                // Create category section
-                const categoryClone = categoryTemplate.content.cloneNode(true);
-                const categorySection = categoryClone.querySelector('.category-section');
-                categorySection.dataset.category = category;
-                categorySection.classList.toggle('active', index === 0);
-                
-                const categoryTitle = categoryClone.querySelector('.category-title');
-                categoryTitle.textContent = category;
-                
-                const productsGrid = categoryClone.querySelector('.products-grid');
-                
-                // Add sample products to this category
-                for (let i = 1; i <= 4; i++) {
-                    const productElement = createSampleProductElement(i, category, productTemplate);
-                    productsGrid.appendChild(productElement);
-                }
-                
-                categorySections.appendChild(categoryClone);
-            });
-        }
-
-        // Create sample product element
-        function createSampleProductElement(index, category, template) {
-            const clone = template.content.cloneNode(true);
-            const productCard = clone.querySelector('.product-card');
-            productCard.dataset.productId = `sample-${category}-${index}`;
-            
-            // Set product info
-            const productNames = {
-                'Notebooks': ['Premium Spiral Notebook', 'Classic Hardbound Notebook', 'Pocket Size Diary', 'Executive Journal'],
-                'Pens': ['Premium Ball Pen', 'Gel Pen Pack', 'Fountain Pen', 'Marker Set'],
-                'Diaries': ['Leather Bound Diary', 'Executive Planner', 'Pocket Diary', 'Desk Diary'],
-                'Stationery': ['Sticky Notes Pack', 'File Folder Set', 'Paper Clips Box', 'Office Organizer']
-            };
-            
-            const prices = [150, 200, 120, 180];
-            const stocks = [50, 30, 10, 25];
-            
-            productCard.querySelector('.product-name').textContent = productNames[category][index-1] || `${category} Product ${index}`;
-            productCard.querySelector('.price-amount').textContent = prices[index-1];
-            productCard.querySelector('.stock-quantity').textContent = stocks[index-1];
-            productCard.querySelector('.product-description').textContent = `Premium quality ${category.toLowerCase()} product for all your needs`;
-            
-            // Set stock status
-            const stockElement = productCard.querySelector('.stock-text');
-            if (stocks[index-1] <= 0) {
-                stockElement.textContent = 'Out of Stock';
-                stockElement.style.color = '#e74c3c';
-                productCard.querySelector('.add-to-cart-btn').disabled = true;
-                productCard.querySelector('.add-to-cart-btn').innerHTML = '<i class="fas fa-times"></i> Out of Stock';
-                productCard.querySelector('.add-to-cart-btn').style.opacity = '0.6';
-            } else if (stocks[index-1] <= 10) {
-                stockElement.textContent = 'Low Stock';
-                stockElement.style.color = '#f39c12';
-            } else {
-                stockElement.textContent = 'In Stock';
-                stockElement.style.color = '#27ae60';
-            }
-            
-            // Set placeholder image
-            const mainImage = productCard.querySelector('.product-main-image');
-            mainImage.src = `https://via.placeholder.com/400x300?text=${encodeURIComponent(productNames[category][index-1])}`;
-            mainImage.alt = productNames[category][index-1];
-            
-            // Handle image loading error
-            mainImage.onerror = function() {
-                this.src = 'https://via.placeholder.com/400x300?text=Product+Image';
-            };
-            
-            // Hide image count badge and navigation (no multiple images for samples)
-            productCard.querySelector('.image-count-badge').style.display = 'none';
-            productCard.querySelector('.nav-prev').style.display = 'none';
-            productCard.querySelector('.nav-next').style.display = 'none';
-            
-            // Setup quantity controls
-            const qtyInput = productCard.querySelector('.qty-input');
-            const maxStock = Math.min(stocks[index-1], 20);
-            qtyInput.max = maxStock;
-            
-            productCard.querySelector('.minus-btn').onclick = () => {
-                const value = parseInt(qtyInput.value);
-                if (value > 1) qtyInput.value = value - 1;
-            };
-            
-            productCard.querySelector('.plus-btn').onclick = () => {
-                const value = parseInt(qtyInput.value);
-                const max = parseInt(qtyInput.max);
-                if (value < max) qtyInput.value = value + 1;
-            };
-            
-            // Setup add to cart button
-            productCard.querySelector('.add-to-cart-btn').onclick = () => {
-                const quantity = parseInt(qtyInput.value);
-                if (quantity > 0 && stocks[index-1] > 0) {
-                    const product = {
-                        id: `sample-${category}-${index}`,
-                        name: productNames[category][index-1],
-                        price: prices[index-1],
-                        stock: stocks[index-1],
-                        category: category
-                    };
-                    addToCart(product, quantity);
-                }
-            };
-            
-            // Setup WhatsApp order button
-            productCard.querySelector('.whatsapp-btn').onclick = () => {
-                const quantity = parseInt(qtyInput.value);
-                const productName = productNames[category][index-1];
-                const price = prices[index-1];
-                const message = `Hello SARM ENTERPRISES,\n\nI want to order:\n\n📓 Product: ${productName}\n📦 Quantity: ${quantity}\n💰 Price: ₹${price}\n💵 Total: ₹${price * quantity}\n\nPlease confirm availability and delivery time.\n\nThank you!`;
-                const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
-                window.open(whatsappUrl, '_blank');
-            };
-            
-            return productCard;
         }
 
         // Switch between categories
@@ -1264,6 +1112,156 @@
             
             // Smooth scroll to products section
             document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Create product element
+        function createProductElement(product, template) {
+            const clone = template.content.cloneNode(true);
+            const productCard = clone.querySelector('.product-card');
+            productCard.dataset.productId = product.id;
+            
+            // Set product info
+            productCard.querySelector('.product-name').textContent = product.name;
+            productCard.querySelector('.price-amount').textContent = product.price;
+            productCard.querySelector('.stock-quantity').textContent = product.stock;
+            productCard.querySelector('.product-description').textContent = product.description || 'Premium quality product';
+            
+            // Set stock status
+            const stockElement = productCard.querySelector('.stock-text');
+            if (product.stock <= 0) {
+                stockElement.textContent = 'Out of Stock';
+                stockElement.style.color = '#e74c3c';
+                productCard.querySelector('.add-to-cart-btn').disabled = true;
+                productCard.querySelector('.add-to-cart-btn').innerHTML = '<i class="fas fa-times"></i> Out of Stock';
+                productCard.querySelector('.add-to-cart-btn').style.opacity = '0.6';
+            } else if (product.stock <= 10) {
+                stockElement.textContent = 'Low Stock';
+                stockElement.style.color = '#f39c12';
+            } else {
+                stockElement.textContent = 'In Stock';
+                stockElement.style.color = '#27ae60';
+            }
+            
+            // Handle product images
+            let productImages = [];
+            if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+                productImages = product.images;
+            } else if (product.imagePath) {
+                productImages = [product.imagePath];
+            } else {
+                productImages = ['https://via.placeholder.com/400x300?text=' + encodeURIComponent(product.name)];
+            }
+            
+            // Set first image
+            const mainImage = productCard.querySelector('.product-main-image');
+            mainImage.src = productImages[0];
+            mainImage.alt = product.name;
+            
+            // Handle image loading error
+            mainImage.onerror = function() {
+                this.src = 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(product.name);
+            };
+            
+            // Set image count badge
+            const imageCount = productCard.querySelector('.image-count');
+            imageCount.textContent = productImages.length;
+            
+            // Setup image gallery if multiple images
+            if (productImages.length > 1) {
+                const dotsContainer = productCard.querySelector('.product-image-dots');
+                dotsContainer.innerHTML = '';
+                
+                productImages.forEach((_, index) => {
+                    const dot = document.createElement('div');
+                    dot.className = `image-dot ${index === 0 ? 'active' : ''}`;
+                    dot.onclick = () => switchProductImage(productCard, index, productImages);
+                    dotsContainer.appendChild(dot);
+                });
+                
+                // Setup navigation
+                let currentIndex = 0;
+                
+                productCard.querySelector('.nav-prev').onclick = () => {
+                    currentIndex = (currentIndex - 1 + productImages.length) % productImages.length;
+                    switchProductImage(productCard, currentIndex, productImages);
+                };
+                
+                productCard.querySelector('.nav-next').onclick = () => {
+                    currentIndex = (currentIndex + 1) % productImages.length;
+                    switchProductImage(productCard, currentIndex, productImages);
+                };
+                
+                // Auto-rotate images every 5 seconds
+                const autoRotate = setInterval(() => {
+                    currentIndex = (currentIndex + 1) % productImages.length;
+                    switchProductImage(productCard, currentIndex, productImages);
+                }, 5000);
+                
+                // Stop auto-rotate on hover
+                const imageContainer = productCard.querySelector('.product-image-container');
+                imageContainer.addEventListener('mouseenter', () => clearInterval(autoRotate));
+                imageContainer.addEventListener('mouseleave', () => {
+                    setInterval(() => {
+                        currentIndex = (currentIndex + 1) % productImages.length;
+                        switchProductImage(productCard, currentIndex, productImages);
+                    }, 5000);
+                });
+            } else {
+                productCard.querySelector('.image-count-badge').style.display = 'none';
+                productCard.querySelector('.nav-prev').style.display = 'none';
+                productCard.querySelector('.nav-next').style.display = 'none';
+            }
+            
+            // Setup quantity controls
+            const qtyInput = productCard.querySelector('.qty-input');
+            const maxStock = Math.min(product.stock, 20);
+            qtyInput.max = maxStock;
+            
+            productCard.querySelector('.minus-btn').onclick = () => {
+                const value = parseInt(qtyInput.value);
+                if (value > 1) qtyInput.value = value - 1;
+            };
+            
+            productCard.querySelector('.plus-btn').onclick = () => {
+                const value = parseInt(qtyInput.value);
+                const max = parseInt(qtyInput.max);
+                if (value < max) qtyInput.value = value + 1;
+            };
+            
+            // Setup add to cart button
+            productCard.querySelector('.add-to-cart-btn').onclick = () => {
+                const quantity = parseInt(qtyInput.value);
+                if (quantity > 0 && product.stock > 0) {
+                    addToCart(product, quantity);
+                }
+            };
+            
+            // Setup WhatsApp order button
+            productCard.querySelector('.whatsapp-btn').onclick = () => {
+                const quantity = parseInt(qtyInput.value);
+                const message = `Hello SARM ENTERPRISES,\n\nI want to order:\n\n📓 Product: ${product.name}\n📦 Quantity: ${quantity}\n💰 Price: ₹${product.price}\n💵 Total: ₹${product.price * quantity}\n\nPlease confirm availability and delivery time.\n\nThank you!`;
+                const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            };
+            
+            return productCard;
+        }
+
+        // Switch product image
+        function switchProductImage(productCard, index, images) {
+            const mainImage = productCard.querySelector('.product-main-image');
+            const dots = productCard.querySelectorAll('.image-dot');
+            
+            mainImage.style.opacity = '0';
+            setTimeout(() => {
+                mainImage.src = images[index];
+                mainImage.alt = `${productCard.querySelector('.product-name').textContent} - Image ${index + 1}`;
+                mainImage.style.opacity = '1';
+                
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+            }, 150);
         }
 
         // ==================== INITIALIZATION ====================
@@ -1304,6 +1302,7 @@
         window.closeCart = closeCart;
         window.checkout = checkout;
         window.clearCart = clearCart;
+        window.switchProductImage = switchProductImage;
         window.switchCategory = switchCategory;
         window.saveLogoToLocalStorage = saveLogoToLocalStorage;
     </script>
