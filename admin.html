@@ -222,7 +222,9 @@
         .product-image {
             width: 100%;
             height: 200px;
-            object-fit: cover;
+            object-fit: contain;
+            background: #f8f9fa;
+            padding: 10px;
         }
 
         .product-info {
@@ -479,6 +481,17 @@
         @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+        }
+
+        /* Placeholder Image */
+        .placeholder-image {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 14px;
+            text-align: center;
         }
     </style>
 </head>
@@ -738,6 +751,9 @@
             password: "admin123"
         };
 
+        // SVG placeholder for images
+        const PLACEHOLDER_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNmM3NTdkIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
+
         // DOM Elements
         const loginScreen = document.getElementById('loginScreen');
         const adminDashboard = document.getElementById('adminDashboard');
@@ -920,7 +936,10 @@
                 
                 categoriesList.innerHTML = '';
                 
-                const snapshot = await db.collection('categories').orderBy('order', 'asc').get();
+                const snapshot = await db.collection('categories')
+                    .orderBy('order', 'asc')
+                    .orderBy('createdAt', 'desc')
+                    .get();
                 
                 if (snapshot.empty) {
                     categoriesList.innerHTML = `
@@ -973,13 +992,28 @@
                 
             } catch (error) {
                 console.error('Error loading categories:', error);
-                categoriesList.innerHTML = `
-                    <div class="no-categories-message" style="border-color: #e74c3c;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px; color: #e74c3c;"></i>
-                        <p>Error loading categories. Please try again.</p>
-                    </div>
-                `;
-                showNotification('Error loading categories', 'error');
+                
+                // Check if it's a permissions error
+                if (error.code === 'permission-denied') {
+                    categoriesList.innerHTML = `
+                        <div class="no-categories-message" style="border-color: #e74c3c;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px; color: #e74c3c;"></i>
+                            <p><strong>Firebase Permission Error</strong></p>
+                            <p>Please update your Firestore security rules to allow read/write operations.</p>
+                            <p style="font-size: 0.8rem; margin-top: 10px;">
+                                Go to Firebase Console → Firestore Database → Rules tab and update rules to allow access.
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    categoriesList.innerHTML = `
+                        <div class="no-categories-message" style="border-color: #e74c3c;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px; color: #e74c3c;"></i>
+                            <p>Error loading categories. Please try again.</p>
+                        </div>
+                    `;
+                }
+                showNotification('Error loading categories: ' + error.message, 'error');
             } finally {
                 const categoriesLoading = document.getElementById('categoriesLoading');
                 if (categoriesLoading) {
@@ -1042,7 +1076,11 @@
                 
             } catch (error) {
                 console.error('Error saving category:', error);
-                showNotification('Error saving category: ' + error.message, 'error');
+                if (error.code === 'permission-denied') {
+                    showNotification('Permission denied. Please check Firestore security rules.', 'error');
+                } else {
+                    showNotification('Error saving category: ' + error.message, 'error');
+                }
             }
         });
 
@@ -1101,7 +1139,9 @@
                     productsLoading.style.display = 'block';
                 }
                 
-                const snapshot = await db.collection('products').get();
+                const snapshot = await db.collection('products')
+                    .orderBy('createdAt', 'desc')
+                    .get();
                 
                 if (snapshot.empty) {
                     productsList.innerHTML = `
@@ -1124,14 +1164,19 @@
                     };
                     products.push(product);
                     
-                    const firstImage = product.images && product.images.length > 0 
-                        ? product.images[0] 
-                        : 'https://via.placeholder.com/300x200?text=No+Image';
+                    // Use first image or placeholder
+                    let firstImage = PLACEHOLDER_IMAGE;
+                    if (product.images && product.images.length > 0 && product.images[0]) {
+                        // Check if it's a local path or full URL
+                        if (product.images[0].startsWith('http') || product.images[0].startsWith('assets/')) {
+                            firstImage = product.images[0];
+                        }
+                    }
                     
                     html += `
                         <div class="product-card">
-                            <img src="${firstImage}" alt="${product.name}" class="product-image" 
-                                 onerror="this.src='https://via.placeholder.com/300x200?text=Image+Error'">
+                            <img src="${firstImage}" alt="${product.name}" class="product-image placeholder-image"
+                                 onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}'; this.classList.add('placeholder-image')">
                             <div class="product-info">
                                 <h4 class="product-name">${product.name}</h4>
                                 <div class="product-price">₹${product.price}</div>
@@ -1160,12 +1205,23 @@
                 
             } catch (error) {
                 console.error('Error loading products:', error);
-                productsList.innerHTML = `
-                    <div class="no-categories-message" style="border-color: #e74c3c;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px; color: #e74c3c;"></i>
-                        <p>Error loading products. Please try again.</p>
-                    </div>
-                `;
+                
+                if (error.code === 'permission-denied') {
+                    productsList.innerHTML = `
+                        <div class="no-categories-message" style="border-color: #e74c3c;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px; color: #e74c3c;"></i>
+                            <p><strong>Firebase Permission Error</strong></p>
+                            <p>Please update your Firestore security rules to allow read/write operations.</p>
+                        </div>
+                    `;
+                } else {
+                    productsList.innerHTML = `
+                        <div class="no-categories-message" style="border-color: #e74c3c;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px; color: #e74c3c;"></i>
+                            <p>Error loading products. Please try again.</p>
+                        </div>
+                    `;
+                }
                 showNotification('Error loading products', 'error');
             } finally {
                 const productsLoading = document.getElementById('productsLoading');
@@ -1281,6 +1337,12 @@
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
+                // Add pages if provided
+                const pages = document.getElementById('productPages').value;
+                if (pages) {
+                    productData.pages = parseInt(pages);
+                }
+                
                 if (editProductId.value) {
                     // Update existing product
                     await db.collection('products').doc(editProductId.value).update({
@@ -1305,7 +1367,11 @@
                 
             } catch (error) {
                 console.error('Error saving product:', error);
-                showNotification('Error saving product: ' + error.message, 'error');
+                if (error.code === 'permission-denied') {
+                    showNotification('Permission denied. Please check Firestore security rules.', 'error');
+                } else {
+                    showNotification('Error saving product: ' + error.message, 'error');
+                }
             }
         });
 
@@ -1348,11 +1414,40 @@
             }
         });
 
+        // ==================== FIREBASE SECURITY RULES ADVICE ====================
+        
+        function showFirebaseRulesAdvice() {
+            console.log(`
+                =============================================
+                FIREBASE FIRESTORE SECURITY RULES
+                =============================================
+                
+                To fix permission errors, update your Firestore rules in Firebase Console:
+                
+                1. Go to Firebase Console → Firestore Database → Rules tab
+                2. Update rules to (for development/testing):
+                
+                rules_version = '2';
+                service cloud.firestore {
+                  match /databases/{database}/documents {
+                    match /{document=**} {
+                      allow read, write: if true;
+                    }
+                  }
+                }
+                
+                3. For production, use proper authentication-based rules.
+                
+                =============================================
+            `);
+        }
+
         // ==================== INITIALIZATION ====================
         
         // Check login status on page load
         document.addEventListener('DOMContentLoaded', function() {
             checkLoginStatus();
+            showFirebaseRulesAdvice();
             
             // Add autocomplete attributes to all form inputs
             document.querySelectorAll('input').forEach(input => {
