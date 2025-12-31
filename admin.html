@@ -7,6 +7,165 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Additional styles for category management */
+        .category-manager {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .category-manager h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .category-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .category-list {
+            margin-top: 20px;
+        }
+        
+        .category-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #3498db;
+        }
+        
+        .category-info h4 {
+            margin: 0 0 5px 0;
+            color: #2c3e50;
+        }
+        
+        .category-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .category-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-category {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-edit-category {
+            background: #3498db;
+            color: white;
+        }
+        
+        .btn-delete-category {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .category-order {
+            color: #7f8c8d;
+            font-size: 0.8rem;
+        }
+        
+        .category-select-container {
+            margin-bottom: 15px;
+        }
+        
+        .category-select-container label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .category-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: white;
+        }
+        
+        .no-categories-message {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px dashed #ddd;
+        }
+        
+        /* Modal for category editing */
+        .category-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .category-modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+        }
+        
+        .category-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .category-modal-header h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        
+        .close-category-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .category-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -31,6 +190,49 @@
             </div>
         </div>
 
+        <!-- Category Management Section -->
+        <div class="category-manager">
+            <h3><i class="fas fa-tags"></i> Product Categories Management</h3>
+            
+            <!-- Category Form -->
+            <div class="category-form">
+                <div class="form-group">
+                    <label for="categoryName"><i class="fas fa-tag"></i> Category Name</label>
+                    <input type="text" id="categoryName" placeholder="e.g., Notebooks, Pens, Diaries" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="categoryOrder"><i class="fas fa-sort"></i> Display Order</label>
+                    <input type="number" id="categoryOrder" value="1" min="1">
+                    <small style="color: #666;">Lower numbers appear first</small>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="categoryDescription"><i class="fas fa-align-left"></i> Description (Optional)</label>
+                <textarea id="categoryDescription" rows="2" placeholder="Describe this category..."></textarea>
+            </div>
+            
+            <button class="btn-primary" id="saveCategoryBtn">
+                <i class="fas fa-save"></i> Save Category
+            </button>
+            <button class="btn-secondary" id="cancelCategoryEdit" style="display: none;">
+                <i class="fas fa-times"></i> Cancel Edit
+            </button>
+            <input type="hidden" id="editCategoryId">
+            
+            <!-- Categories List -->
+            <div class="category-list">
+                <h4 style="margin-top: 30px; margin-bottom: 15px;">Existing Categories</h4>
+                <div id="categoriesList">
+                    <div class="no-categories-message">
+                        <i class="fas fa-tags" style="font-size: 2rem; margin-bottom: 15px; color: #ddd;"></i>
+                        <p>No categories yet. Add your first category above!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Add/Edit Product Form -->
         <div class="form-card">
             <h3><i class="fas fa-plus-circle"></i> Add/Edit Product</h3>
@@ -42,6 +244,16 @@
                                placeholder="e.g., Spiral Notebook 200 Pages or Blue Pen">
                     </div>
                     <div class="form-group">
+                        <label for="productCategory"><i class="fas fa-tags"></i> Product Category</label>
+                        <select id="productCategory" class="category-select" required>
+                            <option value="">Select Category</option>
+                            <!-- Categories will be loaded dynamically -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
                         <label for="productPages">
                             <i class="fas fa-file-alt"></i> Number of Pages
                             <span style="color: #777; font-weight: normal; font-size: 0.9em;"> (Leave blank for pens, umbrellas, etc.)</span>
@@ -49,9 +261,6 @@
                         <input type="number" id="productPages" 
                                placeholder="e.g., 200 (or leave blank for stationery)">
                     </div>
-                </div>
-                
-                <div class="form-row">
                     <div class="form-group">
                         <label for="productPrice"><i class="fas fa-rupee-sign"></i> Price (₹)</label>
                         <input type="number" id="productPrice" required 
@@ -145,7 +354,7 @@
             </form>
         </div>
 
-        <!-- Logo Management (REMOVED file upload, kept for future if needed) -->
+        <!-- Logo Management -->
         <div class="form-card">
             <h3><i class="fas fa-image"></i> Logo Management</h3>
             <div class="form-group">
@@ -183,62 +392,89 @@
                 <canvas id="stockChart"></canvas>
             </div>
         </div>
+
+        <!-- Customer Feedback Manager -->
+        <div class="form-card">
+            <h3><i class="fas fa-comments"></i> Customer Feedback Manager</h3>
+            <p>Review and manage testimonials submitted by customers.</p>
+            
+            <div class="admin-actions" style="margin-bottom: 1.5rem;">
+                <button class="btn-primary" id="refreshPendingBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh Pending List
+                </button>
+            </div>
+            
+            <h4>Pending Review</h4>
+            <div id="pendingFeedbackList">
+                <!-- Pending feedback cards will be loaded here -->
+                <p><i>Click "Refresh Pending List" to load submissions.</i></p>
+            </div>
+        </div>
+
+        <!-- FAQ MANAGEMENT -->
+        <div class="form-card">
+            <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
+            <p>Manage Frequently Asked Questions shown on the FAQ page.</p>
+            
+            <!-- Add New FAQ Form -->
+            <h4>Add New FAQ</h4>
+            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                <div class="form-group">
+                    <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
+                    <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
+                </div>
+                <div class="form-group">
+                    <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
+                    <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
+                    <input type="number" id="faqOrder" placeholder="1" value="1">
+                    <small>Lower numbers appear first on the FAQ page.</small>
+                </div>
+                <button class="btn-primary" id="addFaqBtn">
+                    <i class="fas fa-plus-circle"></i> Add FAQ
+                </button>
+            </div>
+            
+            <!-- Existing FAQs List -->
+            <h4>Existing FAQs</h4>
+            <button class="btn-secondary" id="refreshFaqsBtn" style="margin-bottom: 1rem;">
+                <i class="fas fa-sync-alt"></i> Refresh List
+            </button>
+            <div id="faqsListAdmin">
+                <!-- FAQs will be loaded here -->
+                <p style="text-align: center; padding: 2rem; color: #999;">
+                    Click "Refresh List" to load existing FAQs.
+                </p>
+            </div>
+        </div>
     </div>
 
-    <!-- Customer Feedback Manager -->
-    <div class="form-card">
-        <h3><i class="fas fa-comments"></i> Customer Feedback Manager</h3>
-        <p>Review and manage testimonials submitted by customers.</p>
-        
-        <div class="admin-actions" style="margin-bottom: 1.5rem;">
-            <button class="btn-primary" id="refreshPendingBtn">
-                <i class="fas fa-sync-alt"></i> Refresh Pending List
-            </button>
-        </div>
-        
-        <h4>Pending Review</h4>
-        <div id="pendingFeedbackList">
-            <!-- Pending feedback cards will be loaded here -->
-            <p><i>Click "Refresh Pending List" to load submissions.</i></p>
-        </div>
-    </div>
-
-    <!-- FAQ MANAGEMENT -->
-    <div class="form-card">
-        <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
-        <p>Manage Frequently Asked Questions shown on the FAQ page.</p>
-        
-        <!-- Add New FAQ Form -->
-        <h4>Add New FAQ</h4>
-        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
-            <div class="form-group">
-                <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
-                <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
+    <!-- Category Modal for Editing -->
+    <div id="categoryModal" class="category-modal">
+        <div class="category-modal-content">
+            <div class="category-modal-header">
+                <h3>Edit Category</h3>
+                <button class="close-category-modal">&times;</button>
             </div>
             <div class="form-group">
-                <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
-                <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
+                <label for="editCategoryName">Category Name</label>
+                <input type="text" id="editCategoryName" placeholder="Category name">
             </div>
             <div class="form-group">
-                <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
-                <input type="number" id="faqOrder" placeholder="1" value="1">
-                <small>Lower numbers appear first on the FAQ page.</small>
+                <label for="editCategoryDescription">Description (Optional)</label>
+                <textarea id="editCategoryDescription" rows="3" placeholder="Category description"></textarea>
             </div>
-            <button class="btn-primary" id="addFaqBtn">
-                <i class="fas fa-plus-circle"></i> Add FAQ
-            </button>
-        </div>
-        
-        <!-- Existing FAQs List -->
-        <h4>Existing FAQs</h4>
-        <button class="btn-secondary" id="refreshFaqsBtn" style="margin-bottom: 1rem;">
-            <i class="fas fa-sync-alt"></i> Refresh List
-        </button>
-        <div id="faqsListAdmin">
-            <!-- FAQs will be loaded here -->
-            <p style="text-align: center; padding: 2rem; color: #999;">
-                Click "Refresh List" to load existing FAQs.
-            </p>
+            <div class="form-group">
+                <label for="editCategoryOrder">Display Order</label>
+                <input type="number" id="editCategoryOrder" min="1" value="1">
+                <small>Lower numbers appear first</small>
+            </div>
+            <div class="category-modal-footer">
+                <button class="btn-secondary" id="closeCategoryModalBtn">Cancel</button>
+                <button class="btn-primary" id="updateCategoryBtn">Update Category</button>
+            </div>
         </div>
     </div>
 
@@ -255,14 +491,324 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script type="module" src="admin.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            getDocs, 
+            addDoc, 
+            updateDoc, 
+            deleteDoc, 
+            doc,
+            query,
+            orderBy,
+            serverTimestamp,
+            onSnapshot
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-    <script>
-        // Helper function to preview images from text inputs (called from admin.js)
-        window.previewImagesFromInputs = function() {
-            // This function is defined in admin.js
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD6T2k0fE2R4gF7QY4V6q6Z4Qv0X1W2Y3Z4",
+            authDomain: "sarm-enterprises.firebaseapp.com",
+            projectId: "sarm-enterprises",
+            storageBucket: "sarm-enterprises.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890"
         };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // DOM Elements
+        const logoutBtn = document.getElementById('logoutBtn');
+        const saveCategoryBtn = document.getElementById('saveCategoryBtn');
+        const cancelCategoryEdit = document.getElementById('cancelCategoryEdit');
+        const categoryName = document.getElementById('categoryName');
+        const categoryDescription = document.getElementById('categoryDescription');
+        const categoryOrder = document.getElementById('categoryOrder');
+        const editCategoryId = document.getElementById('editCategoryId');
+        const categoriesList = document.getElementById('categoriesList');
+        const productCategory = document.getElementById('productCategory');
+        
+        // Category Modal Elements
+        const categoryModal = document.getElementById('categoryModal');
+        const closeCategoryModalBtn = document.getElementById('closeCategoryModalBtn');
+        const closeCategoryModalX = document.querySelector('.close-category-modal');
+        const editCategoryName = document.getElementById('editCategoryName');
+        const editCategoryDescription = document.getElementById('editCategoryDescription');
+        const editCategoryOrder = document.getElementById('editCategoryOrder');
+        const updateCategoryBtn = document.getElementById('updateCategoryBtn');
+
+        // State variables
+        let categories = [];
+        let currentCategoryId = null;
+
+        // ==================== CATEGORY MANAGEMENT ====================
+        
+        // Load categories from Firebase
+        async function loadCategories() {
+            try {
+                const categoriesSnapshot = await getDocs(collection(db, "categories"));
+                categories = [];
+                
+                // Clear existing options
+                productCategory.innerHTML = '<option value="">Select Category</option>';
+                
+                if (!categoriesSnapshot.empty) {
+                    categoriesSnapshot.forEach((doc) => {
+                        const categoryData = doc.data();
+                        categories.push({
+                            id: doc.id,
+                            ...categoryData
+                        });
+                    });
+                    
+                    // Sort categories by order
+                    categories.sort((a, b) => (a.order || 999) - (b.order || 999));
+                    
+                    // Add to product category dropdown
+                    categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.name;
+                        option.textContent = category.name;
+                        productCategory.appendChild(option);
+                    });
+                    
+                    // Display categories list
+                    displayCategoriesList();
+                } else {
+                    displayNoCategories();
+                }
+                
+            } catch (error) {
+                console.error("Error loading categories:", error);
+                showNotification("Error loading categories", "error");
+            }
+        }
+
+        function displayCategoriesList() {
+            if (categories.length === 0) {
+                displayNoCategories();
+                return;
+            }
+
+            let html = '';
+            
+            categories.forEach(category => {
+                html += `
+                    <div class="category-item">
+                        <div class="category-info">
+                            <h4>${category.name}</h4>
+                            <p>${category.description || 'No description'}</p>
+                            <div class="category-order">Order: ${category.order || 1}</div>
+                        </div>
+                        <div class="category-actions">
+                            <button class="btn-category btn-edit-category" onclick="editCategory('${category.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn-category btn-delete-category" onclick="deleteCategory('${category.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            categoriesList.innerHTML = html;
+        }
+
+        function displayNoCategories() {
+            categoriesList.innerHTML = `
+                <div class="no-categories-message">
+                    <i class="fas fa-tags" style="font-size: 2rem; margin-bottom: 15px; color: #ddd;"></i>
+                    <p>No categories yet. Add your first category above!</p>
+                </div>
+            `;
+        }
+
+        // Save category
+        saveCategoryBtn.addEventListener('click', async () => {
+            try {
+                if (!categoryName.value.trim()) {
+                    showNotification("Category name is required", "error");
+                    return;
+                }
+
+                const categoryData = {
+                    name: categoryName.value.trim(),
+                    description: categoryDescription.value.trim(),
+                    order: parseInt(categoryOrder.value) || 1,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                };
+
+                if (editCategoryId.value) {
+                    // Update existing category
+                    const categoryRef = doc(db, "categories", editCategoryId.value);
+                    await updateDoc(categoryRef, {
+                        ...categoryData,
+                        updatedAt: serverTimestamp()
+                    });
+                    showNotification("Category updated successfully!", "success");
+                } else {
+                    // Add new category
+                    await addDoc(collection(db, "categories"), categoryData);
+                    showNotification("Category added successfully!", "success");
+                }
+
+                // Reset form
+                categoryName.value = '';
+                categoryDescription.value = '';
+                categoryOrder.value = '1';
+                editCategoryId.value = '';
+                saveCategoryBtn.innerHTML = '<i class="fas fa-save"></i> Save Category';
+                cancelCategoryEdit.style.display = 'none';
+
+                // Reload categories
+                loadCategories();
+
+            } catch (error) {
+                console.error("Error saving category:", error);
+                showNotification("Error saving category", "error");
+            }
+        });
+
+        // Edit category function
+        window.editCategory = function(categoryId) {
+            const category = categories.find(c => c.id === categoryId);
+            if (category) {
+                editCategoryName.value = category.name;
+                editCategoryDescription.value = category.description || '';
+                editCategoryOrder.value = category.order || 1;
+                currentCategoryId = categoryId;
+                categoryModal.style.display = 'flex';
+            }
+        };
+
+        // Update category
+        updateCategoryBtn.addEventListener('click', async () => {
+            try {
+                if (!editCategoryName.value.trim()) {
+                    showNotification("Category name is required", "error");
+                    return;
+                }
+
+                const categoryRef = doc(db, "categories", currentCategoryId);
+                await updateDoc(categoryRef, {
+                    name: editCategoryName.value.trim(),
+                    description: editCategoryDescription.value.trim(),
+                    order: parseInt(editCategoryOrder.value) || 1,
+                    updatedAt: serverTimestamp()
+                });
+
+                showNotification("Category updated successfully!", "success");
+                categoryModal.style.display = 'none';
+                loadCategories();
+
+            } catch (error) {
+                console.error("Error updating category:", error);
+                showNotification("Error updating category", "error");
+            }
+        });
+
+        // Delete category function
+        window.deleteCategory = function(categoryId) {
+            if (confirm("Are you sure you want to delete this category?\n\nNote: Products in this category will need to be reassigned.")) {
+                deleteCategoryConfirmed(categoryId);
+            }
+        };
+
+        async function deleteCategoryConfirmed(categoryId) {
+            try {
+                await deleteDoc(doc(db, "categories", categoryId));
+                showNotification("Category deleted successfully!", "success");
+                loadCategories();
+            } catch (error) {
+                console.error("Error deleting category:", error);
+                showNotification("Error deleting category", "error");
+            }
+        }
+
+        // Cancel category edit
+        cancelCategoryEdit.addEventListener('click', () => {
+            categoryName.value = '';
+            categoryDescription.value = '';
+            categoryOrder.value = '1';
+            editCategoryId.value = '';
+            cancelCategoryEdit.style.display = 'none';
+            saveCategoryBtn.innerHTML = '<i class="fas fa-save"></i> Save Category';
+        });
+
+        // Close category modal
+        closeCategoryModalBtn.addEventListener('click', () => {
+            categoryModal.style.display = 'none';
+        });
+
+        closeCategoryModalX.addEventListener('click', () => {
+            categoryModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        categoryModal.addEventListener('click', (e) => {
+            if (e.target === categoryModal) {
+                categoryModal.style.display = 'none';
+            }
+        });
+
+        // ==================== NOTIFICATION SYSTEM ====================
+        function showNotification(message, type = 'success') {
+            // Create notification element if it doesn't exist
+            let notification = document.getElementById('customNotification');
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.id = 'customNotification';
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 25px;
+                    border-radius: 5px;
+                    color: white;
+                    z-index: 9999;
+                    display: none;
+                    animation: slideIn 0.3s ease;
+                `;
+                document.body.appendChild(notification);
+            }
+
+            notification.textContent = message;
+            notification.style.background = type === 'success' ? '#27ae60' : 
+                                           type === 'error' ? '#e74c3c' : 
+                                           type === 'warning' ? '#f39c12' : '#3498db';
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in (simplified version)
+            const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+            if (!isLoggedIn) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+
+            // Load categories
+            loadCategories();
+
+            // Logout functionality
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('adminLoggedIn');
+                window.location.href = 'admin-login.html';
+            });
+        });
+
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
