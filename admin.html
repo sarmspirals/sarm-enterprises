@@ -5,708 +5,247 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - SARM ENTERPRISES</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f7fa;
-            color: #333;
-            min-height: 100vh;
-        }
-
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-brand h1 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
-
-        .tagline {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        .btn-logout {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-logout:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-
-        .admin-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 2rem;
-        }
-
-        .admin-header {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .admin-header h2 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-
-        .admin-stats {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .admin-stats span {
-            background: #f8f9fa;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            color: #2c3e50;
-            border-left: 4px solid #3498db;
-        }
-
-        .form-card {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .form-card h3 {
-            color: #2c3e50;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f0f0f0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #2c3e50;
-            font-weight: 500;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-family: 'Poppins', sans-serif;
-            transition: border 0.3s ease;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .btn-primary {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
-        }
-
-        .btn-secondary {
-            background: #95a5a6;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-secondary:hover {
-            background: #7f8c8d;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .product-card {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-
-        .product-image {
-            width: 100%;
-            height: 200px;
-            object-fit: contain;
-            background: #f8f9fa;
-            padding: 10px;
-        }
-
-        .product-info {
-            padding: 1rem;
-        }
-
-        .product-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #2c3e50;
-        }
-
-        .product-price {
-            color: #27ae60;
-            font-weight: 600;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .product-stock {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .product-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .chart-container {
-            height: 300px;
-            margin-top: 1rem;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            padding: 2rem;
-            animation: modalSlideIn 0.3s ease;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        /* Category Manager Styles */
-        .category-manager {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .category-list {
-            margin-top: 2rem;
-        }
-
-        .category-item {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 4px solid #3498db;
-        }
-
-        .category-info h4 {
-            margin: 0 0 5px 0;
-            color: #2c3e50;
-        }
-
-        .category-info p {
-            margin: 0;
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .category-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-category {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.9rem;
-        }
-
-        .btn-edit-category {
-            background: #3498db;
-            color: white;
-        }
-
-        .btn-delete-category {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .no-categories-message {
-            text-align: center;
-            padding: 3rem;
-            color: #666;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 2px dashed #ddd;
-        }
-
-        /* Login Container */
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .login-box {
-            background: white;
-            padding: 3rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .login-header h1 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-
-        .login-header p {
-            color: #7f8c8d;
-        }
-
-        .login-form .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 15px;
-            background: #3498db;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .login-btn:hover {
-            background: #2980b9;
-        }
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 8px;
-            color: white;
-            z-index: 9999;
-            display: none;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .notification.success {
-            background: #27ae60;
-        }
-
-        .notification.error {
-            background: #e74c3c;
-        }
-
-        .notification.warning {
-            background: #f39c12;
-        }
-
-        .notification.info {
-            background: #3498db;
-        }
-
-        /* Error Message */
-        .error-message {
-            color: #e74c3c;
-            font-size: 0.9rem;
-            margin-top: 5px;
-            display: none;
-        }
-
-        /* Loading Spinner */
-        .loading-spinner {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .loading-spinner i {
-            font-size: 2rem;
-            color: #3498db;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Placeholder Image */
-        .placeholder-image {
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6c757d;
-            font-size: 14px;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Login Screen (Shown by default) -->
-    <div id="loginScreen" class="login-container">
-        <div class="login-box">
-            <div class="login-header">
-                <h1><i class="fas fa-user-shield"></i> Admin Login</h1>
-                <p>SARM ENTERPRISES Admin Panel</p>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1><i class="fas fa-user-shield"></i> Admin Dashboard</h1>
+                <p class="tagline">SARM ENTERPRISES Management</p>
             </div>
-            <form id="loginForm" class="login-form">
-                <div class="form-group">
-                    <label for="adminEmail">Email Address</label>
-                    <input type="email" id="adminEmail" 
-                           placeholder="Enter your email" 
-                           required 
-                           autocomplete="email"
-                           style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
-                    <div id="emailError" class="error-message"></div>
-                </div>
-                <div class="form-group">
-                    <label for="adminPassword">Password</label>
-                    <input type="password" id="adminPassword" 
-                           placeholder="Enter your password" 
-                           required 
-                           autocomplete="current-password"
-                           style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
-                    <div id="passwordError" class="error-message"></div>
-                </div>
-                <button type="submit" class="login-btn">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </button>
-            </form>
+            <button id="logoutBtn" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
-    </div>
+    </nav>
 
-    <!-- Admin Dashboard (Hidden by default) -->
-    <div id="adminDashboard" style="display: none;">
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-brand">
-                    <h1><i class="fas fa-user-shield"></i> Admin Dashboard</h1>
-                    <p class="tagline">SARM ENTERPRISES Management</p>
-                </div>
-                <button id="logoutBtn" class="btn-logout">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h2>Welcome to Admin Panel</h2>
+            <div class="admin-stats">
+                <span id="totalProducts">0 Products</span>
+                <span id="totalOrders">0 Orders</span>
+                <span id="lowStock">0 Low Stock</span>
             </div>
-        </nav>
+        </div>
 
-        <div class="admin-container">
-            <div class="admin-header">
-                <h2>Welcome to Admin Panel</h2>
-                <div class="admin-stats">
-                    <span id="totalProducts">0 Products</span>
-                    <span id="totalOrders">0 Orders</span>
-                    <span id="lowStock">0 Low Stock</span>
-                </div>
-            </div>
-
-            <!-- Category Management Section -->
-            <div class="category-manager">
-                <h3><i class="fas fa-tags"></i> Product Categories Management</h3>
-                
-                <!-- Category Form -->
+        <!-- Add/Edit Product Form -->
+        <div class="form-card">
+            <h3><i class="fas fa-plus-circle"></i> Add/Edit Product</h3>
+            <form id="productForm">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="categoryName"><i class="fas fa-tag"></i> Category Name</label>
-                        <input type="text" id="categoryName" placeholder="e.g., Notebooks, Pens, Diaries" required>
-                        <div id="categoryNameError" class="error-message"></div>
+                        <label for="productName"><i class="fas fa-tag"></i> Product Name</label>
+                        <input type="text" id="productName" required 
+                               placeholder="e.g., Spiral Notebook 200 Pages or Blue Pen">
                     </div>
-                    
                     <div class="form-group">
-                        <label for="categoryOrder"><i class="fas fa-sort"></i> Display Order</label>
-                        <input type="number" id="categoryOrder" value="1" min="1">
-                        <small style="color: #666;">Lower numbers appear first</small>
+                        <label for="productPages">
+                            <i class="fas fa-file-alt"></i> Number of Pages
+                            <span style="color: #777; font-weight: normal; font-size: 0.9em;"> (Leave blank for pens, umbrellas, etc.)</span>
+                        </label>
+                        <input type="number" id="productPages" 
+                               placeholder="e.g., 200 (or leave blank for stationery)">
                     </div>
                 </div>
                 
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productPrice"><i class="fas fa-rupee-sign"></i> Price (₹)</label>
+                        <input type="number" id="productPrice" required 
+                               placeholder="e.g., 69" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="productStock"><i class="fas fa-box"></i> Stock Quantity</label>
+                        <input type="number" id="productStock" required 
+                               placeholder="e.g., 50">
+                    </div>
+                </div>
+                
+                <!-- UPDATED: Product Images Section (1-4 local images) -->
                 <div class="form-group">
-                    <label for="categoryDescription"><i class="fas fa-align-left"></i> Description (Optional)</label>
-                    <textarea id="categoryDescription" rows="2" placeholder="Describe this category..."></textarea>
-                </div>
-                
-                <button class="btn-primary" id="saveCategoryBtn">
-                    <i class="fas fa-save"></i> Save Category
-                </button>
-                <button class="btn-secondary" id="cancelCategoryEdit" style="display: none;">
-                    <i class="fas fa-times"></i> Cancel Edit
-                </button>
-                <input type="hidden" id="editCategoryId">
-                
-                <!-- Categories List -->
-                <div class="category-list">
-                    <h4 style="margin-top: 30px; margin-bottom: 15px;">Existing Categories</h4>
-                    <div id="categoriesList">
-                        <div class="loading-spinner" id="categoriesLoading">
-                            <i class="fas fa-spinner fa-spin"></i> Loading categories...
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Add/Edit Product Form -->
-            <div class="form-card">
-                <h3><i class="fas fa-plus-circle"></i> Add/Edit Product</h3>
-                <form id="productForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="productName"><i class="fas fa-tag"></i> Product Name</label>
-                            <input type="text" id="productName" required 
-                                   placeholder="e.g., Spiral Notebook 200 Pages or Blue Pen">
-                            <div id="productNameError" class="error-message"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="productCategory"><i class="fas fa-tags"></i> Product Category</label>
-                            <select id="productCategory" required>
-                                <option value="">Select Category</option>
-                            </select>
-                            <div id="productCategoryError" class="error-message"></div>
-                        </div>
-                    </div>
+                    <label for="productImage1"><i class="fas fa-images"></i> Product Images (Enter 1-4 filenames)</label>
                     
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="productPages">
-                                <i class="fas fa-file-alt"></i> Number of Pages
-                                <span style="color: #777; font-weight: normal; font-size: 0.9em;"> (Leave blank for pens, umbrellas, etc.)</span>
-                            </label>
-                            <input type="number" id="productPages" 
-                                   placeholder="e.g., 200 (or leave blank for stationery)">
-                        </div>
-                        <div class="form-group">
-                            <label for="productPrice"><i class="fas fa-rupee-sign"></i> Price (₹)</label>
-                            <input type="number" id="productPrice" required 
-                                   placeholder="e.g., 69" step="0.01" min="1">
-                            <div id="productPriceError" class="error-message"></div>
-                        </div>
-                        <div class="form-group">
-                            <label for="productStock"><i class="fas fa-box"></i> Stock Quantity</label>
-                            <input type="number" id="productStock" required 
-                                   placeholder="e.g., 50" min="0">
-                            <div id="productStockError" class="error-message"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Product Images Section -->
-                    <div class="form-group">
-                        <label><i class="fas fa-images"></i> Product Images</label>
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0;">
-                            <p style="margin: 0 0 15px 0; color: #555;">
-                                <strong>Image Setup:</strong> Upload images to <code>assets/products/</code> folder and enter filenames below.
-                            </p>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label style="font-size: 0.9rem;">Image 1 (Required)</label>
-                                    <input type="text" id="productImage1" placeholder="e.g., notebook-1.jpg" required>
-                                </div>
-                                <div class="form-group">
-                                    <label style="font-size: 0.9rem;">Image 2 (Optional)</label>
-                                    <input type="text" id="productImage2" placeholder="e.g., notebook-2.jpg">
-                                </div>
+                    <div style="margin: 10px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; border-left: 4px solid #3498db;">
+                        <p style="margin: 0 0 10px 0; font-weight: 500;">
+                            📸 <strong>Manual Image Setup</strong>
+                        </p>
+                        <p style="margin: 0 0 15px 0; font-size: 0.9rem; color: #555;">
+                            <strong>Steps:</strong><br>
+                            1. First, upload your images to the <code>assets/products/</code> folder on your website.<br>
+                            2. Then, enter the exact filenames below (e.g., <code>notebook-1.jpg</code>, <code>pen-1.jpg</code>).<br>
+                            3. The first image is the main thumbnail.
+                        </p>
+                        
+                        <!-- 4 Image Input Fields -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
+                            <div>
+                                <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
+                                    <strong>Image 1</strong> (Required)
+                                </label>
+                                <input type="text" id="productImage1" placeholder="e.g., product-1.jpg" 
+                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" required>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
+                                    Image 2 (Optional)
+                                </label>
+                                <input type="text" id="productImage2" placeholder="e.g., product-2.jpg" 
+                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
+                                    Image 3 (Optional)
+                                </label>
+                                <input type="text" id="productImage3" placeholder="e.g., product-3.jpg" 
+                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
+                                    Image 4 (Optional)
+                                </label>
+                                <input type="text" id="productImage4" placeholder="e.g., product-4.jpg" 
+                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                             </div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="productDescription"><i class="fas fa-align-left"></i> Description</label>
-                        <textarea id="productDescription" rows="3" 
-                                  placeholder="Product description..."></textarea>
-                    </div>
-                    
-                    <button type="submit" class="btn-primary" id="submitBtn">
-                        <i class="fas fa-save"></i> Add Product
-                    </button>
-                    <button type="button" class="btn-secondary" id="cancelEdit" style="display: none;">
-                        <i class="fas fa-times"></i> Cancel Edit
-                    </button>
-                    <input type="hidden" id="editProductId">
-                </form>
-            </div>
-
-            <!-- Products List -->
-            <div class="form-card">
-                <h3><i class="fas fa-list"></i> Current Products</h3>
-                <div id="productsList" class="products-grid">
-                    <div class="loading-spinner" id="productsLoading">
-                        <i class="fas fa-spinner fa-spin"></i> Loading products...
+                    <!-- Image Preview Area -->
+                    <div id="imagePreviewContainer" style="margin-top: 15px;">
+                        <!-- Container for multiple image previews -->
+                        <div id="multipleImagePreview" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; min-height: 50px;">
+                            <!-- Selected image previews will appear here dynamically -->
+                        </div>
+                        
+                        <!-- Image info/instructions -->
+                        <div id="imageInfo" style="margin-top: 10px; padding: 10px; background: #f0f8ff; border-radius: 5px; font-size: 0.9rem;">
+                            <strong>📝 Image Guidelines:</strong><br>
+                            1. Upload images to <code>assets/products/</code> folder first.<br>
+                            2. Enter exact filenames above (include extension like .jpg, .png).<br>
+                            3. Image 1 will be the main thumbnail shown in product listings.
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Quotes Management -->
-            <div class="form-card">
-                <h3><i class="fas fa-quote-left"></i> Business Quotes</h3>
+                
                 <div class="form-group">
-                    <label>Add New Quote</label>
-                    <input type="text" id="newQuote" placeholder="Enter a motivational quote...">
-                    <button type="button" class="btn-primary" id="addQuoteBtn">
-                        <i class="fas fa-plus"></i> Add Quote
-                    </button>
+                    <label for="productDescription"><i class="fas fa-align-left"></i> Description</label>
+                    <textarea id="productDescription" rows="3" 
+                              placeholder="Product description..."></textarea>
                 </div>
-                <div id="quotesList">
-                    <!-- Quotes will be displayed here -->
-                </div>
+                
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <i class="fas fa-save"></i> Add Product
+                </button>
+                <button type="button" class="btn-secondary" id="cancelEdit" style="display: none;">
+                    <i class="fas fa-times"></i> Cancel Edit
+                </button>
+                <input type="hidden" id="editProductId">
+            </form>
+        </div>
+
+        <!-- Logo Management (REMOVED file upload, kept for future if needed) -->
+        <div class="form-card">
+            <h3><i class="fas fa-image"></i> Logo Management</h3>
+            <div class="form-group">
+                <p>To update the website logo, replace the file <code>assets/logo/logo.png</code> manually.</p>
+            </div>
+        </div>
+
+        <!-- Products List -->
+        <div class="form-card">
+            <h3><i class="fas fa-list"></i> Current Products</h3>
+            <div id="productsList" class="products-grid">
+                <!-- Products will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Quotes Management -->
+        <div class="form-card">
+            <h3><i class="fas fa-quote-left"></i> Business Quotes</h3>
+            <div class="form-group">
+                <label>Add New Quote</label>
+                <input type="text" id="newQuote" placeholder="Enter a motivational quote...">
+                <button type="button" class="btn-primary" id="addQuoteBtn">
+                    <i class="fas fa-plus"></i> Add Quote
+                </button>
+            </div>
+            <div id="quotesList">
+                <!-- Quotes will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Stock Summary -->
+        <div class="form-card">
+            <h3><i class="fas fa-chart-bar"></i> Stock Summary</h3>
+            <div class="chart-container">
+                <canvas id="stockChart"></canvas>
             </div>
         </div>
     </div>
 
-    <!-- Success Message Modal -->
-    <div id="successMessage" class="modal">
+    <!-- Customer Feedback Manager -->
+    <div class="form-card">
+        <h3><i class="fas fa-comments"></i> Customer Feedback Manager</h3>
+        <p>Review and manage testimonials submitted by customers.</p>
+        
+        <div class="admin-actions" style="margin-bottom: 1.5rem;">
+            <button class="btn-primary" id="refreshPendingBtn">
+                <i class="fas fa-sync-alt"></i> Refresh Pending List
+            </button>
+        </div>
+        
+        <h4>Pending Review</h4>
+        <div id="pendingFeedbackList">
+            <!-- Pending feedback cards will be loaded here -->
+            <p><i>Click "Refresh Pending List" to load submissions.</i></p>
+        </div>
+    </div>
+
+    <!-- FAQ MANAGEMENT -->
+    <div class="form-card">
+        <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
+        <p>Manage Frequently Asked Questions shown on the FAQ page.</p>
+        
+        <!-- Add New FAQ Form -->
+        <h4>Add New FAQ</h4>
+        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+            <div class="form-group">
+                <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
+                <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
+            </div>
+            <div class="form-group">
+                <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
+                <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
+                <input type="number" id="faqOrder" placeholder="1" value="1">
+                <small>Lower numbers appear first on the FAQ page.</small>
+            </div>
+            <button class="btn-primary" id="addFaqBtn">
+                <i class="fas fa-plus-circle"></i> Add FAQ
+            </button>
+        </div>
+        
+        <!-- Existing FAQs List -->
+        <h4>Existing FAQs</h4>
+        <button class="btn-secondary" id="refreshFaqsBtn" style="margin-bottom: 1rem;">
+            <i class="fas fa-sync-alt"></i> Refresh List
+        </button>
+        <div id="faqsListAdmin">
+            <!-- FAQs will be loaded here -->
+            <p style="text-align: center; padding: 2rem; color: #999;">
+                Click "Refresh List" to load existing FAQs.
+            </p>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" style="display: none;" class="modal">
         <div class="modal-content" style="text-align: center;">
-            <h2><i class="fas fa-check-circle" style="color: #27ae60; font-size: 3rem;"></i></h2>
+            <h2><i class="fas fa-check-circle" style="color: var(--success-color); font-size: 3rem;"></i></h2>
             <h3>Success!</h3>
             <p id="successText">Operation completed successfully.</p>
             <button class="btn-primary" onclick="document.getElementById('successMessage').style.display='none'">
@@ -715,756 +254,15 @@
         </div>
     </div>
 
-    <!-- Notification -->
-    <div id="notification" class="notification"></div>
-
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    
+    <script type="module" src="admin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
-        // Initialize Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyD6T2k0fE2R4gF7QY4V6q6Z4Qv0X1W2Y3Z4",
-            authDomain: "sarm-enterprises.firebaseapp.com",
-            projectId: "sarm-enterprises",
-            storageBucket: "sarm-enterprises.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdef1234567890"
+        // Helper function to preview images from text inputs (called from admin.js)
+        window.previewImagesFromInputs = function() {
+            // This function is defined in admin.js
         };
-
-        // Initialize Firebase
-        try {
-            firebase.initializeApp(firebaseConfig);
-            console.log("Firebase initialized successfully");
-        } catch (error) {
-            console.error("Firebase initialization error:", error);
-            showNotification("Firebase initialization failed. Please check your configuration.", "error");
-        }
-
-        // Get Firestore reference
-        const db = firebase.firestore();
-
-        // Admin credentials
-        const ADMIN_CREDENTIALS = {
-            email: "admin@sarm.com",
-            password: "admin123"
-        };
-
-        // SVG placeholder for images
-        const PLACEHOLDER_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNmM3NTdkIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
-
-        // DOM Elements
-        const loginScreen = document.getElementById('loginScreen');
-        const adminDashboard = document.getElementById('adminDashboard');
-        const loginForm = document.getElementById('loginForm');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const notification = document.getElementById('notification');
-
-        // Login form elements
-        const adminEmail = document.getElementById('adminEmail');
-        const adminPassword = document.getElementById('adminPassword');
-
-        // Category management elements
-        const categoryName = document.getElementById('categoryName');
-        const categoryDescription = document.getElementById('categoryDescription');
-        const categoryOrder = document.getElementById('categoryOrder');
-        const saveCategoryBtn = document.getElementById('saveCategoryBtn');
-        const cancelCategoryEdit = document.getElementById('cancelCategoryEdit');
-        const editCategoryId = document.getElementById('editCategoryId');
-        const categoriesList = document.getElementById('categoriesList');
-        const productCategory = document.getElementById('productCategory');
-
-        // Product form elements
-        const productForm = document.getElementById('productForm');
-        const productName = document.getElementById('productName');
-        const productPrice = document.getElementById('productPrice');
-        const productStock = document.getElementById('productStock');
-        const productDescription = document.getElementById('productDescription');
-        const submitBtn = document.getElementById('submitBtn');
-        const cancelEdit = document.getElementById('cancelEdit');
-        const editProductId = document.getElementById('editProductId');
-
-        // State variables
-        let categories = [];
-        let products = [];
-        let currentCategoryId = null;
-        let currentProductId = null;
-
-        // ==================== AUTHENTICATION ====================
-        
-        // Check if already logged in
-        function checkLoginStatus() {
-            const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
-            if (isLoggedIn) {
-                showAdminDashboard();
-            } else {
-                showLoginScreen();
-            }
-        }
-
-        // Login form submission
-        loginForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Clear previous errors
-            clearErrors();
-            
-            const email = adminEmail.value.trim();
-            const password = adminPassword.value.trim();
-            
-            // Validation
-            let isValid = true;
-            
-            if (!email) {
-                showError('adminEmail', 'Email is required');
-                isValid = false;
-            } else if (!isValidEmail(email)) {
-                showError('adminEmail', 'Please enter a valid email address');
-                isValid = false;
-            }
-            
-            if (!password) {
-                showError('adminPassword', 'Password is required');
-                isValid = false;
-            } else if (password.length < 6) {
-                showError('adminPassword', 'Password must be at least 6 characters');
-                isValid = false;
-            }
-            
-            if (!isValid) return;
-            
-            // Check credentials
-            if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
-                // Successful login
-                localStorage.setItem('adminLoggedIn', 'true');
-                localStorage.setItem('adminEmail', email);
-                showAdminDashboard();
-                showNotification('Login successful!', 'success');
-            } else {
-                showError('adminEmail', 'Invalid email or password');
-                showError('adminPassword', 'Invalid email or password');
-                showNotification('Invalid login credentials', 'error');
-            }
-        });
-
-        // Logout
-        logoutBtn.addEventListener('click', function() {
-            localStorage.removeItem('adminLoggedIn');
-            localStorage.removeItem('adminEmail');
-            showLoginScreen();
-            showNotification('Logged out successfully', 'success');
-        });
-
-        function showLoginScreen() {
-            loginScreen.style.display = 'flex';
-            adminDashboard.style.display = 'none';
-            
-            // Clear form
-            loginForm.reset();
-            clearErrors();
-        }
-
-        function showAdminDashboard() {
-            loginScreen.style.display = 'none';
-            adminDashboard.style.display = 'block';
-            
-            // Load data
-            loadCategories();
-            loadProducts();
-        }
-
-        // ==================== ERROR HANDLING ====================
-        
-        function showError(fieldId, message) {
-            const errorElement = document.getElementById(fieldId + 'Error');
-            if (errorElement) {
-                errorElement.textContent = message;
-                errorElement.style.display = 'block';
-                
-                // Highlight input field
-                const inputField = document.getElementById(fieldId);
-                if (inputField) {
-                    inputField.style.borderColor = '#e74c3c';
-                }
-            }
-        }
-
-        function clearErrors() {
-            // Clear all error messages
-            document.querySelectorAll('.error-message').forEach(el => {
-                el.textContent = '';
-                el.style.display = 'none';
-            });
-            
-            // Reset input borders
-            document.querySelectorAll('input, select, textarea').forEach(el => {
-                el.style.borderColor = '#ddd';
-            });
-        }
-
-        function isValidEmail(email) {
-            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return re.test(email);
-        }
-
-        // ==================== NOTIFICATION SYSTEM ====================
-        
-        function showNotification(message, type = 'info') {
-            notification.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-
-        function showSuccessModal(message) {
-            document.getElementById('successText').textContent = message;
-            document.getElementById('successMessage').style.display = 'flex';
-        }
-
-        // ==================== CATEGORY MANAGEMENT ====================
-        
-        async function loadCategories() {
-            try {
-                const categoriesLoading = document.getElementById('categoriesLoading');
-                if (categoriesLoading) {
-                    categoriesLoading.style.display = 'block';
-                }
-                
-                categoriesList.innerHTML = '';
-                
-                const snapshot = await db.collection('categories')
-                    .orderBy('order', 'asc')
-                    .orderBy('createdAt', 'desc')
-                    .get();
-                
-                if (snapshot.empty) {
-                    categoriesList.innerHTML = `
-                        <div class="no-categories-message">
-                            <i class="fas fa-tags" style="font-size: 2rem; margin-bottom: 15px; color: #ddd;"></i>
-                            <p>No categories yet. Add your first category above!</p>
-                        </div>
-                    `;
-                    
-                    // Clear category dropdown
-                    productCategory.innerHTML = '<option value="">Select Category</option>';
-                    return;
-                }
-                
-                categories = [];
-                let html = '';
-                
-                snapshot.forEach(doc => {
-                    const categoryData = doc.data();
-                    const category = {
-                        id: doc.id,
-                        ...categoryData
-                    };
-                    categories.push(category);
-                    
-                    // Add to category list
-                    html += `
-                        <div class="category-item">
-                            <div class="category-info">
-                                <h4>${category.name}</h4>
-                                <p>${category.description || 'No description'}</p>
-                                <small style="color: #7f8c8d;">Order: ${category.order || 1}</small>
-                            </div>
-                            <div class="category-actions">
-                                <button class="btn-category btn-edit-category" onclick="editCategory('${category.id}')">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn-category btn-delete-category" onclick="deleteCategory('${category.id}')">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                categoriesList.innerHTML = html;
-                
-                // Update category dropdown
-                updateCategoryDropdown();
-                
-            } catch (error) {
-                console.error('Error loading categories:', error);
-                
-                // Check if it's a permissions error
-                if (error.code === 'permission-denied') {
-                    categoriesList.innerHTML = `
-                        <div class="no-categories-message" style="border-color: #e74c3c;">
-                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px; color: #e74c3c;"></i>
-                            <p><strong>Firebase Permission Error</strong></p>
-                            <p>Please update your Firestore security rules to allow read/write operations.</p>
-                            <p style="font-size: 0.8rem; margin-top: 10px;">
-                                Go to Firebase Console → Firestore Database → Rules tab and update rules to allow access.
-                            </p>
-                        </div>
-                    `;
-                } else {
-                    categoriesList.innerHTML = `
-                        <div class="no-categories-message" style="border-color: #e74c3c;">
-                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px; color: #e74c3c;"></i>
-                            <p>Error loading categories. Please try again.</p>
-                        </div>
-                    `;
-                }
-                showNotification('Error loading categories: ' + error.message, 'error');
-            } finally {
-                const categoriesLoading = document.getElementById('categoriesLoading');
-                if (categoriesLoading) {
-                    categoriesLoading.style.display = 'none';
-                }
-            }
-        }
-
-        function updateCategoryDropdown() {
-            productCategory.innerHTML = '<option value="">Select Category</option>';
-            
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category.name;
-                option.textContent = category.name;
-                productCategory.appendChild(option);
-            });
-        }
-
-        // Save category
-        saveCategoryBtn.addEventListener('click', async function() {
-            try {
-                // Validation
-                if (!categoryName.value.trim()) {
-                    showError('categoryName', 'Category name is required');
-                    return;
-                }
-                
-                const categoryData = {
-                    name: categoryName.value.trim(),
-                    description: categoryDescription.value.trim(),
-                    order: parseInt(categoryOrder.value) || 1,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                
-                if (editCategoryId.value) {
-                    // Update existing category
-                    await db.collection('categories').doc(editCategoryId.value).update({
-                        ...categoryData,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    showNotification('Category updated successfully!', 'success');
-                } else {
-                    // Add new category
-                    await db.collection('categories').add(categoryData);
-                    showNotification('Category added successfully!', 'success');
-                }
-                
-                // Reset form
-                categoryName.value = '';
-                categoryDescription.value = '';
-                categoryOrder.value = '1';
-                editCategoryId.value = '';
-                cancelCategoryEdit.style.display = 'none';
-                saveCategoryBtn.innerHTML = '<i class="fas fa-save"></i> Save Category';
-                
-                // Reload categories
-                loadCategories();
-                
-            } catch (error) {
-                console.error('Error saving category:', error);
-                if (error.code === 'permission-denied') {
-                    showNotification('Permission denied. Please check Firestore security rules.', 'error');
-                } else {
-                    showNotification('Error saving category: ' + error.message, 'error');
-                }
-            }
-        });
-
-        // Edit category
-        window.editCategory = function(categoryId) {
-            const category = categories.find(c => c.id === categoryId);
-            if (category) {
-                categoryName.value = category.name;
-                categoryDescription.value = category.description || '';
-                categoryOrder.value = category.order || 1;
-                editCategoryId.value = category.id;
-                
-                saveCategoryBtn.innerHTML = '<i class="fas fa-save"></i> Update Category';
-                cancelCategoryEdit.style.display = 'inline-flex';
-                
-                // Scroll to category form
-                document.querySelector('.category-manager').scrollIntoView({ behavior: 'smooth' });
-            }
-        };
-
-        // Delete category
-        window.deleteCategory = function(categoryId) {
-            if (confirm('Are you sure you want to delete this category?\n\nNote: Products in this category will need to be reassigned.')) {
-                deleteCategoryConfirmed(categoryId);
-            }
-        };
-
-        async function deleteCategoryConfirmed(categoryId) {
-            try {
-                await db.collection('categories').doc(categoryId).delete();
-                showNotification('Category deleted successfully!', 'success');
-                loadCategories();
-            } catch (error) {
-                console.error('Error deleting category:', error);
-                showNotification('Error deleting category', 'error');
-            }
-        }
-
-        // Cancel category edit
-        cancelCategoryEdit.addEventListener('click', function() {
-            categoryName.value = '';
-            categoryDescription.value = '';
-            categoryOrder.value = '1';
-            editCategoryId.value = '';
-            cancelCategoryEdit.style.display = 'none';
-            saveCategoryBtn.innerHTML = '<i class="fas fa-save"></i> Save Category';
-            clearErrors();
-        });
-
-        // ==================== PRODUCT MANAGEMENT ====================
-        
-        async function loadProducts() {
-            try {
-                const productsLoading = document.getElementById('productsLoading');
-                if (productsLoading) {
-                    productsLoading.style.display = 'block';
-                }
-                
-                const snapshot = await db.collection('products')
-                    .orderBy('createdAt', 'desc')
-                    .get();
-                
-                if (snapshot.empty) {
-                    productsList.innerHTML = `
-                        <div class="no-categories-message">
-                            <i class="fas fa-box" style="font-size: 2rem; margin-bottom: 15px; color: #ddd;"></i>
-                            <p>No products yet. Add your first product above!</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                products = [];
-                let html = '';
-                
-                snapshot.forEach(doc => {
-                    const productData = doc.data();
-                    const product = {
-                        id: doc.id,
-                        ...productData
-                    };
-                    products.push(product);
-                    
-                    // Use first image or placeholder
-                    let firstImage = PLACEHOLDER_IMAGE;
-                    if (product.images && product.images.length > 0 && product.images[0]) {
-                        // Check if it's a local path or full URL
-                        if (product.images[0].startsWith('http') || product.images[0].startsWith('assets/')) {
-                            firstImage = product.images[0];
-                        }
-                    }
-                    
-                    html += `
-                        <div class="product-card">
-                            <img src="${firstImage}" alt="${product.name}" class="product-image placeholder-image"
-                                 onerror="this.onerror=null; this.src='${PLACEHOLDER_IMAGE}'; this.classList.add('placeholder-image')">
-                            <div class="product-info">
-                                <h4 class="product-name">${product.name}</h4>
-                                <div class="product-price">₹${product.price}</div>
-                                <div class="product-stock">
-                                    <i class="fas fa-box"></i> Stock: ${product.stock}
-                                    <br>
-                                    <i class="fas fa-tag"></i> Category: ${product.category || 'Uncategorized'}
-                                </div>
-                                <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
-                                    ${product.description ? product.description.substring(0, 100) + '...' : 'No description'}
-                                </p>
-                                <div class="product-actions">
-                                    <button class="btn-primary" onclick="editProduct('${product.id}')" style="padding: 8px 15px;">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <button class="btn-secondary" onclick="deleteProduct('${product.id}')" style="padding: 8px 15px;">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                productsList.innerHTML = html;
-                
-            } catch (error) {
-                console.error('Error loading products:', error);
-                
-                if (error.code === 'permission-denied') {
-                    productsList.innerHTML = `
-                        <div class="no-categories-message" style="border-color: #e74c3c;">
-                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px; color: #e74c3c;"></i>
-                            <p><strong>Firebase Permission Error</strong></p>
-                            <p>Please update your Firestore security rules to allow read/write operations.</p>
-                        </div>
-                    `;
-                } else {
-                    productsList.innerHTML = `
-                        <div class="no-categories-message" style="border-color: #e74c3c;">
-                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px; color: #e74c3c;"></i>
-                            <p>Error loading products. Please try again.</p>
-                        </div>
-                    `;
-                }
-                showNotification('Error loading products', 'error');
-            } finally {
-                const productsLoading = document.getElementById('productsLoading');
-                if (productsLoading) {
-                    productsLoading.style.display = 'none';
-                }
-            }
-        }
-
-        // Edit product
-        window.editProduct = function(productId) {
-            const product = products.find(p => p.id === productId);
-            if (product) {
-                productName.value = product.name;
-                productPrice.value = product.price;
-                productStock.value = product.stock;
-                productDescription.value = product.description || '';
-                
-                // Set category
-                if (product.category) {
-                    productCategory.value = product.category;
-                }
-                
-                // Set images
-                if (product.images && product.images.length > 0) {
-                    document.getElementById('productImage1').value = product.images[0];
-                    if (product.images.length > 1) {
-                        document.getElementById('productImage2').value = product.images[1];
-                    }
-                }
-                
-                editProductId.value = product.id;
-                submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Product';
-                cancelEdit.style.display = 'inline-flex';
-                
-                // Scroll to product form
-                document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
-            }
-        };
-
-        // Delete product
-        window.deleteProduct = function(productId) {
-            if (confirm('Are you sure you want to delete this product?')) {
-                deleteProductConfirmed(productId);
-            }
-        };
-
-        async function deleteProductConfirmed(productId) {
-            try {
-                await db.collection('products').doc(productId).delete();
-                showNotification('Product deleted successfully!', 'success');
-                loadProducts();
-            } catch (error) {
-                console.error('Error deleting product:', error);
-                showNotification('Error deleting product', 'error');
-            }
-        }
-
-        // Product form submission
-        productForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            // Clear errors
-            clearErrors();
-            
-            // Validation
-            let isValid = true;
-            
-            if (!productName.value.trim()) {
-                showError('productName', 'Product name is required');
-                isValid = false;
-            }
-            
-            if (!productCategory.value) {
-                showError('productCategory', 'Product category is required');
-                isValid = false;
-            }
-            
-            if (!productPrice.value || productPrice.value <= 0) {
-                showError('productPrice', 'Valid price is required');
-                isValid = false;
-            }
-            
-            if (!productStock.value || productStock.value < 0) {
-                showError('productStock', 'Valid stock quantity is required');
-                isValid = false;
-            }
-            
-            const productImage1 = document.getElementById('productImage1').value.trim();
-            if (!productImage1) {
-                showError('productImage1', 'At least one image is required');
-                isValid = false;
-            }
-            
-            if (!isValid) return;
-            
-            try {
-                // Prepare images array
-                const images = [];
-                if (productImage1) images.push(productImage1);
-                
-                const productImage2 = document.getElementById('productImage2').value.trim();
-                if (productImage2) images.push(productImage2);
-                
-                const productData = {
-                    name: productName.value.trim(),
-                    category: productCategory.value,
-                    price: parseFloat(productPrice.value),
-                    stock: parseInt(productStock.value),
-                    description: productDescription.value.trim(),
-                    images: images,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                
-                // Add pages if provided
-                const pages = document.getElementById('productPages').value;
-                if (pages) {
-                    productData.pages = parseInt(pages);
-                }
-                
-                if (editProductId.value) {
-                    // Update existing product
-                    await db.collection('products').doc(editProductId.value).update({
-                        ...productData,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    showNotification('Product updated successfully!', 'success');
-                } else {
-                    // Add new product
-                    await db.collection('products').add(productData);
-                    showNotification('Product added successfully!', 'success');
-                }
-                
-                // Reset form
-                productForm.reset();
-                editProductId.value = '';
-                submitBtn.innerHTML = '<i class="fas fa-save"></i> Add Product';
-                cancelEdit.style.display = 'none';
-                
-                // Reload products
-                loadProducts();
-                
-            } catch (error) {
-                console.error('Error saving product:', error);
-                if (error.code === 'permission-denied') {
-                    showNotification('Permission denied. Please check Firestore security rules.', 'error');
-                } else {
-                    showNotification('Error saving product: ' + error.message, 'error');
-                }
-            }
-        });
-
-        // Cancel product edit
-        cancelEdit.addEventListener('click', function() {
-            productForm.reset();
-            editProductId.value = '';
-            submitBtn.innerHTML = '<i class="fas fa-save"></i> Add Product';
-            cancelEdit.style.display = 'none';
-            clearErrors();
-        });
-
-        // ==================== QUOTES MANAGEMENT ====================
-        
-        document.getElementById('addQuoteBtn').addEventListener('click', async function() {
-            const quoteInput = document.getElementById('newQuote');
-            const quote = quoteInput.value.trim();
-            
-            if (!quote) {
-                showNotification('Please enter a quote', 'warning');
-                return;
-            }
-            
-            try {
-                await db.collection('quotes').add({
-                    text: quote,
-                    author: 'SARM ENTERPRISES',
-                    order: 1,
-                    status: 'active',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                showNotification('Quote added successfully!', 'success');
-                quoteInput.value = '';
-                
-            } catch (error) {
-                console.error('Error adding quote:', error);
-                showNotification('Error adding quote', 'error');
-            }
-        });
-
-        // ==================== FIREBASE SECURITY RULES ADVICE ====================
-        
-        function showFirebaseRulesAdvice() {
-            console.log(`
-                =============================================
-                FIREBASE FIRESTORE SECURITY RULES
-                =============================================
-                
-                To fix permission errors, update your Firestore rules in Firebase Console:
-                
-                1. Go to Firebase Console → Firestore Database → Rules tab
-                2. Update rules to (for development/testing):
-                
-                rules_version = '2';
-                service cloud.firestore {
-                  match /databases/{database}/documents {
-                    match /{document=**} {
-                      allow read, write: if true;
-                    }
-                  }
-                }
-                
-                3. For production, use proper authentication-based rules.
-                
-                =============================================
-            `);
-        }
-
-        // ==================== INITIALIZATION ====================
-        
-        // Check login status on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            checkLoginStatus();
-            showFirebaseRulesAdvice();
-            
-            // Add autocomplete attributes to all form inputs
-            document.querySelectorAll('input').forEach(input => {
-                if (input.type === 'email' && !input.hasAttribute('autocomplete')) {
-                    input.setAttribute('autocomplete', 'email');
-                }
-                if (input.type === 'password' && !input.hasAttribute('autocomplete')) {
-                    input.setAttribute('autocomplete', 'current-password');
-                }
-            });
-        });
-
-        // Handle window close/refresh
-        window.addEventListener('beforeunload', function() {
-            // Optional: Clear sensitive data if needed
-        });
-
     </script>
 </body>
 </html>
