@@ -110,7 +110,151 @@
             font-size: 0.8rem;
             z-index: 2;
         }
+
+                /* Admin Dashboard Styles */
+        .admin-dashboard {
+            padding: 40px 0;
+        }
         
+        .admin-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        .admin-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .admin-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .admin-table {
+            overflow-x: auto;
+        }
+        
+        .admin-table table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .admin-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .admin-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-right: 5px;
+        }
+        
+        .btn-small:hover {
+            background: #2980b9;
+        }
+        
+        .btn-danger {
+            background: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        
+        .login-section {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .login-box h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .login-box p {
+            color: #666;
+            margin-bottom: 25px;
+        }
         /* Cart Styles */
         .cart-count {
             background: #e74c3c;
@@ -608,12 +752,27 @@
     </div>
 
     <!-- Main JavaScript -->
-    <script type="module">
-        // Import Firebase only for products, not for logo
+      <script type="module">
+        // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { 
+            getFirestore, 
+            collection, 
+            getDocs, 
+            addDoc, 
+            updateDoc, 
+            deleteDoc, 
+            doc,
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword,
+            signOut,
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
-        // Your Firebase configuration (only for products)
+        // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyD6T2k0fE2R4gF7QY4V6q6Z4Qv0X1W2Y3Z4",
             authDomain: "sarm-enterprises.firebaseapp.com",
@@ -626,406 +785,420 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
-        // ==================== LOGO SYSTEM ====================
-        // Load logo from localStorage (Base64 string)
-        function loadLogo() {
-            try {
-                console.log("Loading logo from localStorage...");
-                const savedLogo = localStorage.getItem('sarmLogo');
-                
-                if (savedLogo) {
-                    const logoImg = document.getElementById('logo');
-                    logoImg.src = savedLogo;
-                    console.log("Logo loaded from localStorage");
-                    
-                    // Handle logo loading error
-                    logoImg.onerror = () => {
-                        console.log("Local storage logo failed to load, using default");
-                        setDefaultLogo();
-                    };
-                } else {
-                    console.log("No logo in localStorage, using default");
-                    setDefaultLogo();
-                }
-            } catch (error) {
-                console.error("Error loading logo:", error);
-                setDefaultLogo();
+        // ==================== AUTHENTICATION SYSTEM ====================
+        let currentUser = null;
+
+        // Check login status
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                showAdminDashboard();
+                document.getElementById('adminLink').style.display = 'inline-block';
+                document.getElementById('adminLoginLink').textContent = 'Logout';
+                document.getElementById('adminLoginLink').onclick = (e) => {
+                    e.preventDefault();
+                    adminLogout();
+                };
+            } else {
+                currentUser = null;
+                showLoginForm();
+                document.getElementById('adminLink').style.display = 'none';
+                document.getElementById('adminLoginLink').textContent = 'Admin Login';
+                document.getElementById('adminLoginLink').onclick = (e) => {
+                    e.preventDefault();
+                    showLoginModal();
+                };
             }
-        }
+        });
 
-        // Set default logo
-        function setDefaultLogo() {
-            const logoImg = document.getElementById('logo');
-            logoImg.src = "assets/logo/logo.png";
-        }
-
-        // Save logo to localStorage (this function should be called from admin panel)
-        function saveLogoToLocalStorage(base64String) {
+        // Login function
+        async function adminLogin(email, password) {
             try {
-                localStorage.setItem('sarmLogo', base64String);
-                console.log("Logo saved to localStorage");
-                
-                // Update logo on current page
-                const logoImg = document.getElementById('logo');
-                if (logoImg) {
-                    logoImg.src = base64String;
-                }
-                
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log("Admin logged in:", userCredential.user.email);
                 return true;
             } catch (error) {
-                console.error("Error saving logo to localStorage:", error);
+                console.error("Login error:", error);
+                showNotification('Login failed: ' + error.message, 'error');
                 return false;
             }
         }
 
-        // ==================== CART SYSTEM ====================
-        let cart = JSON.parse(localStorage.getItem('sarmCart')) || [];
-
-        // Update cart count
-        function updateCartCount() {
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('cartCount').textContent = totalItems;
-            localStorage.setItem('sarmCart', JSON.stringify(cart));
-        }
-
-        // Show notification
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.style.display = 'block';
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-
-        // Add to cart
-        function addToCart(product, quantity) {
-            const existingItem = cart.find(item => item.id === product.id);
-            
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                cart.push({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.images ? product.images[0] : '',
-                    quantity: quantity
-                });
-            }
-            
-            updateCartCount();
-            showNotification('Added to cart!');
-        }
-
-        // Remove from cart
-        function removeFromCart(productId) {
-            cart = cart.filter(item => item.id !== productId);
-            updateCartCount();
-            renderCart();
-        }
-
-        // Update quantity
-        function updateCartQuantity(productId, quantity) {
-            const item = cart.find(item => item.id === productId);
-            if (item) {
-                if (quantity < 1) {
-                    removeFromCart(productId);
-                } else {
-                    item.quantity = quantity;
-                    updateCartCount();
-                    renderCart();
-                }
+        // Logout function
+        async function adminLogout() {
+            try {
+                await signOut(auth);
+                showNotification('Logged out successfully', 'success');
+            } catch (error) {
+                console.error("Logout error:", error);
             }
         }
 
-        // Render cart
-        function renderCart() {
-            const cartItems = document.getElementById('cartItems');
-            const cartTotal = document.getElementById('cartTotal');
-            const cartTotalDiv = document.querySelector('.cart-total');
-            
-            if (cart.length === 0) {
-                cartItems.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">Your cart is empty</p>';
-                cartTotalDiv.style.display = 'none';
-                return;
-            }
-            
-            let html = '';
-            let total = 0;
-            
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
+        // ==================== CATEGORY MANAGEMENT ====================
+        async function loadCategories() {
+            try {
+                const categoriesSelect = document.getElementById('categorySelect');
+                const categoriesList = document.getElementById('categoriesList');
                 
-                html += `
-                    <div class="cart-item">
-                        <div>
-                            <h4>${item.name}</h4>
-                            <p>₹${item.price} × ${item.quantity}</p>
-                            <p style="font-weight: bold;">Item Total: ₹${itemTotal}</p>
-                        </div>
-                        <div class="quantity-controls">
-                            <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.quantity - 1})">-</button>
-                            <span style="min-width: 30px; text-align: center;">${item.quantity}</span>
-                            <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.quantity + 1})">+</button>
-                            <button class="remove-btn" onclick="removeFromCart('${item.id}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            cartItems.innerHTML = html;
-            cartTotal.textContent = total;
-            cartTotalDiv.style.display = 'block';
+                if (!categoriesSelect) return;
+                
+                categoriesSelect.innerHTML = '<option value="">Loading categories...</option>';
+                if (categoriesList) categoriesList.innerHTML = '<tr><td colspan="3">Loading categories...</td></tr>';
+                
+                const querySnapshot = await getDocs(collection(db, "categories"));
+                
+                // Clear existing options
+                categoriesSelect.innerHTML = '<option value="">Select Category</option>';
+                
+                if (querySnapshot.empty) {
+                    categoriesSelect.innerHTML += '<option value="notebooks">Notebooks</option><option value="reams">Reams</option><option value="pens">Pens</option><option value="diaries">Diaries</option>';
+                    if (categoriesList) categoriesList.innerHTML = '<tr><td colspan="3">No categories found. Add some!</td></tr>';
+                    return;
+                }
+                
+                let categoriesHtml = '';
+                querySnapshot.forEach((doc) => {
+                    const category = doc.data();
+                    const categoryId = doc.id;
+                    
+                    // Add to select dropdowns
+                    categoriesSelect.innerHTML += `<option value="${categoryId}">${category.name}</option>`;
+                    
+                    // Add to categories list table
+                    categoriesHtml += `
+                        <tr>
+                            <td>${category.name}</td>
+                            <td>${category.order || 999}</td>
+                            <td>
+                                <button onclick="editCategory('${categoryId}', '${category.name}', ${category.order || 999})" class="btn-small">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button onclick="deleteCategory('${categoryId}')" class="btn-small btn-danger">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                if (categoriesList) {
+                    categoriesList.innerHTML = categoriesHtml || '<tr><td colspan="3">No categories found. Add some!</td></tr>';
+                }
+                
+            } catch (error) {
+                console.error("Error loading categories:", error);
+                showNotification('Error loading categories: ' + error.message, 'error');
+            }
         }
 
-        // Open cart
-        function openCart() {
-            document.getElementById('cartModal').style.display = 'block';
-            renderCart();
-        }
-
-        // Close cart
-        function closeCart() {
-            document.getElementById('cartModal').style.display = 'none';
-        }
-
-        // Checkout
-        function checkout() {
-            if (cart.length === 0) {
-                alert('Your cart is empty!');
+        // Add new category
+        async function addCategory() {
+            if (!currentUser) {
+                showNotification('Please login first', 'error');
                 return;
             }
             
-            let message = "Hello SARM ENTERPRISES,\n\nI would like to place an order:\n\n";
+            const categoryName = document.getElementById('categoryName').value;
+            const categoryOrder = document.getElementById('categoryOrder').value || 999;
             
-            cart.forEach((item, index) => {
-                message += `${index + 1}. ${item.name} - ${item.quantity} × ₹${item.price} = ₹${item.price * item.quantity}\n`;
-            });
+            if (!categoryName) {
+                showNotification('Please enter category name', 'error');
+                return;
+            }
             
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            message += `\n📦 **Order Summary:**\n`;
-            message += `Total Items: ${cart.reduce((sum, item) => sum + item.quantity, 0)}\n`;
-            message += `Total Amount: ₹${total}\n\n`;
-            message += `Please confirm availability and delivery details.\n\nThank you!`;
-            
-            const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        }
-
-        // Clear cart
-        function clearCart() {
-            if (confirm('Are you sure you want to clear your cart?')) {
-                cart = [];
-                updateCartCount();
-                renderCart();
-                showNotification('Cart cleared!');
+            try {
+                // Create category ID from name (lowercase, no spaces)
+                const categoryId = categoryName.toLowerCase().replace(/\s+/g, '_');
+                
+                await addDoc(collection(db, "categories"), {
+                    name: categoryName,
+                    order: parseInt(categoryOrder),
+                    createdAt: serverTimestamp(),
+                    createdBy: currentUser.email
+                });
+                
+                document.getElementById('categoryName').value = '';
+                document.getElementById('categoryOrder').value = '';
+                
+                showNotification('Category added successfully!', 'success');
+                loadCategories();
+                
+            } catch (error) {
+                console.error("Error adding category:", error);
+                showNotification('Error adding category: ' + error.message, 'error');
             }
         }
 
-        // ==================== PRODUCT LOADING ====================
+        // Edit category
+        async function editCategory(categoryId, currentName, currentOrder) {
+            const newName = prompt('Enter new category name:', currentName);
+            if (!newName) return;
+            
+            const newOrder = prompt('Enter order number:', currentOrder);
+            
+            try {
+                const categoryRef = doc(db, "categories", categoryId);
+                await updateDoc(categoryRef, {
+                    name: newName,
+                    order: parseInt(newOrder) || 999,
+                    updatedAt: serverTimestamp(),
+                    updatedBy: currentUser.email
+                });
+                
+                showNotification('Category updated successfully!', 'success');
+                loadCategories();
+            } catch (error) {
+                console.error("Error updating category:", error);
+                showNotification('Error updating category: ' + error.message, 'error');
+            }
+        }
+
+        // Delete category
+        async function deleteCategory(categoryId) {
+            if (!confirm('Are you sure you want to delete this category?')) return;
+            
+            try {
+                const categoryRef = doc(db, "categories", categoryId);
+                await deleteDoc(categoryRef);
+                
+                showNotification('Category deleted successfully!', 'success');
+                loadCategories();
+            } catch (error) {
+                console.error("Error deleting category:", error);
+                showNotification('Error deleting category: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== PRODUCT MANAGEMENT ====================
         async function loadProducts() {
             try {
-                const productsContainer = document.getElementById('productsContainer');
-                const template = document.getElementById('productTemplate');
+                const productsList = document.getElementById('productsList');
+                if (!productsList) return;
                 
-                productsContainer.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</div>';
+                productsList.innerHTML = '<tr><td colspan="5">Loading products...</td></tr>';
                 
                 const querySnapshot = await getDocs(collection(db, "products"));
                 
                 if (querySnapshot.empty) {
-                    productsContainer.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available at the moment.</p>';
+                    productsList.innerHTML = '<tr><td colspan="5">No products found. Add some!</td></tr>';
                     return;
                 }
                 
-                productsContainer.innerHTML = '';
-                
+                let productsHtml = '';
                 querySnapshot.forEach((doc) => {
                     const product = doc.data();
-                    product.id = doc.id;
+                    const productId = doc.id;
                     
-                    // Create product element
-                    const clone = template.content.cloneNode(true);
-                    const productCard = clone.querySelector('.product-card');
-                    productCard.dataset.productId = product.id;
+                    // Get category name
+                    let categoryName = product.categoryId || product.category || 'Not Specified';
                     
-                    // Set product info
-                    productCard.querySelector('.product-name').textContent = product.name;
-                    productCard.querySelector('.price-amount').textContent = product.price;
-                    productCard.querySelector('.stock-quantity').textContent = product.stock;
-                    productCard.querySelector('.product-description').textContent = product.description || 'Premium quality notebook';
-                    
-                    // Set stock status
-                    const stockElement = productCard.querySelector('.stock-text');
-                    if (product.stock <= 0) {
-                        stockElement.textContent = 'Out of Stock';
-                        stockElement.style.color = '#e74c3c';
-                        productCard.querySelector('.add-to-cart-btn').disabled = true;
-                        productCard.querySelector('.add-to-cart-btn').innerHTML = '<i class="fas fa-times"></i> Out of Stock';
-                    } else if (product.stock <= 10) {
-                        stockElement.textContent = 'Low Stock';
-                        stockElement.style.color = '#f39c12';
+                    // Handle images from GitHub repository
+                    let imagePreview = '';
+                    if (product.imageFileName) {
+                        const githubRepo = 'sarm-enterprises'; // UPDATE THIS with your actual GitHub repo name
+                        imagePreview = `<img src="https://sarmspirals.github.io/${githubRepo}/product_images/${product.imageFileName}" 
+                                         alt="${product.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">`;
+                    } else if (product.images && product.images.length > 0) {
+                        const firstImage = product.images[0];
+                        imagePreview = `<img src="${firstImage}" alt="${product.name}" 
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">`;
                     } else {
-                        stockElement.textContent = 'In Stock';
-                        stockElement.style.color = '#27ae60';
+                        imagePreview = '<div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-image"></i></div>';
                     }
                     
-                    // Handle product images
-                    let productImages = [];
-                    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-                        productImages = product.images;
-                    } else if (product.imagePath) {
-                        productImages = [product.imagePath];
-                    } else {
-                        productImages = ['https://via.placeholder.com/400x300?text=Notebook'];
-                    }
-                    
-                    // Set first image
-                    const mainImage = productCard.querySelector('.product-main-image');
-                    mainImage.src = productImages[0];
-                    mainImage.alt = product.name;
-                    
-                    // Handle image loading error
-                    mainImage.onerror = function() {
-                        this.src = 'https://via.placeholder.com/400x300?text=Notebook';
-                    };
-                    
-                    // Set image count badge
-                    const imageCount = productCard.querySelector('.image-count');
-                    imageCount.textContent = productImages.length;
-                    
-                    // Setup image gallery if multiple images
-                    if (productImages.length > 1) {
-                        const dotsContainer = productCard.querySelector('.product-image-dots');
-                        dotsContainer.innerHTML = '';
-                        
-                        productImages.forEach((_, index) => {
-                            const dot = document.createElement('div');
-                            dot.className = `image-dot ${index === 0 ? 'active' : ''}`;
-                            dot.onclick = () => switchProductImage(productCard, index, productImages);
-                            dotsContainer.appendChild(dot);
-                        });
-                        
-                        // Setup navigation
-                        let currentIndex = 0;
-                        
-                        productCard.querySelector('.nav-prev').onclick = () => {
-                            currentIndex = (currentIndex - 1 + productImages.length) % productImages.length;
-                            switchProductImage(productCard, currentIndex, productImages);
-                        };
-                        
-                        productCard.querySelector('.nav-next').onclick = () => {
-                            currentIndex = (currentIndex + 1) % productImages.length;
-                            switchProductImage(productCard, currentIndex, productImages);
-                        };
-                    } else {
-                        productCard.querySelector('.image-count-badge').style.display = 'none';
-                        productCard.querySelector('.nav-prev').style.display = 'none';
-                        productCard.querySelector('.nav-next').style.display = 'none';
-                    }
-                    
-                    // Setup quantity controls
-                    const qtyInput = productCard.querySelector('.qty-input');
-                    const maxStock = Math.min(product.stock, 20);
-                    qtyInput.max = maxStock;
-                    
-                    productCard.querySelector('.minus-btn').onclick = () => {
-                        const value = parseInt(qtyInput.value);
-                        if (value > 1) qtyInput.value = value - 1;
-                    };
-                    
-                    productCard.querySelector('.plus-btn').onclick = () => {
-                        const value = parseInt(qtyInput.value);
-                        const max = parseInt(qtyInput.max);
-                        if (value < max) qtyInput.value = value + 1;
-                    };
-                    
-                    // Setup add to cart button
-                    productCard.querySelector('.add-to-cart-btn').onclick = () => {
-                        const quantity = parseInt(qtyInput.value);
-                        if (quantity > 0 && product.stock > 0) {
-                            addToCart(product, quantity);
-                        }
-                    };
-                    
-                    // Setup WhatsApp order button
-                    productCard.querySelector('.whatsapp-btn').onclick = () => {
-                        const quantity = parseInt(qtyInput.value);
-                        const message = `Hello SARM ENTERPRISES,\n\nI want to order:\n\n📓 Product: ${product.name}\n📦 Quantity: ${quantity}\n💰 Price: ₹${product.price}\n💵 Total: ₹${product.price * quantity}\n\nPlease confirm availability and delivery time.\n\nThank you!`;
-                        const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
-                        window.open(whatsappUrl, '_blank');
-                    };
-                    
-                    productsContainer.appendChild(clone);
+                    productsHtml += `
+                        <tr>
+                            <td>${imagePreview}</td>
+                            <td>${product.name}</td>
+                            <td>₹${product.price}</td>
+                            <td>${categoryName}</td>
+                            <td>
+                                <button onclick="editProduct('${productId}')" class="btn-small">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button onclick="deleteProduct('${productId}')" class="btn-small btn-danger">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
                 });
+                
+                productsList.innerHTML = productsHtml;
                 
             } catch (error) {
                 console.error("Error loading products:", error);
-                document.getElementById('productsContainer').innerHTML = 
-                    '<p style="color: #e74c3c; text-align: center; padding: 2rem;">Error loading products. Please refresh the page or try again later.</p>';
+                showNotification('Error loading products: ' + error.message, 'error');
             }
         }
 
-        // Switch product image
-        function switchProductImage(productCard, index, images) {
-            const mainImage = productCard.querySelector('.product-main-image');
-            const dots = productCard.querySelectorAll('.image-dot');
+        // Add new product (USING GITHUB REPOSITORY FOR IMAGES)
+        async function addProduct() {
+            if (!currentUser) {
+                showNotification('Please login first', 'error');
+                return;
+            }
             
-            mainImage.style.opacity = '0';
-            setTimeout(() => {
-                mainImage.src = images[index];
-                mainImage.alt = `${productCard.querySelector('.product-name').textContent} - Image ${index + 1}`;
-                mainImage.style.opacity = '1';
+            const productName = document.getElementById('productName').value;
+            const productPrice = document.getElementById('productPrice').value;
+            const productStock = document.getElementById('productStock').value || 10;
+            const productDescription = document.getElementById('productDescription').value;
+            const categorySelect = document.getElementById('categorySelect').value;
+            const imageFileName = document.getElementById('imageFileName').value;
+            
+            if (!productName || !productPrice || !categorySelect) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            try {
+                const productData = {
+                    name: productName,
+                    price: parseFloat(productPrice),
+                    stock: parseInt(productStock),
+                    description: productDescription,
+                    categoryId: categorySelect,
+                    createdAt: serverTimestamp(),
+                    createdBy: currentUser.email
+                };
                 
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === index);
-                });
-            }, 150);
+                // Add imageFileName if provided (for GitHub repository)
+                if (imageFileName) {
+                    productData.imageFileName = imageFileName;
+                    
+                    // Validate GitHub URL
+                    const githubRepo = 'sarm-enterprises'; // UPDATE THIS
+                    const testUrl = `https://sarmspirals.github.io/${githubRepo}/product_images/${imageFileName}`;
+                    console.log('Image will be loaded from:', testUrl);
+                }
+                
+                await addDoc(collection(db, "products"), productData);
+                
+                // Clear form
+                document.getElementById('productName').value = '';
+                document.getElementById('productPrice').value = '';
+                document.getElementById('productStock').value = '';
+                document.getElementById('productDescription').value = '';
+                document.getElementById('categorySelect').value = '';
+                document.getElementById('imageFileName').value = '';
+                
+                showNotification('Product added successfully!', 'success');
+                loadProducts();
+                
+            } catch (error) {
+                console.error("Error adding product:", error);
+                showNotification('Error adding product: ' + error.message, 'error');
+            }
+        }
+
+        // Edit product
+        async function editProduct(productId) {
+            try {
+                const productRef = doc(db, "products", productId);
+                const productSnap = await getDoc(productRef);
+                
+                if (!productSnap.exists()) {
+                    showNotification('Product not found', 'error');
+                    return;
+                }
+                
+                const productData = productSnap.data();
+                
+                // Show edit form with current values
+                const newName = prompt('Enter new product name:', productData.name);
+                if (!newName) return;
+                
+                const newPrice = prompt('Enter new price:', productData.price);
+                const newStock = prompt('Enter new stock quantity:', productData.stock || 10);
+                const newDescription = prompt('Enter new description:', productData.description || '');
+                const newImageFileName = prompt('Enter new image filename (from GitHub repository):', productData.imageFileName || '');
+                
+                const updates = {
+                    name: newName,
+                    price: parseFloat(newPrice) || productData.price,
+                    stock: parseInt(newStock) || productData.stock || 10,
+                    description: newDescription,
+                    updatedAt: serverTimestamp(),
+                    updatedBy: currentUser.email
+                };
+                
+                if (newImageFileName) {
+                    updates.imageFileName = newImageFileName;
+                }
+                
+                await updateDoc(productRef, updates);
+                
+                showNotification('Product updated successfully!', 'success');
+                loadProducts();
+                
+            } catch (error) {
+                console.error("Error updating product:", error);
+                showNotification('Error updating product: ' + error.message, 'error');
+            }
+        }
+
+        // Delete product
+        async function deleteProduct(productId) {
+            if (!confirm('Are you sure you want to delete this product?')) return;
+            
+            try {
+                const productRef = doc(db, "products", productId);
+                await deleteDoc(productRef);
+                
+                showNotification('Product deleted successfully!', 'success');
+                loadProducts();
+            } catch (error) {
+                console.error("Error deleting product:", error);
+                showNotification('Error deleting product: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== UI FUNCTIONS ====================
+        function showAdminDashboard() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            loadCategories();
+            loadProducts();
+        }
+
+        function showLoginForm() {
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('adminDashboard').style.display = 'none';
+        }
+
+        function showNotification(message, type = 'success') {
+            alert(message); // Simple alert for now
         }
 
         // ==================== INITIALIZATION ====================
         document.addEventListener('DOMContentLoaded', () => {
-            // Setup cart link
-            document.getElementById('cartLink').onclick = (e) => {
+            // Setup login form
+            document.getElementById('loginForm').onsubmit = async (e) => {
                 e.preventDefault();
-                openCart();
-            };
-            
-            // Load logo and products
-            loadLogo();
-            updateCartCount();
-            loadProducts();
-            
-            // Close modal when clicking outside
-            window.onclick = (e) => {
-                const cartModal = document.getElementById('cartModal');
-                if (e.target === cartModal) {
-                    closeCart();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const success = await adminLogin(email, password);
+                if (success) {
+                    showAdminDashboard();
                 }
             };
             
-            // Close cart with ESC key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeCart();
-                }
-            });
+            // Setup add category button
+            document.getElementById('addCategoryBtn').onclick = addCategory;
+            
+            // Setup add product button
+            document.getElementById('addProductBtn').onclick = addProduct;
         });
 
         // Make functions globally available
-        window.addToCart = addToCart;
-        window.removeFromCart = removeFromCart;
-        window.updateCartQuantity = updateCartQuantity;
-        window.openCart = openCart;
-        window.closeCart = closeCart;
-        window.checkout = checkout;
-        window.clearCart = clearCart;
-        window.switchProductImage = switchProductImage;
-        window.saveLogoToLocalStorage = saveLogoToLocalStorage;
+        window.editCategory = editCategory;
+        window.deleteCategory = deleteCategory;
+        window.editProduct = editProduct;
+        window.deleteProduct = deleteProduct;
+        window.adminLogin = adminLogin;
+        window.adminLogout = adminLogout;
     </script>
 
     <!-- Add to style.css -->
