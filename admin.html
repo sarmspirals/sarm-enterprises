@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - SARM ENTERPRISES</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -149,7 +148,7 @@
 
         .form-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
             margin-bottom: 1rem;
         }
@@ -200,25 +199,6 @@
             background: #7f8c8d;
         }
 
-        .btn-danger {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -242,9 +222,7 @@
         .product-image {
             width: 100%;
             height: 200px;
-            object-fit: contain;
-            background: #f8f9fa;
-            padding: 10px;
+            object-fit: cover;
         }
 
         .product-info {
@@ -279,6 +257,40 @@
         .chart-container {
             height: 300px;
             margin-top: 1rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         /* Category Manager Styles */
@@ -351,80 +363,6 @@
             border: 2px dashed #ddd;
         }
 
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 8px;
-            color: white;
-            z-index: 9999;
-            display: none;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .notification.success {
-            background: #27ae60;
-        }
-
-        .notification.error {
-            background: #e74c3c;
-        }
-
-        .notification.warning {
-            background: #f39c12;
-        }
-
-        .notification.info {
-            background: #3498db;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            padding: 2rem;
-            animation: modalSlideIn 0.3s ease;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
         /* Login Container */
         .login-container {
             display: flex;
@@ -478,6 +416,46 @@
             background: #2980b9;
         }
 
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            z-index: 9999;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            background: #27ae60;
+        }
+
+        .notification.error {
+            background: #e74c3c;
+        }
+
+        .notification.warning {
+            background: #f39c12;
+        }
+
+        .notification.info {
+            background: #3498db;
+        }
+
         /* Error Message */
         .error-message {
             color: #e74c3c;
@@ -502,51 +480,6 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
-        /* Image Preview */
-        .image-preview-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .image-preview {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 5px;
-            border: 2px solid #ddd;
-        }
-
-        /* Tab Navigation for Categories */
-        .category-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 10px;
-        }
-
-        .category-tab {
-            padding: 10px 20px;
-            background: #f8f9fa;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .category-tab.active {
-            background: #3498db;
-            color: white;
-        }
-
-        .category-tab:hover {
-            background: #2980b9;
-            color: white;
-        }
     </style>
 </head>
 <body>
@@ -563,14 +496,18 @@
                     <input type="email" id="adminEmail" 
                            placeholder="Enter your email" 
                            required 
-                           autocomplete="email">
+                           autocomplete="email"
+                           style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
+                    <div id="emailError" class="error-message"></div>
                 </div>
                 <div class="form-group">
                     <label for="adminPassword">Password</label>
                     <input type="password" id="adminPassword" 
                            placeholder="Enter your password" 
                            required 
-                           autocomplete="current-password">
+                           autocomplete="current-password"
+                           style="padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%;">
+                    <div id="passwordError" class="error-message"></div>
                 </div>
                 <button type="submit" class="login-btn">
                     <i class="fas fa-sign-in-alt"></i> Login
@@ -603,29 +540,16 @@
                 </div>
             </div>
 
-            <!-- CATEGORY MANAGEMENT SECTION -->
+            <!-- Category Management Section -->
             <div class="category-manager">
                 <h3><i class="fas fa-tags"></i> Product Categories Management</h3>
-                
-                <!-- Category Tabs for different types -->
-                <div class="category-tabs">
-                    <button class="category-tab active" data-category-type="stationery">Stationery</button>
-                    <button class="category-tab" data-category-type="gifts">Gifts</button>
-                    <button class="category-tab" data-category-type="office">Office Supplies</button>
-                    <button class="category-tab" data-category-type="books">Books</button>
-                </div>
                 
                 <!-- Category Form -->
                 <div class="form-row">
                     <div class="form-group">
                         <label for="categoryName"><i class="fas fa-tag"></i> Category Name</label>
                         <input type="text" id="categoryName" placeholder="e.g., Notebooks, Pens, Diaries" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="categorySlug"><i class="fas fa-link"></i> URL Slug</label>
-                        <input type="text" id="categorySlug" placeholder="e.g., notebooks, pens" required>
-                        <small style="color: #666;">Used in URLs (lowercase, no spaces)</small>
+                        <div id="categoryNameError" class="error-message"></div>
                     </div>
                     
                     <div class="form-group">
@@ -636,35 +560,16 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="categoryDescription"><i class="fas fa-align-left"></i> Description</label>
-                    <textarea id="categoryDescription" rows="3" placeholder="Describe this category..."></textarea>
+                    <label for="categoryDescription"><i class="fas fa-align-left"></i> Description (Optional)</label>
+                    <textarea id="categoryDescription" rows="2" placeholder="Describe this category..."></textarea>
                 </div>
                 
-                <div class="form-group">
-                    <label for="categoryIcon"><i class="fas fa-icons"></i> Icon Class (FontAwesome)</label>
-                    <input type="text" id="categoryIcon" placeholder="e.g., fas fa-book, fas fa-pen" value="fas fa-tag">
-                    <small style="color: #666;">Enter FontAwesome icon class (e.g., fas fa-book)</small>
-                </div>
-                
-                <div class="form-group">
-                    <label for="categoryType"><i class="fas fa-folder"></i> Category Type</label>
-                    <select id="categoryType">
-                        <option value="stationery">Stationery</option>
-                        <option value="gifts">Gifts</option>
-                        <option value="office">Office Supplies</option>
-                        <option value="books">Books</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button class="btn-primary" id="saveCategoryBtn">
-                        <i class="fas fa-save"></i> Save Category
-                    </button>
-                    <button class="btn-secondary" id="cancelCategoryEdit" style="display: none;">
-                        <i class="fas fa-times"></i> Cancel Edit
-                    </button>
-                </div>
+                <button class="btn-primary" id="saveCategoryBtn">
+                    <i class="fas fa-save"></i> Save Category
+                </button>
+                <button class="btn-secondary" id="cancelCategoryEdit" style="display: none;">
+                    <i class="fas fa-times"></i> Cancel Edit
+                </button>
                 <input type="hidden" id="editCategoryId">
                 
                 <!-- Categories List -->
@@ -678,7 +583,7 @@
                 </div>
             </div>
 
-            <!-- PRODUCT MANAGEMENT SECTION -->
+            <!-- Add/Edit Product Form -->
             <div class="form-card">
                 <h3><i class="fas fa-plus-circle"></i> Add/Edit Product</h3>
                 <form id="productForm">
@@ -687,14 +592,14 @@
                             <label for="productName"><i class="fas fa-tag"></i> Product Name</label>
                             <input type="text" id="productName" required 
                                    placeholder="e.g., Spiral Notebook 200 Pages or Blue Pen">
+                            <div id="productNameError" class="error-message"></div>
                         </div>
-                        
                         <div class="form-group">
                             <label for="productCategory"><i class="fas fa-tags"></i> Product Category</label>
                             <select id="productCategory" required>
                                 <option value="">Select Category</option>
-                                <!-- Categories will be loaded here -->
                             </select>
+                            <div id="productCategoryError" class="error-message"></div>
                         </div>
                     </div>
                     
@@ -707,17 +612,17 @@
                             <input type="number" id="productPages" 
                                    placeholder="e.g., 200 (or leave blank for stationery)">
                         </div>
-                        
                         <div class="form-group">
                             <label for="productPrice"><i class="fas fa-rupee-sign"></i> Price (₹)</label>
                             <input type="number" id="productPrice" required 
                                    placeholder="e.g., 69" step="0.01" min="1">
+                            <div id="productPriceError" class="error-message"></div>
                         </div>
-                        
                         <div class="form-group">
                             <label for="productStock"><i class="fas fa-box"></i> Stock Quantity</label>
                             <input type="number" id="productStock" required 
                                    placeholder="e.g., 50" min="0">
+                            <div id="productStockError" class="error-message"></div>
                         </div>
                     </div>
                     
@@ -738,87 +643,29 @@
                                     <label style="font-size: 0.9rem;">Image 2 (Optional)</label>
                                     <input type="text" id="productImage2" placeholder="e.g., notebook-2.jpg">
                                 </div>
-                                <div class="form-group">
-                                    <label style="font-size: 0.9rem;">Image 3 (Optional)</label>
-                                    <input type="text" id="productImage3" placeholder="e.g., notebook-3.jpg">
-                                </div>
-                                <div class="form-group">
-                                    <label style="font-size: 0.9rem;">Image 4 (Optional)</label>
-                                    <input type="text" id="productImage4" placeholder="e.g., notebook-4.jpg">
-                                </div>
-                            </div>
-                            
-                            <!-- Image Preview -->
-                            <div id="imagePreviewContainer" style="margin-top: 15px;">
-                                <div id="multipleImagePreview" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; min-height: 50px;"></div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="productDescription"><i class="fas fa-align-left"></i> Description</label>
-                        <textarea id="productDescription" rows="4" 
+                        <textarea id="productDescription" rows="3" 
                                   placeholder="Product description..."></textarea>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="productFeatures"><i class="fas fa-star"></i> Key Features (One per line)</label>
-                        <textarea id="productFeatures" rows="3" 
-                                  placeholder="• Feature 1\n• Feature 2\n• Feature 3"></textarea>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="productBrand"><i class="fas fa-copyright"></i> Brand</label>
-                            <input type="text" id="productBrand" placeholder="e.g., Classmate, Parker">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="productColor"><i class="fas fa-palette"></i> Color</label>
-                            <input type="text" id="productColor" placeholder="e.g., Blue, Red, Black">
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button type="submit" class="btn-primary" id="submitBtn">
-                            <i class="fas fa-save"></i> Add Product
-                        </button>
-                        <button type="button" class="btn-secondary" id="cancelEdit" style="display: none;">
-                            <i class="fas fa-times"></i> Cancel Edit
-                        </button>
-                    </div>
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        <i class="fas fa-save"></i> Add Product
+                    </button>
+                    <button type="button" class="btn-secondary" id="cancelEdit" style="display: none;">
+                        <i class="fas fa-times"></i> Cancel Edit
+                    </button>
                     <input type="hidden" id="editProductId">
                 </form>
             </div>
 
-            <!-- PRODUCTS LIST -->
+            <!-- Products List -->
             <div class="form-card">
                 <h3><i class="fas fa-list"></i> Current Products</h3>
-                <div class="form-row" style="margin-bottom: 20px;">
-                    <div class="form-group">
-                        <label for="filterCategory">Filter by Category</label>
-                        <select id="filterCategory">
-                            <option value="">All Categories</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="filterType">Filter by Type</label>
-                        <select id="filterType">
-                            <option value="">All Types</option>
-                            <option value="stationery">Stationery</option>
-                            <option value="gifts">Gifts</option>
-                            <option value="office">Office Supplies</option>
-                            <option value="books">Books</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="searchProduct">Search Product</label>
-                        <input type="text" id="searchProduct" placeholder="Search by name...">
-                    </div>
-                </div>
-                
                 <div id="productsList" class="products-grid">
                     <div class="loading-spinner" id="productsLoading">
                         <i class="fas fa-spinner fa-spin"></i> Loading products...
@@ -826,7 +673,7 @@
                 </div>
             </div>
 
-            <!-- QUOTES MANAGEMENT -->
+            <!-- Quotes Management -->
             <div class="form-card">
                 <h3><i class="fas fa-quote-left"></i> Business Quotes</h3>
                 <div class="form-group">
@@ -838,37 +685,6 @@
                 </div>
                 <div id="quotesList">
                     <!-- Quotes will be displayed here -->
-                </div>
-            </div>
-
-            <!-- FAQ MANAGEMENT -->
-            <div class="form-card">
-                <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
-                
-                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
-                    <div class="form-group">
-                        <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
-                        <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
-                    </div>
-                    <div class="form-group">
-                        <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
-                        <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
-                        <input type="number" id="faqOrder" placeholder="1" value="1">
-                        <small>Lower numbers appear first on the FAQ page.</small>
-                    </div>
-                    <button class="btn-primary" id="addFaqBtn">
-                        <i class="fas fa-plus-circle"></i> Add FAQ
-                    </button>
-                </div>
-                
-                <h4>Existing FAQs</h4>
-                <div id="faqsListAdmin">
-                    <p style="text-align: center; padding: 2rem; color: #999;">
-                        FAQs will be loaded here.
-                    </p>
                 </div>
             </div>
         </div>
@@ -892,7 +708,6 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
         // Initialize Firebase
@@ -911,6 +726,7 @@
             console.log("Firebase initialized successfully");
         } catch (error) {
             console.error("Firebase initialization error:", error);
+            showNotification("Firebase initialization failed. Please check your configuration.", "error");
         }
 
         // Get Firestore reference
@@ -929,20 +745,19 @@
         const logoutBtn = document.getElementById('logoutBtn');
         const notification = document.getElementById('notification');
 
+        // Login form elements
+        const adminEmail = document.getElementById('adminEmail');
+        const adminPassword = document.getElementById('adminPassword');
+
         // Category management elements
         const categoryName = document.getElementById('categoryName');
-        const categorySlug = document.getElementById('categorySlug');
         const categoryDescription = document.getElementById('categoryDescription');
         const categoryOrder = document.getElementById('categoryOrder');
-        const categoryIcon = document.getElementById('categoryIcon');
-        const categoryType = document.getElementById('categoryType');
         const saveCategoryBtn = document.getElementById('saveCategoryBtn');
         const cancelCategoryEdit = document.getElementById('cancelCategoryEdit');
         const editCategoryId = document.getElementById('editCategoryId');
         const categoriesList = document.getElementById('categoriesList');
         const productCategory = document.getElementById('productCategory');
-        const filterCategory = document.getElementById('filterCategory');
-        const categoryTabs = document.querySelectorAll('.category-tab');
 
         // Product form elements
         const productForm = document.getElementById('productForm');
@@ -950,7 +765,6 @@
         const productPrice = document.getElementById('productPrice');
         const productStock = document.getElementById('productStock');
         const productDescription = document.getElementById('productDescription');
-        const productFeatures = document.getElementById('productFeatures');
         const submitBtn = document.getElementById('submitBtn');
         const cancelEdit = document.getElementById('cancelEdit');
         const editProductId = document.getElementById('editProductId');
@@ -960,42 +774,10 @@
         let products = [];
         let currentCategoryId = null;
         let currentProductId = null;
-        let currentCategoryType = 'stationery';
-
-        // Generate slug from category name
-        function generateSlug(text) {
-            return text.toLowerCase()
-                .replace(/[^\w\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/--+/g, '-')
-                .trim();
-        }
-
-        // Update slug when category name changes
-        categoryName.addEventListener('input', function() {
-            if (!editCategoryId.value) {
-                categorySlug.value = generateSlug(categoryName.value);
-            }
-        });
-
-        // Category tabs functionality
-        categoryTabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Remove active class from all tabs
-                categoryTabs.forEach(t => t.classList.remove('active'));
-                // Add active class to clicked tab
-                this.classList.add('active');
-                // Update current category type
-                currentCategoryType = this.dataset.categoryType;
-                // Load categories for this type
-                loadCategories(currentCategoryType);
-                // Set category type select
-                categoryType.value = currentCategoryType;
-            });
-        });
 
         // ==================== AUTHENTICATION ====================
         
+        // Check if already logged in
         function checkLoginStatus() {
             const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
             if (isLoggedIn) {
@@ -1005,22 +787,52 @@
             }
         }
 
+        // Login form submission
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const email = document.getElementById('adminEmail').value.trim();
-            const password = document.getElementById('adminPassword').value.trim();
+            // Clear previous errors
+            clearErrors();
             
+            const email = adminEmail.value.trim();
+            const password = adminPassword.value.trim();
+            
+            // Validation
+            let isValid = true;
+            
+            if (!email) {
+                showError('adminEmail', 'Email is required');
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                showError('adminEmail', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            if (!password) {
+                showError('adminPassword', 'Password is required');
+                isValid = false;
+            } else if (password.length < 6) {
+                showError('adminPassword', 'Password must be at least 6 characters');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Check credentials
             if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
+                // Successful login
                 localStorage.setItem('adminLoggedIn', 'true');
                 localStorage.setItem('adminEmail', email);
                 showAdminDashboard();
                 showNotification('Login successful!', 'success');
             } else {
+                showError('adminEmail', 'Invalid email or password');
+                showError('adminPassword', 'Invalid email or password');
                 showNotification('Invalid login credentials', 'error');
             }
         });
 
+        // Logout
         logoutBtn.addEventListener('click', function() {
             localStorage.removeItem('adminLoggedIn');
             localStorage.removeItem('adminEmail');
@@ -1031,14 +843,53 @@
         function showLoginScreen() {
             loginScreen.style.display = 'flex';
             adminDashboard.style.display = 'none';
+            
+            // Clear form
             loginForm.reset();
+            clearErrors();
         }
 
         function showAdminDashboard() {
             loginScreen.style.display = 'none';
             adminDashboard.style.display = 'block';
+            
+            // Load data
             loadCategories();
             loadProducts();
+        }
+
+        // ==================== ERROR HANDLING ====================
+        
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                
+                // Highlight input field
+                const inputField = document.getElementById(fieldId);
+                if (inputField) {
+                    inputField.style.borderColor = '#e74c3c';
+                }
+            }
+        }
+
+        function clearErrors() {
+            // Clear all error messages
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.textContent = '';
+                el.style.display = 'none';
+            });
+            
+            // Reset input borders
+            document.querySelectorAll('input, select, textarea').forEach(el => {
+                el.style.borderColor = '#ddd';
+            });
+        }
+
+        function isValidEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
         }
 
         // ==================== NOTIFICATION SYSTEM ====================
@@ -1060,17 +911,16 @@
 
         // ==================== CATEGORY MANAGEMENT ====================
         
-        async function loadCategories(type = null) {
+        async function loadCategories() {
             try {
-                categoriesList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading categories...</div>';
-                
-                let query = db.collection('categories').orderBy('order', 'asc');
-                
-                if (type) {
-                    query = query.where('type', '==', type);
+                const categoriesLoading = document.getElementById('categoriesLoading');
+                if (categoriesLoading) {
+                    categoriesLoading.style.display = 'block';
                 }
                 
-                const snapshot = await query.get();
+                categoriesList.innerHTML = '';
+                
+                const snapshot = await db.collection('categories').orderBy('order', 'asc').get();
                 
                 if (snapshot.empty) {
                     categoriesList.innerHTML = `
@@ -1079,7 +929,9 @@
                             <p>No categories yet. Add your first category above!</p>
                         </div>
                     `;
-                    updateCategoryDropdowns();
+                    
+                    // Clear category dropdown
+                    productCategory.innerHTML = '<option value="">Select Category</option>';
                     return;
                 }
                 
@@ -1094,18 +946,13 @@
                     };
                     categories.push(category);
                     
+                    // Add to category list
                     html += `
                         <div class="category-item">
                             <div class="category-info">
-                                <h4><i class="${category.icon || 'fas fa-tag'}"></i> ${category.name}</h4>
+                                <h4>${category.name}</h4>
                                 <p>${category.description || 'No description'}</p>
-                                <div style="display: flex; gap: 10px; margin-top: 5px;">
-                                    <small style="color: #7f8c8d;">Order: ${category.order || 1}</small>
-                                    <small style="color: #3498db; background: #e3f2fd; padding: 2px 8px; border-radius: 10px;">
-                                        ${category.type || 'stationery'}
-                                    </small>
-                                    <small style="color: #27ae60;">Slug: ${category.slug}</small>
-                                </div>
+                                <small style="color: #7f8c8d;">Order: ${category.order || 1}</small>
                             </div>
                             <div class="category-actions">
                                 <button class="btn-category btn-edit-category" onclick="editCategory('${category.id}')">
@@ -1120,7 +967,9 @@
                 });
                 
                 categoriesList.innerHTML = html;
-                updateCategoryDropdowns();
+                
+                // Update category dropdown
+                updateCategoryDropdown();
                 
             } catch (error) {
                 console.error('Error loading categories:', error);
@@ -1131,38 +980,38 @@
                     </div>
                 `;
                 showNotification('Error loading categories', 'error');
+            } finally {
+                const categoriesLoading = document.getElementById('categoriesLoading');
+                if (categoriesLoading) {
+                    categoriesLoading.style.display = 'none';
+                }
             }
         }
 
-        function updateCategoryDropdowns() {
-            // Update product category dropdown
+        function updateCategoryDropdown() {
             productCategory.innerHTML = '<option value="">Select Category</option>';
-            filterCategory.innerHTML = '<option value="">All Categories</option>';
             
             categories.forEach(category => {
                 const option = document.createElement('option');
-                option.value = category.slug;
-                option.textContent = `${category.name} (${category.type})`;
-                productCategory.appendChild(option.cloneNode(true));
-                filterCategory.appendChild(option);
+                option.value = category.name;
+                option.textContent = category.name;
+                productCategory.appendChild(option);
             });
         }
 
         // Save category
         saveCategoryBtn.addEventListener('click', async function() {
             try {
+                // Validation
                 if (!categoryName.value.trim()) {
-                    showNotification('Category name is required', 'error');
+                    showError('categoryName', 'Category name is required');
                     return;
                 }
                 
                 const categoryData = {
                     name: categoryName.value.trim(),
-                    slug: categorySlug.value.trim() || generateSlug(categoryName.value),
                     description: categoryDescription.value.trim(),
                     order: parseInt(categoryOrder.value) || 1,
-                    icon: categoryIcon.value.trim() || 'fas fa-tag',
-                    type: categoryType.value || 'stationery',
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
@@ -1182,17 +1031,14 @@
                 
                 // Reset form
                 categoryName.value = '';
-                categorySlug.value = '';
                 categoryDescription.value = '';
                 categoryOrder.value = '1';
-                categoryIcon.value = 'fas fa-tag';
-                categoryType.value = 'stationery';
                 editCategoryId.value = '';
                 cancelCategoryEdit.style.display = 'none';
                 saveCategoryBtn.innerHTML = '<i class="fas fa-save"></i> Save Category';
                 
                 // Reload categories
-                loadCategories(currentCategoryType);
+                loadCategories();
                 
             } catch (error) {
                 console.error('Error saving category:', error);
@@ -1205,11 +1051,8 @@
             const category = categories.find(c => c.id === categoryId);
             if (category) {
                 categoryName.value = category.name;
-                categorySlug.value = category.slug;
                 categoryDescription.value = category.description || '';
                 categoryOrder.value = category.order || 1;
-                categoryIcon.value = category.icon || 'fas fa-tag';
-                categoryType.value = category.type || 'stationery';
                 editCategoryId.value = category.id;
                 
                 saveCategoryBtn.innerHTML = '<i class="fas fa-save"></i> Update Category';
@@ -1222,7 +1065,7 @@
 
         // Delete category
         window.deleteCategory = function(categoryId) {
-            if (confirm('Are you sure you want to delete this category?\n\nNote: Products in this category will become uncategorized.')) {
+            if (confirm('Are you sure you want to delete this category?\n\nNote: Products in this category will need to be reassigned.')) {
                 deleteCategoryConfirmed(categoryId);
             }
         };
@@ -1231,7 +1074,7 @@
             try {
                 await db.collection('categories').doc(categoryId).delete();
                 showNotification('Category deleted successfully!', 'success');
-                loadCategories(currentCategoryType);
+                loadCategories();
             } catch (error) {
                 console.error('Error deleting category:', error);
                 showNotification('Error deleting category', 'error');
@@ -1241,14 +1084,12 @@
         // Cancel category edit
         cancelCategoryEdit.addEventListener('click', function() {
             categoryName.value = '';
-            categorySlug.value = '';
             categoryDescription.value = '';
             categoryOrder.value = '1';
-            categoryIcon.value = 'fas fa-tag';
-            categoryType.value = 'stationery';
             editCategoryId.value = '';
             cancelCategoryEdit.style.display = 'none';
             saveCategoryBtn.innerHTML = '<i class="fas fa-save"></i> Save Category';
+            clearErrors();
         });
 
         // ==================== PRODUCT MANAGEMENT ====================
@@ -1260,7 +1101,7 @@
                     productsLoading.style.display = 'block';
                 }
                 
-                const snapshot = await db.collection('products').orderBy('createdAt', 'desc').get();
+                const snapshot = await db.collection('products').get();
                 
                 if (snapshot.empty) {
                     productsList.innerHTML = `
@@ -1284,25 +1125,20 @@
                     products.push(product);
                     
                     const firstImage = product.images && product.images.length > 0 
-                        ? `assets/products/${product.images[0]}`
-                        : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNmM3NTdkIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
-                    
-                    // Find category info
-                    const categoryInfo = categories.find(c => c.slug === product.category);
-                    const categoryName = categoryInfo ? categoryInfo.name : product.category || 'Uncategorized';
+                        ? product.images[0] 
+                        : 'https://via.placeholder.com/300x200?text=No+Image';
                     
                     html += `
                         <div class="product-card">
-                            <img src="${firstImage}" alt="${product.name}" class="product-image"
-                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNmM3NTdkIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4='">
+                            <img src="${firstImage}" alt="${product.name}" class="product-image" 
+                                 onerror="this.src='https://via.placeholder.com/300x200?text=Image+Error'">
                             <div class="product-info">
                                 <h4 class="product-name">${product.name}</h4>
                                 <div class="product-price">₹${product.price}</div>
                                 <div class="product-stock">
                                     <i class="fas fa-box"></i> Stock: ${product.stock}
                                     <br>
-                                    <i class="fas fa-tag"></i> ${categoryName}
-                                    ${product.pages ? `<br><i class="fas fa-file-alt"></i> ${product.pages} pages` : ''}
+                                    <i class="fas fa-tag"></i> Category: ${product.category || 'Uncategorized'}
                                 </div>
                                 <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
                                     ${product.description ? product.description.substring(0, 100) + '...' : 'No description'}
@@ -1311,7 +1147,7 @@
                                     <button class="btn-primary" onclick="editProduct('${product.id}')" style="padding: 8px 15px;">
                                         <i class="fas fa-edit"></i> Edit
                                     </button>
-                                    <button class="btn-danger" onclick="deleteProduct('${product.id}')" style="padding: 8px 15px;">
+                                    <button class="btn-secondary" onclick="deleteProduct('${product.id}')" style="padding: 8px 15px;">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                 </div>
@@ -1321,10 +1157,6 @@
                 });
                 
                 productsList.innerHTML = html;
-                
-                // Update stats
-                document.getElementById('totalProducts').textContent = `${products.length} Products`;
-                document.getElementById('lowStock').textContent = `${products.filter(p => p.stock < 10).length} Low Stock`;
                 
             } catch (error) {
                 console.error('Error loading products:', error);
@@ -1351,7 +1183,6 @@
                 productPrice.value = product.price;
                 productStock.value = product.stock;
                 productDescription.value = product.description || '';
-                productFeatures.value = product.features ? product.features.join('\n') : '';
                 
                 // Set category
                 if (product.category) {
@@ -1361,15 +1192,10 @@
                 // Set images
                 if (product.images && product.images.length > 0) {
                     document.getElementById('productImage1').value = product.images[0];
-                    document.getElementById('productImage2').value = product.images[1] || '';
-                    document.getElementById('productImage3').value = product.images[2] || '';
-                    document.getElementById('productImage4').value = product.images[3] || '';
+                    if (product.images.length > 1) {
+                        document.getElementById('productImage2').value = product.images[1];
+                    }
                 }
-                
-                // Set other fields
-                if (product.pages) document.getElementById('productPages').value = product.pages;
-                if (product.brand) document.getElementById('productBrand').value = product.brand;
-                if (product.color) document.getElementById('productColor').value = product.color;
                 
                 editProductId.value = product.id;
                 submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Product';
@@ -1402,24 +1228,47 @@
         productForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            // Clear errors
+            clearErrors();
+            
+            // Validation
+            let isValid = true;
+            
+            if (!productName.value.trim()) {
+                showError('productName', 'Product name is required');
+                isValid = false;
+            }
+            
+            if (!productCategory.value) {
+                showError('productCategory', 'Product category is required');
+                isValid = false;
+            }
+            
+            if (!productPrice.value || productPrice.value <= 0) {
+                showError('productPrice', 'Valid price is required');
+                isValid = false;
+            }
+            
+            if (!productStock.value || productStock.value < 0) {
+                showError('productStock', 'Valid stock quantity is required');
+                isValid = false;
+            }
+            
+            const productImage1 = document.getElementById('productImage1').value.trim();
+            if (!productImage1) {
+                showError('productImage1', 'At least one image is required');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
             try {
                 // Prepare images array
                 const images = [];
-                const image1 = document.getElementById('productImage1').value.trim();
-                if (image1) images.push(image1);
+                if (productImage1) images.push(productImage1);
                 
-                const image2 = document.getElementById('productImage2').value.trim();
-                if (image2) images.push(image2);
-                
-                const image3 = document.getElementById('productImage3').value.trim();
-                if (image3) images.push(image3);
-                
-                const image4 = document.getElementById('productImage4').value.trim();
-                if (image4) images.push(image4);
-                
-                // Prepare features array
-                const featuresText = document.getElementById('productFeatures').value.trim();
-                const features = featuresText ? featuresText.split('\n').filter(f => f.trim()) : [];
+                const productImage2 = document.getElementById('productImage2').value.trim();
+                if (productImage2) images.push(productImage2);
                 
                 const productData = {
                     name: productName.value.trim(),
@@ -1428,20 +1277,9 @@
                     stock: parseInt(productStock.value),
                     description: productDescription.value.trim(),
                     images: images,
-                    features: features,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
-                
-                // Add optional fields
-                const pages = document.getElementById('productPages').value;
-                if (pages) productData.pages = parseInt(pages);
-                
-                const brand = document.getElementById('productBrand').value.trim();
-                if (brand) productData.brand = brand;
-                
-                const color = document.getElementById('productColor').value.trim();
-                if (color) productData.color = color;
                 
                 if (editProductId.value) {
                     // Update existing product
@@ -1477,6 +1315,7 @@
             editProductId.value = '';
             submitBtn.innerHTML = '<i class="fas fa-save"></i> Add Product';
             cancelEdit.style.display = 'none';
+            clearErrors();
         });
 
         // ==================== QUOTES MANAGEMENT ====================
@@ -1509,111 +1348,26 @@
             }
         });
 
-        // ==================== FAQ MANAGEMENT ====================
-        
-        document.getElementById('addFaqBtn').addEventListener('click', async function() {
-            const question = document.getElementById('faqQuestion').value.trim();
-            const answer = document.getElementById('faqAnswer').value.trim();
-            const order = parseInt(document.getElementById('faqOrder').value) || 1;
-            
-            if (!question || !answer) {
-                showNotification('Both question and answer are required', 'warning');
-                return;
-            }
-            
-            try {
-                await db.collection('faqs').add({
-                    question: question,
-                    answer: answer,
-                    order: order,
-                    status: 'active',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                showNotification('FAQ added successfully!', 'success');
-                document.getElementById('faqQuestion').value = '';
-                document.getElementById('faqAnswer').value = '';
-                document.getElementById('faqOrder').value = '1';
-                
-            } catch (error) {
-                console.error('Error adding FAQ:', error);
-                showNotification('Error adding FAQ', 'error');
-            }
-        });
-
-        // ==================== FILTERING ====================
-        
-        filterCategory.addEventListener('change', function() {
-            filterProducts();
-        });
-
-        document.getElementById('filterType').addEventListener('change', function() {
-            filterProducts();
-        });
-
-        document.getElementById('searchProduct').addEventListener('input', function() {
-            filterProducts();
-        });
-
-        function filterProducts() {
-            const categoryFilter = filterCategory.value;
-            const typeFilter = document.getElementById('filterType').value;
-            const searchFilter = document.getElementById('searchProduct').value.toLowerCase();
-            
-            const productCards = document.querySelectorAll('.product-card');
-            
-            productCards.forEach(card => {
-                const productName = card.querySelector('.product-name').textContent.toLowerCase();
-                const productCategory = card.querySelector('.product-stock').textContent;
-                const shouldShow = 
-                    (!categoryFilter || productCategory.includes(categoryFilter)) &&
-                    (!typeFilter || productCategory.includes(typeFilter)) &&
-                    (!searchFilter || productName.includes(searchFilter));
-                
-                card.style.display = shouldShow ? 'block' : 'none';
-            });
-        }
-
-        // ==================== IMAGE PREVIEW ====================
-        
-        function updateImagePreview() {
-            const previewContainer = document.getElementById('multipleImagePreview');
-            previewContainer.innerHTML = '';
-            
-            for (let i = 1; i <= 4; i++) {
-                const input = document.getElementById(`productImage${i}`);
-                if (input && input.value.trim()) {
-                    const img = document.createElement('img');
-                    img.src = `assets/products/${input.value.trim()}`;
-                    img.alt = `Preview ${i}`;
-                    img.className = 'image-preview';
-                    img.onerror = function() {
-                        this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNmM3NTdkIj5JbWFnZSBFcnJvcjwvdGV4dD48L3N2Zz4=';
-                    };
-                    previewContainer.appendChild(img);
-                }
-            }
-        }
-
-        // Add event listeners to image inputs
-        for (let i = 1; i <= 4; i++) {
-            const input = document.getElementById(`productImage${i}`);
-            if (input) {
-                input.addEventListener('input', updateImagePreview);
-            }
-        }
-
         // ==================== INITIALIZATION ====================
         
+        // Check login status on page load
         document.addEventListener('DOMContentLoaded', function() {
             checkLoginStatus();
             
-            // Load initial data
-            if (localStorage.getItem('adminLoggedIn') === 'true') {
-                loadCategories();
-                loadProducts();
-            }
+            // Add autocomplete attributes to all form inputs
+            document.querySelectorAll('input').forEach(input => {
+                if (input.type === 'email' && !input.hasAttribute('autocomplete')) {
+                    input.setAttribute('autocomplete', 'email');
+                }
+                if (input.type === 'password' && !input.hasAttribute('autocomplete')) {
+                    input.setAttribute('autocomplete', 'current-password');
+                }
+            });
+        });
+
+        // Handle window close/refresh
+        window.addEventListener('beforeunload', function() {
+            // Optional: Clear sensitive data if needed
         });
 
     </script>
