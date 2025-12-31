@@ -3,266 +3,1397 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - SARM ENTERPRISES</title>
+    <title>SARM ENTERPRISES - Premium Notebooks & Stationery</title>
+    <meta name="description" content="Premium quality notebooks and stationery from SARM ENTERPRISES Kashmir. Order notebooks, diaries,ream, pens, and writing materials.">
+    <meta name="keywords" content="notebooks, stationery, Kashmir, SARM ENTERPRISES, notebooks shop, writing materials,ream, pens, diaries">
+    <meta name="author" content="SARM ENTERPRISES">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <style>
+        /* Logo Styling */
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-right: 15px;
+            background: white;
+            padding: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* Horizontal Moving Quotes Carousel - UPDATED for smooth left-to-right movement */
+        .hero-quotes-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            margin: 30px 0;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-quotes-container {
+            display: flex;
+            width: calc(400% + 400px); /* Extra width for smooth continuous movement */
+            animation: moveQuotes 17s linear infinite; /* Slower continuous movement */
+            padding-left: 20px;
+        }
+        
+        .quote-slide {
+            flex: 0 0 25%; /* Each quote takes 25% of container width */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+            min-width: 300px;
+        }
+        
+        .quote {
+            background: rgba(0, 0, 0, 0.7); /* Darker background for better readability */
+            padding: 25px 40px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 280px;
+            max-width: 550px;
+            width: 100%;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .quote:hover {
+            background: rgba(0, 0, 0, 0.85);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+        }
+        
+        .quote i {
+            color: #3498db;
+            font-size: 1.8rem;
+            margin-right: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .quote p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            margin: 0;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        /* Continuous animation for left-to-right movement */
+        @keyframes moveQuotes {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(calc(-100% + 100vw)); /* Move all the way */
+            }
+        }
+        
+        /* Pause animation on hover for better readability */
+        .hero-quotes-container:hover {
+            animation-play-state: paused;
+        }
+        
+        /* Quote Navigation Dots - Updated for better visibility */
+        .quote-dots {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .quote-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .quote-dot.active {
+            background: #3498db;
+            transform: scale(1.4);
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
+        }
+        
+        .quote-dot:hover {
+            background: #2980b9;
+            transform: scale(1.3);
+        }
+        
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .category-tab {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .category-tab:hover {
+            background: #e9ecef;
+        }
+        
+        .category-tab.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        /* Category Sections */
+        .category-section {
+            margin-bottom: 50px;
+            display: none;
+        }
+        
+        .category-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .category-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .category-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #3498db;
+            border-radius: 2px;
+        }
+        
+        /* Multi-Image Gallery Styles */
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .product-main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+        
+        .product-image-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 2;
+        }
+        
+        .image-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .image-dot.active {
+            background: #3498db;
+            transform: scale(1.2);
+        }
+        
+        .product-image-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+        
+        .product-image-container:hover .product-image-nav {
+            opacity: 1;
+        }
+        
+        .nav-prev {
+            left: 10px;
+        }
+        
+        .nav-next {
+            right: 10px;
+        }
+        
+        .image-count-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            z-index: 2;
+        }
+        
+        /* Cart Styles */
+        .cart-count {
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+        
+        .cart-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+        
+        .cart-content {
+            background: white;
+            margin: 50px auto;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .quantity-btn {
+            background: #f0f0f0;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .remove-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* Quantity Selector in Products */
+        .product-quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .qty-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .qty-input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            z-index: 9999;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .logo-img {
+                width: 50px;
+                height: 50px;
+                margin-right: 10px;
+            }
+            
+            .quote {
+                padding: 20px 30px;
+                min-width: 250px;
+            }
+            
+            .quote p {
+                font-size: 1.3rem;
+            }
+            
+            .hero-quotes-wrapper {
+                min-height: 120px;
+            }
+            
+            .hero-quotes-container {
+                animation: moveQuotes 35s linear infinite; /* Slightly faster on mobile */
+            }
+            
+            .product-image-container {
+                height: 200px;
+            }
+            
+            .category-tabs {
+                gap: 5px;
+            }
+            
+            .category-tab {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .quote {
+                padding: 18px 25px;
+                min-width: 220px;
+            }
+            
+            .quote p {
+                font-size: 1.1rem;
+                font-weight: 500;
+            }
+            
+            .quote i {
+                font-size: 1.4rem;
+                margin-right: 10px;
+            }
+            
+            .hero-quotes-container {
+                animation: moveQuotes 30s linear infinite; /* Faster on small screens */
+            }
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+        
+        .loading-spinner i {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <h1><i class="fas fa-user-shield"></i> Admin Dashboard</h1>
-                <p class="tagline">SARM ENTERPRISES Management</p>
+                <img id="logo" src="assets/logo/logo.png" 
+                     alt="SARM ENTERPRISES Logo" class="logo-img">
+                <div>
+                    <h1>SARM ENTERPRISES</h1>
+                    <p class="tagline">Quality Pages for Quality Thoughts</p>
+                </div>
             </div>
-            <button id="logoutBtn" class="btn-logout">
-                <i class="fas fa-sign-out-alt"></i> Logout
+            <div class="nav-menu">
+                <a href="#home"><i class="fas fa-home"></i> Home</a>
+                <a href="#products"><i class="fas fa-book"></i> Products</a>
+                <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
+                <a href="faqs.html"><i class="fas fa-question-circle"></i> FAQs</a>
+                <!-- Cart Link -->
+                <a href="#" id="cartLink">
+                    <i class="fas fa-shopping-cart"></i> Cart 
+                    <span id="cartCount" class="cart-count">0</span>
+                </a>
+                <!-- Admin link hidden by default -->
+                <a href="admin.html" id="adminLink" style="display: none;">
+                    <i class="fas fa-user-shield"></i> Admin
+                </a>
+            </div>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
             </button>
         </div>
     </nav>
 
-    <div class="admin-container">
-        <div class="admin-header">
-            <h2>Welcome to Admin Panel</h2>
-            <div class="admin-stats">
-                <span id="totalProducts">0 Products</span>
-                <span id="totalOrders">0 Orders</span>
-                <span id="lowStock">0 Low Stock</span>
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h2>Capture Your Thoughts with Our Premium Notebooks</h2>
+            <p>Experience the perfect blend of quality paper, durable binding, and elegant design. Your ideas deserve the best.</p>
+            
+            <!-- Horizontal Moving Quotes Carousel - UPDATED -->
+            <div class="hero-quotes-wrapper">
+                <div class="hero-quotes-container">
+                    <!-- Duplicate quotes for seamless continuous loop -->
+                    <div class="quote-slide">
+                        <div class="quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Where Thoughts Find Their Perfect Home</p>
+                        </div>
+                    </div>
+                    <div class="quote-slide">
+                        <div class="quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Quality Pages for Lifelong Memories</p>
+                        </div>
+                    </div>
+                    <div class="quote-slide">
+                        <div class="quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Writing Transforms Thoughts into Treasures</p>
+                        </div>
+                    </div>
+                    <div class="quote-slide">
+                        <div class="quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Your Ideas Deserve the Perfect Canvas</p>
+                        </div>
+                    </div>
+                    <!-- Repeat for seamless loop -->
+                    <div class="quote-slide">
+                        <div class="quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Where Thoughts Find Their Perfect Home</p>
+                        </div>
+                    </div>
+                    <div class="quote-slide">
+                        <div class="quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Quality Pages for Lifelong Memories</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quote Navigation Dots -->
+            <div class="quote-dots">
+                <span class="quote-dot active" data-index="0"></span>
+                <span class="quote-dot" data-index="1"></span>
+                <span class="quote-dot" data-index="2"></span>
+                <span class="quote-dot" data-index="3"></span>
+            </div>
+            
+            <a href="#products" class="btn-primary">Shop Now</a>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products-section">
+        <div class="container">
+            <h2 class="section-title">Our Premium Collection</h2>
+            <p class="section-subtitle">Browse through our wide range of quality products</p>
+            
+            <!-- Category Tabs -->
+            <div class="category-tabs" id="categoryTabs">
+                <!-- Tabs will be generated dynamically -->
+            </div>
+            
+            <!-- Category Sections Container -->
+            <div id="categorySections">
+                <!-- Category sections will be loaded here -->
+            </div>
+            
+            <!-- Category Template -->
+            <template id="categoryTemplate">
+                <div class="category-section" data-category="">
+                    <h3 class="category-title"></h3>
+                    <div class="products-grid">
+                        <!-- Products for this category will be loaded here -->
+                    </div>
+                </div>
+            </template>
+            
+            <!-- Product Template -->
+            <template id="productTemplate">
+                <div class="product-card" data-product-id="">
+                    <div class="product-image-container">
+                        <img class="product-main-image" src="" alt="Product Image">
+                        <div class="image-count-badge">
+                            <i class="fas fa-images"></i> <span class="image-count">0</span>
+                        </div>
+                        <div class="product-image-dots"></div>
+                        <button class="product-image-nav nav-prev">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="product-image-nav nav-next">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="product-info">
+                        <h3 class="product-name"></h3>
+                        <div class="product-price">₹<span class="price-amount"></span></div>
+                        <div class="product-stock">
+                            <i class="fas fa-box"></i> <span class="stock-text"></span>
+                            (<span class="stock-quantity"></span>)
+                        </div>
+                        <p class="product-description"></p>
+                        
+                        <!-- Quantity Selector -->
+                        <div class="product-quantity">
+                            <button class="qty-btn minus-btn">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" class="qty-input" value="1" min="1" max="10">
+                            <button class="qty-btn plus-btn">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn-primary add-to-cart-btn">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                            <button class="btn-secondary whatsapp-btn">
+                                <i class="fab fa-whatsapp"></i> Order Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-shipping-fast"></i>
+                    <h3>Free Delivery</h3>
+                    <p>Free delivery within 5km radius</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Quality Guarantee</h3>
+                    <p>Premium quality paper and binding</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-headset"></i>
+                    <h3>24/7 Support</h3>
+                    <p>Always available to assist you</p>
+                </div>
             </div>
         </div>
+    </section>
 
-        <!-- Add/Edit Product Form -->
-        <div class="form-card">
-            <h3><i class="fas fa-plus-circle"></i> Add/Edit Product</h3>
-            <form id="productForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="productName"><i class="fas fa-tag"></i> Product Name</label>
-                        <input type="text" id="productName" required 
-                               placeholder="e.g., Spiral Notebook 200 Pages or Blue Pen">
-                    </div>
-                    <div class="form-group">
-                        <label for="productPages">
-                            <i class="fas fa-file-alt"></i> Number of Pages
-                            <span style="color: #777; font-weight: normal; font-size: 0.9em;"> (Leave blank for pens, umbrellas, etc.)</span>
-                        </label>
-                        <input type="number" id="productPages" 
-                               placeholder="e.g., 200 (or leave blank for stationery)">
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="productPrice"><i class="fas fa-rupee-sign"></i> Price (₹)</label>
-                        <input type="number" id="productPrice" required 
-                               placeholder="e.g., 69" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label for="productStock"><i class="fas fa-box"></i> Stock Quantity</label>
-                        <input type="number" id="productStock" required 
-                               placeholder="e.g., 50">
-                    </div>
-                </div>
-                
-                <!-- UPDATED: Product Images Section (1-4 local images) -->
-                <div class="form-group">
-                    <label for="productImage1"><i class="fas fa-images"></i> Product Images (Enter 1-4 filenames)</label>
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Contact Us for Orders</h2>
+            <p class="section-subtitle">Get in touch with us through any of these methods</p>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3><i class="fas fa-map-marker-alt"></i> Our Address</h3>
+                    <p>KAWOOSA KHALISA, NARBAL, BADGAM</p>
+                    <p>Pincode: 193411</p>
                     
-                    <div style="margin: 10px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; border-left: 4px solid #3498db;">
-                        <p style="margin: 0 0 10px 0; font-weight: 500;">
-                            📸 <strong>Manual Image Setup</strong>
-                        </p>
-                        <p style="margin: 0 0 15px 0; font-size: 0.9rem; color: #555;">
-                            <strong>Steps:</strong><br>
-                            1. First, upload your images to the <code>assets/products/</code> folder on your website.<br>
-                            2. Then, enter the exact filenames below (e.g., <code>notebook-1.jpg</code>, <code>pen-1.jpg</code>).<br>
-                            3. The first image is the main thumbnail.
-                        </p>
-                        
-                        <!-- 4 Image Input Fields -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
-                            <div>
-                                <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
-                                    <strong>Image 1</strong> (Required)
-                                </label>
-                                <input type="text" id="productImage1" placeholder="e.g., product-1.jpg" 
-                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" required>
-                            </div>
-                            <div>
-                                <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
-                                    Image 2 (Optional)
-                                </label>
-                                <input type="text" id="productImage2" placeholder="e.g., product-2.jpg" 
-                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                            </div>
-                            <div>
-                                <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
-                                    Image 3 (Optional)
-                                </label>
-                                <input type="text" id="productImage3" placeholder="e.g., product-3.jpg" 
-                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                            </div>
-                            <div>
-                                <label style="font-size: 0.9rem; display: block; margin-bottom: 5px;">
-                                    Image 4 (Optional)
-                                </label>
-                                <input type="text" id="productImage4" placeholder="e.g., product-4.jpg" 
-                                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                            </div>
-                        </div>
-                    </div>
+                    <h3><i class="fas fa-phone"></i> Phone Numbers</h3>
+                    <p>7006927825 / 7006927825</p>
                     
-                    <!-- Image Preview Area -->
-                    <div id="imagePreviewContainer" style="margin-top: 15px;">
-                        <!-- Container for multiple image previews -->
-                        <div id="multipleImagePreview" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; min-height: 50px;">
-                            <!-- Selected image previews will appear here dynamically -->
-                        </div>
+                    <h3><i class="fas fa-envelope"></i> Email</h3>
+                    <p>sarmenterprises786@gmail.com</p>
+                    
+                    <h3><i class="fas fa-qrcode"></i> UPI ID</h3>
+                    <p class="upi-id">7006927825@pz</p>
+                </div>
+                
+                <div class="contact-options">
+                    <h3>Order Now</h3>
+                    <div class="contact-buttons">
+                        <button onclick="openCart()" class="btn-whatsapp">
+                            <i class="fas fa-shopping-cart"></i> View Cart
+                        </button>
                         
-                        <!-- Image info/instructions -->
-                        <div id="imageInfo" style="margin-top: 10px; padding: 10px; background: #f0f8ff; border-radius: 5px; font-size: 0.9rem;">
-                            <strong>📝 Image Guidelines:</strong><br>
-                            1. Upload images to <code>assets/products/</code> folder first.<br>
-                            2. Enter exact filenames above (include extension like .jpg, .png).<br>
-                            3. Image 1 will be the main thumbnail shown in product listings.
-                        </div>
+                        <a href="https://wa.me/917006927825?text=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
+                           class="btn-whatsapp" target="_blank">
+                            <i class="fab fa-whatsapp"></i> WhatsApp Order
+                        </a>
+                        
+                        <a href="tel:+917006927825" class="btn-phone">
+                            <i class="fas fa-phone"></i> Call Us
+                        </a>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="productDescription"><i class="fas fa-align-left"></i> Description</label>
-                    <textarea id="productDescription" rows="3" 
-                              placeholder="Product description..."></textarea>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-book"></i> SARM ENTERPRISES</h3>
+                    <p>Quality Notebooks Since 2024</p>
                 </div>
-                
-                <button type="submit" class="btn-primary" id="submitBtn">
-                    <i class="fas fa-save"></i> Add Product
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="#home">Home</a>
+                    <a href="#products">Products</a>
+                    <a href="#contact">Contact</a>
+                    <a href="#" id="adminLoginLink">Admin Login</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 SARM ENTERPRISES. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="cart-modal">
+        <div class="cart-content">
+            <span class="close-modal" onclick="closeCart()">&times;</span>
+            <h2><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+            
+            <div id="cartItems">
+                <p style="text-align: center; padding: 40px; color: #666;">
+                    Your cart is empty
+                </p>
+            </div>
+            
+            <div class="cart-total" style="display: none;">
+                <h3>Total: ₹<span id="cartTotal">0</span></h3>
+                <button onclick="checkout()" class="btn-whatsapp" style="width: 100%; margin-top: 15px;">
+                    <i class="fab fa-whatsapp"></i> Checkout on WhatsApp
                 </button>
-                <button type="button" class="btn-secondary" id="cancelEdit" style="display: none;">
-                    <i class="fas fa-times"></i> Cancel Edit
+                <button onclick="clearCart()" class="btn-secondary" style="width: 100%; margin-top: 10px;">
+                    <i class="fas fa-trash"></i> Clear Cart
                 </button>
-                <input type="hidden" id="editProductId">
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Admin Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn-primary">Login</button>
             </form>
         </div>
-
-        <!-- Logo Management (REMOVED file upload, kept for future if needed) -->
-        <div class="form-card">
-            <h3><i class="fas fa-image"></i> Logo Management</h3>
-            <div class="form-group">
-                <p>To update the website logo, replace the file <code>assets/logo/logo.png</code> manually.</p>
-            </div>
-        </div>
-
-        <!-- Products List -->
-        <div class="form-card">
-            <h3><i class="fas fa-list"></i> Current Products</h3>
-            <div id="productsList" class="products-grid">
-                <!-- Products will be loaded here -->
-            </div>
-        </div>
-
-        <!-- Quotes Management -->
-        <div class="form-card">
-            <h3><i class="fas fa-quote-left"></i> Business Quotes</h3>
-            <div class="form-group">
-                <label>Add New Quote</label>
-                <input type="text" id="newQuote" placeholder="Enter a motivational quote...">
-                <button type="button" class="btn-primary" id="addQuoteBtn">
-                    <i class="fas fa-plus"></i> Add Quote
-                </button>
-            </div>
-            <div id="quotesList">
-                <!-- Quotes will be displayed here -->
-            </div>
-        </div>
-
-        <!-- Stock Summary -->
-        <div class="form-card">
-            <h3><i class="fas fa-chart-bar"></i> Stock Summary</h3>
-            <div class="chart-container">
-                <canvas id="stockChart"></canvas>
-            </div>
-        </div>
     </div>
 
-    <!-- Customer Feedback Manager -->
-    <div class="form-card">
-        <h3><i class="fas fa-comments"></i> Customer Feedback Manager</h3>
-        <p>Review and manage testimonials submitted by customers.</p>
-        
-        <div class="admin-actions" style="margin-bottom: 1.5rem;">
-            <button class="btn-primary" id="refreshPendingBtn">
-                <i class="fas fa-sync-alt"></i> Refresh Pending List
-            </button>
-        </div>
-        
-        <h4>Pending Review</h4>
-        <div id="pendingFeedbackList">
-            <!-- Pending feedback cards will be loaded here -->
-            <p><i>Click "Refresh Pending List" to load submissions.</i></p>
-        </div>
-    </div>
+    <!-- Main JavaScript -->
+    <script type="module">
+        // Import Firebase only for products
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-    <!-- FAQ MANAGEMENT -->
-    <div class="form-card">
-        <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
-        <p>Manage Frequently Asked Questions shown on the FAQ page.</p>
-        
-        <!-- Add New FAQ Form -->
-        <h4>Add New FAQ</h4>
-        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
-            <div class="form-group">
-                <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
-                <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
-            </div>
-            <div class="form-group">
-                <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
-                <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
-            </div>
-            <div class="form-group">
-                <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
-                <input type="number" id="faqOrder" placeholder="1" value="1">
-                <small>Lower numbers appear first on the FAQ page.</small>
-            </div>
-            <button class="btn-primary" id="addFaqBtn">
-                <i class="fas fa-plus-circle"></i> Add FAQ
-            </button>
-        </div>
-        
-        <!-- Existing FAQs List -->
-        <h4>Existing FAQs</h4>
-        <button class="btn-secondary" id="refreshFaqsBtn" style="margin-bottom: 1rem;">
-            <i class="fas fa-sync-alt"></i> Refresh List
-        </button>
-        <div id="faqsListAdmin">
-            <!-- FAQs will be loaded here -->
-            <p style="text-align: center; padding: 2rem; color: #999;">
-                Click "Refresh List" to load existing FAQs.
-            </p>
-        </div>
-    </div>
-
-    <!-- Success Message -->
-    <div id="successMessage" style="display: none;" class="modal">
-        <div class="modal-content" style="text-align: center;">
-            <h2><i class="fas fa-check-circle" style="color: var(--success-color); font-size: 3rem;"></i></h2>
-            <h3>Success!</h3>
-            <p id="successText">Operation completed successfully.</p>
-            <button class="btn-primary" onclick="document.getElementById('successMessage').style.display='none'">
-                OK
-            </button>
-        </div>
-    </div>
-
-    <!-- Firebase SDK -->
-    <script type="module" src="admin.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-        // Helper function to preview images from text inputs (called from admin.js)
-        window.previewImagesFromInputs = function() {
-            // This function is defined in admin.js
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD6T2k0fE2R4gF7QY4V6q6Z4Qv0X1W2Y3Z4",
+            authDomain: "sarm-enterprises.firebaseapp.com",
+            projectId: "sarm-enterprises",
+            storageBucket: "sarm-enterprises.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890"
         };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // ==================== LOGO SYSTEM ====================
+        // Load logo from localStorage (Base64 string)
+        function loadLogo() {
+            try {
+                const savedLogo = localStorage.getItem('sarmLogo');
+                
+                if (savedLogo) {
+                    const logoImg = document.getElementById('logo');
+                    logoImg.src = savedLogo;
+                    
+                    // Handle logo loading error
+                    logoImg.onerror = () => {
+                        setDefaultLogo();
+                    };
+                } else {
+                    setDefaultLogo();
+                }
+            } catch (error) {
+                console.error("Error loading logo:", error);
+                setDefaultLogo();
+            }
+        }
+
+        // Set default logo
+        function setDefaultLogo() {
+            const logoImg = document.getElementById('logo');
+            logoImg.src = "assets/logo/logo.png";
+        }
+
+        // ==================== HORIZONTAL MOVING QUOTES CAROUSEL - UPDATED ====================
+        function initQuotesCarousel() {
+            const quotesContainer = document.querySelector('.hero-quotes-container');
+            const dots = document.querySelectorAll('.quote-dot');
+            
+            if (!quotesContainer) return;
+            
+            let currentActive = 0;
+            const totalDots = dots.length;
+            
+            // Update active dot based on position in animation
+            function updateActiveDot() {
+                // Calculate which quote should be "active" based on animation progress
+                // This is approximate since we're using CSS animation
+                const containerWidth = quotesContainer.offsetWidth;
+                const translateX = getTranslateX(quotesContainer);
+                const progress = Math.abs(translateX) / containerWidth * 100;
+                
+                // Rough estimate of which quote is centered
+                const estimatedIndex = Math.floor(progress / 25) % totalDots;
+                
+                if (estimatedIndex !== currentActive) {
+                    currentActive = estimatedIndex;
+                    dots.forEach((dot, i) => {
+                        dot.classList.toggle('active', i === currentActive);
+                    });
+                }
+            }
+            
+            // Helper function to get translateX value
+            function getTranslateX(element) {
+                const style = window.getComputedStyle(element);
+                const matrix = new DOMMatrixReadOnly(style.transform);
+                return matrix.m41;
+            }
+            
+            // Update dots periodically to sync with animation
+            setInterval(updateActiveDot, 1000);
+            
+            // Click on dots to navigate (for manual control)
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    // Note: With continuous animation, clicking dots won't jump
+                    // but we can highlight the selected quote
+                    dots.forEach(d => d.classList.remove('active'));
+                    dot.classList.add('active');
+                });
+            });
+        }
+
+        // ==================== CART SYSTEM ====================
+        let cart = JSON.parse(localStorage.getItem('sarmCart')) || [];
+
+        // Update cart count
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = totalItems;
+            localStorage.setItem('sarmCart', JSON.stringify(cart));
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                    notification.style.animation = 'slideIn 0.3s ease';
+                }, 300);
+            }, 3000);
+        }
+
+        // Add to cart
+        function addToCart(product, quantity) {
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.images ? product.images[0] : '',
+                    quantity: quantity,
+                    category: product.category || 'General'
+                });
+            }
+            
+            updateCartCount();
+            showNotification('Added to cart!');
+        }
+
+        // Remove from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            renderCart();
+        }
+
+        // Update quantity
+        function updateCartQuantity(productId, quantity) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                if (quantity < 1) {
+                    removeFromCart(productId);
+                } else {
+                    item.quantity = quantity;
+                    updateCartCount();
+                    renderCart();
+                }
+            }
+        }
+
+        // Render cart
+        function renderCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const cartTotalDiv = document.querySelector('.cart-total');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">Your cart is empty</p>';
+                cartTotalDiv.style.display = 'none';
+                return;
+            }
+            
+            let html = '';
+            let total = 0;
+            
+            // Group cart items by category
+            const itemsByCategory = {};
+            cart.forEach(item => {
+                const category = item.category || 'General';
+                if (!itemsByCategory[category]) {
+                    itemsByCategory[category] = [];
+                }
+                itemsByCategory[category].push(item);
+            });
+            
+            // Display by category
+            for (const category in itemsByCategory) {
+                html += `<div style="margin-bottom: 20px;"><h4 style="color: #3498db; border-bottom: 1px solid #eee; padding-bottom: 10px;">${category}</h4>`;
+                
+                itemsByCategory[category].forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    
+                    html += `
+                        <div class="cart-item">
+                            <div>
+                                <h4>${item.name}</h4>
+                                <p>₹${item.price} × ${item.quantity}</p>
+                                <p style="font-weight: bold;">Item Total: ₹${itemTotal}</p>
+                            </div>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                                <span style="min-width: 30px; text-align: center;">${item.quantity}</span>
+                                <button class="quantity-btn" onclick="updateCartQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                                <button class="remove-btn" onclick="removeFromCart('${item.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+            }
+            
+            cartItems.innerHTML = html;
+            cartTotal.textContent = total;
+            cartTotalDiv.style.display = 'block';
+        }
+
+        // Open cart
+        function openCart() {
+            document.getElementById('cartModal').style.display = 'block';
+            renderCart();
+        }
+
+        // Close cart
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        // Checkout
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            
+            let message = "Hello SARM ENTERPRISES,\n\nI would like to place an order:\n\n";
+            
+            // Group items by category for better organization
+            const itemsByCategory = {};
+            cart.forEach(item => {
+                const category = item.category || 'General';
+                if (!itemsByCategory[category]) {
+                    itemsByCategory[category] = [];
+                }
+                itemsByCategory[category].push(item);
+            });
+            
+            for (const category in itemsByCategory) {
+                message += `📦 **${category}:**\n`;
+                itemsByCategory[category].forEach((item, index) => {
+                    message += `  ${index + 1}. ${item.name} - ${item.quantity} × ₹${item.price} = ₹${item.price * item.quantity}\n`;
+                });
+                message += '\n';
+            }
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            message += `📊 **Order Summary:**\n`;
+            message += `Total Items: ${totalItems}\n`;
+            message += `Total Amount: ₹${totalAmount}\n\n`;
+            message += `Please confirm availability and delivery details.\n\nThank you!`;
+            
+            const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Clear cart
+        function clearCart() {
+            if (confirm('Are you sure you want to clear your cart?')) {
+                cart = [];
+                updateCartCount();
+                renderCart();
+                showNotification('Cart cleared!');
+            }
+        }
+
+        // ==================== PRODUCT CATEGORIES SYSTEM ====================
+        async function loadProductsByCategory() {
+            try {
+                const categoryTabs = document.getElementById('categoryTabs');
+                const categorySections = document.getElementById('categorySections');
+                const categoryTemplate = document.getElementById('categoryTemplate');
+                const productTemplate = document.getElementById('productTemplate');
+                
+                // Show loading
+                categorySections.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</div>';
+                
+                // First, try to load categories from the 'categories' collection
+                let categories = [];
+                try {
+                    const categoriesSnapshot = await getDocs(collection(db, "categories"));
+                    if (!categoriesSnapshot.empty) {
+                        categoriesSnapshot.forEach((doc) => {
+                            const categoryData = doc.data();
+                            categories.push({
+                                id: doc.id,
+                                name: categoryData.name,
+                                description: categoryData.description || '',
+                                order: categoryData.order || 999
+                            });
+                        });
+                        // Sort categories by order
+                        categories.sort((a, b) => a.order - b.order);
+                    }
+                } catch (error) {
+                    console.log("No categories collection found, will extract from products");
+                }
+                
+                const querySnapshot = await getDocs(collection(db, "products"));
+                
+                if (querySnapshot.empty) {
+                    categorySections.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available at the moment.</p>';
+                    return;
+                }
+                
+                // Clear containers
+                categoryTabs.innerHTML = '';
+                categorySections.innerHTML = '';
+                
+                // Group products by category
+                const productsByCategory = {};
+                
+                querySnapshot.forEach((doc) => {
+                    const product = doc.data();
+                    product.id = doc.id;
+                    
+                    // Default category if not specified
+                    const category = product.category || 'Notebooks';
+                    
+                    if (!productsByCategory[category]) {
+                        productsByCategory[category] = [];
+                    }
+                    
+                    productsByCategory[category].push(product);
+                });
+                
+                // If we have predefined categories, use them
+                // Otherwise, extract categories from products
+                let categoriesToUse = [];
+                if (categories.length > 0) {
+                    categoriesToUse = categories.map(c => c.name);
+                } else {
+                    // Get category list from products and sort alphabetically
+                    categoriesToUse = Object.keys(productsByCategory).sort();
+                }
+                
+                // Create tabs for each category
+                categoriesToUse.forEach((category, index) => {
+                    // Skip if category has no products
+                    if (!productsByCategory[category] || productsByCategory[category].length === 0) {
+                        return;
+                    }
+                    
+                    // Create tab button
+                    const tabButton = document.createElement('button');
+                    tabButton.className = `category-tab ${index === 0 ? 'active' : ''}`;
+                    tabButton.textContent = category;
+                    tabButton.dataset.category = category;
+                    tabButton.onclick = () => switchCategory(category);
+                    categoryTabs.appendChild(tabButton);
+                    
+                    // Create category section
+                    const categoryClone = categoryTemplate.content.cloneNode(true);
+                    const categorySection = categoryClone.querySelector('.category-section');
+                    categorySection.dataset.category = category;
+                    categorySection.classList.toggle('active', index === 0);
+                    
+                    const categoryTitle = categoryClone.querySelector('.category-title');
+                    categoryTitle.textContent = category;
+                    
+                    const productsGrid = categoryClone.querySelector('.products-grid');
+                    
+                    // Add products to this category
+                    productsByCategory[category].forEach(product => {
+                        const productElement = createProductElement(product, productTemplate);
+                        productsGrid.appendChild(productElement);
+                    });
+                    
+                    categorySections.appendChild(categoryClone);
+                });
+                
+                // If no tabs were created (no products in any category)
+                if (categoryTabs.children.length === 0) {
+                    categorySections.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available in any category.</p>';
+                }
+                
+            } catch (error) {
+                console.error("Error loading products:", error);
+                document.getElementById('categorySections').innerHTML = 
+                    '<p style="color: #e74c3c; text-align: center; padding: 2rem;">Error loading products. Please refresh the page.</p>';
+            }
+        }
+
+        // Switch between categories
+        function switchCategory(category) {
+            // Update active tab
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.category === category);
+            });
+            
+            // Show selected category section
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.toggle('active', section.dataset.category === category);
+            });
+            
+            // Smooth scroll to products section
+            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Create product element
+        function createProductElement(product, template) {
+            const clone = template.content.cloneNode(true);
+            const productCard = clone.querySelector('.product-card');
+            productCard.dataset.productId = product.id;
+            
+            // Set product info
+            productCard.querySelector('.product-name').textContent = product.name;
+            productCard.querySelector('.price-amount').textContent = product.price;
+            productCard.querySelector('.stock-quantity').textContent = product.stock;
+            productCard.querySelector('.product-description').textContent = product.description || 'Premium quality product';
+            
+            // Set stock status
+            const stockElement = productCard.querySelector('.stock-text');
+            if (product.stock <= 0) {
+                stockElement.textContent = 'Out of Stock';
+                stockElement.style.color = '#e74c3c';
+                productCard.querySelector('.add-to-cart-btn').disabled = true;
+                productCard.querySelector('.add-to-cart-btn').innerHTML = '<i class="fas fa-times"></i> Out of Stock';
+                productCard.querySelector('.add-to-cart-btn').style.opacity = '0.6';
+            } else if (product.stock <= 10) {
+                stockElement.textContent = 'Low Stock';
+                stockElement.style.color = '#f39c12';
+            } else {
+                stockElement.textContent = 'In Stock';
+                stockElement.style.color = '#27ae60';
+            }
+            
+            // Handle product images
+            let productImages = [];
+            if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+                productImages = product.images;
+            } else if (product.imagePath) {
+                productImages = [product.imagePath];
+            } else {
+                productImages = ['https://via.placeholder.com/400x300?text=' + encodeURIComponent(product.name)];
+            }
+            
+            // Set first image
+            const mainImage = productCard.querySelector('.product-main-image');
+            mainImage.src = productImages[0];
+            mainImage.alt = product.name;
+            
+            // Handle image loading error
+            mainImage.onerror = function() {
+                this.src = 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(product.name);
+            };
+            
+            // Set image count badge
+            const imageCount = productCard.querySelector('.image-count');
+            imageCount.textContent = productImages.length;
+            
+            // Setup image gallery if multiple images
+            if (productImages.length > 1) {
+                const dotsContainer = productCard.querySelector('.product-image-dots');
+                dotsContainer.innerHTML = '';
+                
+                productImages.forEach((_, index) => {
+                    const dot = document.createElement('div');
+                    dot.className = `image-dot ${index === 0 ? 'active' : ''}`;
+                    dot.onclick = () => switchProductImage(productCard, index, productImages);
+                    dotsContainer.appendChild(dot);
+                });
+                
+                // Setup navigation
+                let currentIndex = 0;
+                
+                productCard.querySelector('.nav-prev').onclick = () => {
+                    currentIndex = (currentIndex - 1 + productImages.length) % productImages.length;
+                    switchProductImage(productCard, currentIndex, productImages);
+                };
+                
+                productCard.querySelector('.nav-next').onclick = () => {
+                    currentIndex = (currentIndex + 1) % productImages.length;
+                    switchProductImage(productCard, currentIndex, productImages);
+                };
+                
+                // Auto-rotate images every 5 seconds
+                const autoRotate = setInterval(() => {
+                    currentIndex = (currentIndex + 1) % productImages.length;
+                    switchProductImage(productCard, currentIndex, productImages);
+                }, 5000);
+                
+                // Stop auto-rotate on hover
+                const imageContainer = productCard.querySelector('.product-image-container');
+                imageContainer.addEventListener('mouseenter', () => clearInterval(autoRotate));
+                imageContainer.addEventListener('mouseleave', () => {
+                    setInterval(() => {
+                        currentIndex = (currentIndex + 1) % productImages.length;
+                        switchProductImage(productCard, currentIndex, productImages);
+                    }, 5000);
+                });
+            } else {
+                productCard.querySelector('.image-count-badge').style.display = 'none';
+                productCard.querySelector('.nav-prev').style.display = 'none';
+                productCard.querySelector('.nav-next').style.display = 'none';
+            }
+            
+            // Setup quantity controls
+            const qtyInput = productCard.querySelector('.qty-input');
+            const maxStock = Math.min(product.stock, 20);
+            qtyInput.max = maxStock;
+            
+            productCard.querySelector('.minus-btn').onclick = () => {
+                const value = parseInt(qtyInput.value);
+                if (value > 1) qtyInput.value = value - 1;
+            };
+            
+            productCard.querySelector('.plus-btn').onclick = () => {
+                const value = parseInt(qtyInput.value);
+                const max = parseInt(qtyInput.max);
+                if (value < max) qtyInput.value = value + 1;
+            };
+            
+            // Setup add to cart button
+            productCard.querySelector('.add-to-cart-btn').onclick = () => {
+                const quantity = parseInt(qtyInput.value);
+                if (quantity > 0 && product.stock > 0) {
+                    addToCart(product, quantity);
+                }
+            };
+            
+            // Setup WhatsApp order button
+            productCard.querySelector('.whatsapp-btn').onclick = () => {
+                const quantity = parseInt(qtyInput.value);
+                const message = `Hello SARM ENTERPRISES,\n\nI want to order:\n\n📓 Product: ${product.name}\n📦 Quantity: ${quantity}\n💰 Price: ₹${product.price}\n💵 Total: ₹${product.price * quantity}\n\nPlease confirm availability and delivery time.\n\nThank you!`;
+                const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            };
+            
+            return productCard;
+        }
+
+        // Switch product image
+        function switchProductImage(productCard, index, images) {
+            const mainImage = productCard.querySelector('.product-main-image');
+            const dots = productCard.querySelectorAll('.image-dot');
+            
+            mainImage.style.opacity = '0';
+            setTimeout(() => {
+                mainImage.src = images[index];
+                mainImage.alt = `${productCard.querySelector('.product-name').textContent} - Image ${index + 1}`;
+                mainImage.style.opacity = '1';
+                
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+            }, 150);
+        }
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Setup cart link
+            document.getElementById('cartLink').onclick = (e) => {
+                e.preventDefault();
+                openCart();
+            };
+            
+            // Load logo, quotes carousel, and products
+            loadLogo();
+            initQuotesCarousel();
+            updateCartCount();
+            loadProductsByCategory();
+            
+            // Close modal when clicking outside
+            window.onclick = (e) => {
+                const cartModal = document.getElementById('cartModal');
+                if (e.target === cartModal) {
+                    closeCart();
+                }
+            };
+            
+            // Close cart with ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeCart();
+                }
+            });
+        });
+
+        // Make functions globally available
+        window.addToCart = addToCart;
+        window.removeFromCart = removeFromCart;
+        window.updateCartQuantity = updateCartQuantity;
+        window.openCart = openCart;
+        window.closeCart = closeCart;
+        window.checkout = checkout;
+        window.clearCart = clearCart;
+        window.switchProductImage = switchProductImage;
+        window.switchCategory = switchCategory;
+        window.saveLogoToLocalStorage = saveLogoToLocalStorage;
     </script>
 </body>
 </html>
