@@ -788,7 +788,7 @@
     <script type="module">
         // Import Firebase only for products
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
         // Your Firebase configuration
         const firebaseConfig = {
@@ -883,6 +883,280 @@
             });
         }
 
+        // ==================== PRODUCT CATEGORIES SYSTEM (UPDATED) ====================
+        async function loadProductsByCategory() {
+            try {
+                const categoryTabs = document.getElementById('categoryTabs');
+                const categorySections = document.getElementById('categorySections');
+                const categoryTemplate = document.getElementById('categoryTemplate');
+                const productTemplate = document.getElementById('productTemplate');
+                
+                // Show loading
+                categorySections.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</div>';
+                
+                // Load categories from the 'categories' collection
+                let categories = [];
+                try {
+                    const categoriesSnapshot = await getDocs(collection(db, "categories"));
+                    if (!categoriesSnapshot.empty) {
+                        categoriesSnapshot.forEach((doc) => {
+                            const categoryData = doc.data();
+                            categories.push({
+                                id: doc.id,
+                                name: categoryData.name,
+                                order: categoryData.order || 999
+                            });
+                        });
+                        // Sort categories by order
+                        categories.sort((a, b) => a.order - b.order);
+                    } else {
+                        // Default categories if none exist
+                        categories = [
+                            { id: 'notebooks', name: 'Notebooks', order: 1 },
+                            { id: 'reams', name: 'Reams', order: 2 },
+                            { id: 'pens', name: 'Pens', order: 3 },
+                            { id: 'diaries', name: 'Diaries', order: 4 }
+                        ];
+                    }
+                } catch (error) {
+                    console.log("Error loading categories:", error);
+                    categories = [
+                        { id: 'notebooks', name: 'Notebooks', order: 1 },
+                        { id: 'reams', name: 'Reams', order: 2 },
+                        { id: 'pens', name: 'Pens', order: 3 },
+                        { id: 'diaries', name: 'Diaries', order: 4 }
+                    ];
+                }
+                
+                const querySnapshot = await getDocs(collection(db, "products"));
+                
+                if (querySnapshot.empty) {
+                    categorySections.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available at the moment.</p>';
+                    return;
+                }
+                
+                // Clear containers
+                categoryTabs.innerHTML = '';
+                categorySections.innerHTML = '';
+                
+                // Group products by category
+                const productsByCategory = {};
+                
+                querySnapshot.forEach((doc) => {
+                    const product = doc.data();
+                    product.id = doc.id;
+                    
+                    // Use categoryId field if exists, otherwise use category field
+                    const category = product.categoryId || product.category || 'notebooks';
+                    
+                    if (!productsByCategory[category]) {
+                        productsByCategory[category] = [];
+                    }
+                    
+                    productsByCategory[category].push(product);
+                });
+                
+                // Create tabs for each category
+                categories.forEach((category, index) => {
+                    // Skip if category has no products
+                    if (!productsByCategory[category.id] || productsByCategory[category.id].length === 0) {
+                        return;
+                    }
+                    
+                    // Create tab button
+                    const tabButton = document.createElement('button');
+                    tabButton.className = `category-tab ${index === 0 ? 'active' : ''}`;
+                    tabButton.textContent = category.name;
+                    tabButton.dataset.category = category.id;
+                    tabButton.onclick = () => switchCategory(category.id);
+                    categoryTabs.appendChild(tabButton);
+                    
+                    // Create category section
+                    const categoryClone = categoryTemplate.content.cloneNode(true);
+                    const categorySection = categoryClone.querySelector('.category-section');
+                    categorySection.dataset.category = category.id;
+                    categorySection.classList.toggle('active', index === 0);
+                    
+                    const categoryTitle = categoryClone.querySelector('.category-title');
+                    categoryTitle.textContent = category.name;
+                    
+                    const productsGrid = categoryClone.querySelector('.products-grid');
+                    
+                    // Add products to this category
+                    productsByCategory[category.id].forEach(product => {
+                        const productElement = createProductElement(product, productTemplate);
+                        productsGrid.appendChild(productElement);
+                    });
+                    
+                    categorySections.appendChild(categoryClone);
+                });
+                
+                // If no tabs were created (no products in any category)
+                if (categoryTabs.children.length === 0) {
+                    categorySections.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available in any category.</p>';
+                }
+                
+            } catch (error) {
+                console.error("Error loading products:", error);
+                document.getElementById('categorySections').innerHTML = 
+                    '<p style="color: #e74c3c; text-align: center; padding: 2rem;">Error loading products. Please refresh the page.</p>';
+            }
+        }
+
+        // Replace the image handling in createProductElement function:
+        function createProductElement(product, template) {
+            const clone = template.content.cloneNode(true);
+            const productCard = clone.querySelector('.product-card');
+            productCard.dataset.productId = product.id;
+            
+            // Set product info
+            productCard.querySelector('.product-name').textContent = product.name;
+            productCard.querySelector('.price-amount').textContent = product.price;
+            productCard.querySelector('.stock-quantity').textContent = product.stock || 10;
+            productCard.querySelector('.product-description').textContent = product.description || 'Premium quality product';
+            
+            // Set stock status
+            const stockElement = productCard.querySelector('.stock-text');
+            const stock = product.stock || 10;
+            if (stock <= 0) {
+                stockElement.textContent = 'Out of Stock';
+                stockElement.style.color = '#e74c3c';
+                productCard.querySelector('.add-to-cart-btn').disabled = true;
+                productCard.querySelector('.add-to-cart-btn').innerHTML = '<i class="fas fa-times"></i> Out of Stock';
+                productCard.querySelector('.add-to-cart-btn').style.opacity = '0.6';
+            } else if (stock <= 10) {
+                stockElement.textContent = 'Low Stock';
+                stockElement.style.color = '#f39c12';
+            } else {
+                stockElement.textContent = 'In Stock';
+                stockElement.style.color = '#27ae60';
+            }
+            
+            // Handle product images - USING GITHUB REPOSITORY
+            let productImages = [];
+            
+            // If product has imageFileName (single image from GitHub)
+            if (product.imageFileName) {
+                // Construct GitHub repository image URL
+                // Change 'your-repo-name' to your actual GitHub repository name
+                const githubRepo = 'sarm-enterprises'; // UPDATE THIS with your actual GitHub repo name
+                const imageUrl = `https://sarmspirals.github.io/${githubRepo}/product_images/${product.imageFileName}`;
+                productImages = [imageUrl];
+            }
+            // If product has multiple images array
+            else if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+                productImages = product.images.map(img => {
+                    if (img.startsWith('http')) {
+                        return img; // Already full URL
+                    } else {
+                        // Assume it's a filename in GitHub repository
+                        const githubRepo = 'sarm-enterprises'; // UPDATE THIS
+                        return `https://sarmspirals.github.io/${githubRepo}/product_images/${img}`;
+                    }
+                });
+            }
+            // Fallback to placeholder
+            else {
+                // Use a data URL as fallback instead of external placeholder
+                productImages = ['data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNGMEYwRjAiLz48dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2IiBmaWxsPSIjNjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+UHJvZHVjdCBJbWFnZTwvdGV4dD48L3N2Zz4='];
+            }
+            
+            // Set first image
+            const mainImage = productCard.querySelector('.product-main-image');
+            mainImage.src = productImages[0];
+            mainImage.alt = product.name;
+            
+            // Handle image loading error
+            mainImage.onerror = function() {
+                // Fallback to data URL
+                this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNGMEYwRjAiLz48dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2IiBmaWxsPSIjNjY2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+SW1hZ2UgTm90IExvYWRlZDwvdGV4dD48L3N2Zz4=';
+            };
+            
+            // Set image count badge
+            const imageCount = productCard.querySelector('.image-count');
+            imageCount.textContent = productImages.length;
+            
+            // Setup image gallery if multiple images
+            if (productImages.length > 1) {
+                const dotsContainer = productCard.querySelector('.product-image-dots');
+                dotsContainer.innerHTML = '';
+                
+                productImages.forEach((_, index) => {
+                    const dot = document.createElement('div');
+                    dot.className = `image-dot ${index === 0 ? 'active' : ''}`;
+                    dot.onclick = () => switchProductImage(productCard, index, productImages);
+                    dotsContainer.appendChild(dot);
+                });
+                
+                // Setup navigation
+                let currentIndex = 0;
+                
+                productCard.querySelector('.nav-prev').onclick = () => {
+                    currentIndex = (currentIndex - 1 + productImages.length) % productImages.length;
+                    switchProductImage(productCard, currentIndex, productImages);
+                };
+                
+                productCard.querySelector('.nav-next').onclick = () => {
+                    currentIndex = (currentIndex + 1) % productImages.length;
+                    switchProductImage(productCard, currentIndex, productImages);
+                };
+            } else {
+                productCard.querySelector('.image-count-badge').style.display = 'none';
+                productCard.querySelector('.nav-prev').style.display = 'none';
+                productCard.querySelector('.nav-next').style.display = 'none';
+            }
+            
+            // Setup quantity controls
+            const qtyInput = productCard.querySelector('.qty-input');
+            const maxStock = Math.min(stock, 20);
+            qtyInput.max = maxStock;
+            
+            productCard.querySelector('.minus-btn').onclick = () => {
+                const value = parseInt(qtyInput.value);
+                if (value > 1) qtyInput.value = value - 1;
+            };
+            
+            productCard.querySelector('.plus-btn').onclick = () => {
+                const value = parseInt(qtyInput.value);
+                const max = parseInt(qtyInput.max);
+                if (value < max) qtyInput.value = value + 1;
+            };
+            
+            // Setup add to cart button
+            productCard.querySelector('.add-to-cart-btn').onclick = () => {
+                const quantity = parseInt(qtyInput.value);
+                if (quantity > 0 && stock > 0) {
+                    addToCart(product, quantity);
+                }
+            };
+            
+            // Setup WhatsApp order button
+            productCard.querySelector('.whatsapp-btn').onclick = () => {
+                const quantity = parseInt(qtyInput.value);
+                const message = `Hello SARM ENTERPRISES,\n\nI want to order:\n\n📓 Product: ${product.name}\n📦 Quantity: ${quantity}\n💰 Price: ₹${product.price}\n💵 Total: ₹${product.price * quantity}\n\nPlease confirm availability and delivery time.\n\nThank you!`;
+                const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+            };
+            
+            return productCard;
+        }
+
+        // Switch between categories
+        function switchCategory(category) {
+            // Update active tab
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.category === category);
+            });
+            
+            // Show selected category section
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.toggle('active', section.dataset.category === category);
+            });
+            
+            // Smooth scroll to products section
+            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        }
+
         // ==================== CART SYSTEM ====================
         let cart = JSON.parse(localStorage.getItem('sarmCart')) || [];
 
@@ -921,7 +1195,7 @@
                     price: product.price,
                     image: product.images ? product.images[0] : '',
                     quantity: quantity,
-                    category: product.category || 'General'
+                    category: product.categoryId || product.category || 'General'
                 });
             }
             
@@ -1070,272 +1344,6 @@
             }
         }
 
-        // ==================== PRODUCT CATEGORIES SYSTEM ====================
-        async function loadProductsByCategory() {
-            try {
-                const categoryTabs = document.getElementById('categoryTabs');
-                const categorySections = document.getElementById('categorySections');
-                const categoryTemplate = document.getElementById('categoryTemplate');
-                const productTemplate = document.getElementById('productTemplate');
-                
-                // Show loading
-                categorySections.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading products...</div>';
-                
-                // First, try to load categories from the 'categories' collection
-                let categories = [];
-                try {
-                    const categoriesSnapshot = await getDocs(collection(db, "categories"));
-                    if (!categoriesSnapshot.empty) {
-                        categoriesSnapshot.forEach((doc) => {
-                            const categoryData = doc.data();
-                            categories.push({
-                                id: doc.id,
-                                name: categoryData.name,
-                                description: categoryData.description || '',
-                                order: categoryData.order || 999
-                            });
-                        });
-                        // Sort categories by order
-                        categories.sort((a, b) => a.order - b.order);
-                    }
-                } catch (error) {
-                    console.log("No categories collection found, will extract from products");
-                }
-                
-                const querySnapshot = await getDocs(collection(db, "products"));
-                
-                if (querySnapshot.empty) {
-                    categorySections.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available at the moment.</p>';
-                    return;
-                }
-                
-                // Clear containers
-                categoryTabs.innerHTML = '';
-                categorySections.innerHTML = '';
-                
-                // Group products by category
-                const productsByCategory = {};
-                
-                querySnapshot.forEach((doc) => {
-                    const product = doc.data();
-                    product.id = doc.id;
-                    
-                    // Default category if not specified
-                    const category = product.category || 'Notebooks';
-                    
-                    if (!productsByCategory[category]) {
-                        productsByCategory[category] = [];
-                    }
-                    
-                    productsByCategory[category].push(product);
-                });
-                
-                // If we have predefined categories, use them
-                // Otherwise, extract categories from products
-                let categoriesToUse = [];
-                if (categories.length > 0) {
-                    categoriesToUse = categories.map(c => c.name);
-                } else {
-                    // Get category list from products and sort alphabetically
-                    categoriesToUse = Object.keys(productsByCategory).sort();
-                }
-                
-                // Create tabs for each category
-                categoriesToUse.forEach((category, index) => {
-                    // Skip if category has no products
-                    if (!productsByCategory[category] || productsByCategory[category].length === 0) {
-                        return;
-                    }
-                    
-                    // Create tab button
-                    const tabButton = document.createElement('button');
-                    tabButton.className = `category-tab ${index === 0 ? 'active' : ''}`;
-                    tabButton.textContent = category;
-                    tabButton.dataset.category = category;
-                    tabButton.onclick = () => switchCategory(category);
-                    categoryTabs.appendChild(tabButton);
-                    
-                    // Create category section
-                    const categoryClone = categoryTemplate.content.cloneNode(true);
-                    const categorySection = categoryClone.querySelector('.category-section');
-                    categorySection.dataset.category = category;
-                    categorySection.classList.toggle('active', index === 0);
-                    
-                    const categoryTitle = categoryClone.querySelector('.category-title');
-                    categoryTitle.textContent = category;
-                    
-                    const productsGrid = categoryClone.querySelector('.products-grid');
-                    
-                    // Add products to this category
-                    productsByCategory[category].forEach(product => {
-                        const productElement = createProductElement(product, productTemplate);
-                        productsGrid.appendChild(productElement);
-                    });
-                    
-                    categorySections.appendChild(categoryClone);
-                });
-                
-                // If no tabs were created (no products in any category)
-                if (categoryTabs.children.length === 0) {
-                    categorySections.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No products available in any category.</p>';
-                }
-                
-            } catch (error) {
-                console.error("Error loading products:", error);
-                document.getElementById('categorySections').innerHTML = 
-                    '<p style="color: #e74c3c; text-align: center; padding: 2rem;">Error loading products. Please refresh the page.</p>';
-            }
-        }
-
-        // Switch between categories
-        function switchCategory(category) {
-            // Update active tab
-            document.querySelectorAll('.category-tab').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.category === category);
-            });
-            
-            // Show selected category section
-            document.querySelectorAll('.category-section').forEach(section => {
-                section.classList.toggle('active', section.dataset.category === category);
-            });
-            
-            // Smooth scroll to products section
-            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Create product element
-        function createProductElement(product, template) {
-            const clone = template.content.cloneNode(true);
-            const productCard = clone.querySelector('.product-card');
-            productCard.dataset.productId = product.id;
-            
-            // Set product info
-            productCard.querySelector('.product-name').textContent = product.name;
-            productCard.querySelector('.price-amount').textContent = product.price;
-            productCard.querySelector('.stock-quantity').textContent = product.stock;
-            productCard.querySelector('.product-description').textContent = product.description || 'Premium quality product';
-            
-            // Set stock status
-            const stockElement = productCard.querySelector('.stock-text');
-            if (product.stock <= 0) {
-                stockElement.textContent = 'Out of Stock';
-                stockElement.style.color = '#e74c3c';
-                productCard.querySelector('.add-to-cart-btn').disabled = true;
-                productCard.querySelector('.add-to-cart-btn').innerHTML = '<i class="fas fa-times"></i> Out of Stock';
-                productCard.querySelector('.add-to-cart-btn').style.opacity = '0.6';
-            } else if (product.stock <= 10) {
-                stockElement.textContent = 'Low Stock';
-                stockElement.style.color = '#f39c12';
-            } else {
-                stockElement.textContent = 'In Stock';
-                stockElement.style.color = '#27ae60';
-            }
-            
-            // Handle product images
-            let productImages = [];
-            if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-                productImages = product.images;
-            } else if (product.imagePath) {
-                productImages = [product.imagePath];
-            } else {
-                productImages = ['https://via.placeholder.com/400x300?text=' + encodeURIComponent(product.name)];
-            }
-            
-            // Set first image
-            const mainImage = productCard.querySelector('.product-main-image');
-            mainImage.src = productImages[0];
-            mainImage.alt = product.name;
-            
-            // Handle image loading error
-            mainImage.onerror = function() {
-                this.src = 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(product.name);
-            };
-            
-            // Set image count badge
-            const imageCount = productCard.querySelector('.image-count');
-            imageCount.textContent = productImages.length;
-            
-            // Setup image gallery if multiple images
-            if (productImages.length > 1) {
-                const dotsContainer = productCard.querySelector('.product-image-dots');
-                dotsContainer.innerHTML = '';
-                
-                productImages.forEach((_, index) => {
-                    const dot = document.createElement('div');
-                    dot.className = `image-dot ${index === 0 ? 'active' : ''}`;
-                    dot.onclick = () => switchProductImage(productCard, index, productImages);
-                    dotsContainer.appendChild(dot);
-                });
-                
-                // Setup navigation
-                let currentIndex = 0;
-                
-                productCard.querySelector('.nav-prev').onclick = () => {
-                    currentIndex = (currentIndex - 1 + productImages.length) % productImages.length;
-                    switchProductImage(productCard, currentIndex, productImages);
-                };
-                
-                productCard.querySelector('.nav-next').onclick = () => {
-                    currentIndex = (currentIndex + 1) % productImages.length;
-                    switchProductImage(productCard, currentIndex, productImages);
-                };
-                
-                // Auto-rotate images every 5 seconds
-                const autoRotate = setInterval(() => {
-                    currentIndex = (currentIndex + 1) % productImages.length;
-                    switchProductImage(productCard, currentIndex, productImages);
-                }, 5000);
-                
-                // Stop auto-rotate on hover
-                const imageContainer = productCard.querySelector('.product-image-container');
-                imageContainer.addEventListener('mouseenter', () => clearInterval(autoRotate));
-                imageContainer.addEventListener('mouseleave', () => {
-                    setInterval(() => {
-                        currentIndex = (currentIndex + 1) % productImages.length;
-                        switchProductImage(productCard, currentIndex, productImages);
-                    }, 5000);
-                });
-            } else {
-                productCard.querySelector('.image-count-badge').style.display = 'none';
-                productCard.querySelector('.nav-prev').style.display = 'none';
-                productCard.querySelector('.nav-next').style.display = 'none';
-            }
-            
-            // Setup quantity controls
-            const qtyInput = productCard.querySelector('.qty-input');
-            const maxStock = Math.min(product.stock, 20);
-            qtyInput.max = maxStock;
-            
-            productCard.querySelector('.minus-btn').onclick = () => {
-                const value = parseInt(qtyInput.value);
-                if (value > 1) qtyInput.value = value - 1;
-            };
-            
-            productCard.querySelector('.plus-btn').onclick = () => {
-                const value = parseInt(qtyInput.value);
-                const max = parseInt(qtyInput.max);
-                if (value < max) qtyInput.value = value + 1;
-            };
-            
-            // Setup add to cart button
-            productCard.querySelector('.add-to-cart-btn').onclick = () => {
-                const quantity = parseInt(qtyInput.value);
-                if (quantity > 0 && product.stock > 0) {
-                    addToCart(product, quantity);
-                }
-            };
-            
-            // Setup WhatsApp order button
-            productCard.querySelector('.whatsapp-btn').onclick = () => {
-                const quantity = parseInt(qtyInput.value);
-                const message = `Hello SARM ENTERPRISES,\n\nI want to order:\n\n📓 Product: ${product.name}\n📦 Quantity: ${quantity}\n💰 Price: ₹${product.price}\n💵 Total: ₹${product.price * quantity}\n\nPlease confirm availability and delivery time.\n\nThank you!`;
-                const whatsappUrl = `https://wa.me/917006927825?text=${encodeURIComponent(message)}`;
-                window.open(whatsappUrl, '_blank');
-            };
-            
-            return productCard;
-        }
-
         // Switch product image
         function switchProductImage(productCard, index, images) {
             const mainImage = productCard.querySelector('.product-main-image');
@@ -1365,7 +1373,7 @@
             loadLogo();
             initQuotesCarousel();
             updateCartCount();
-            loadProductsByCategory();
+            loadProductsByCategory(); // Changed from loadProducts()
             
             // Close modal when clicking outside
             window.onclick = (e) => {
