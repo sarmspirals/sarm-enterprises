@@ -266,6 +266,132 @@
         </div>
     </nav>
 
+        <!-- Admin Dashboard Section -->
+    <section id="adminDashboard" class="admin-dashboard" style="display: none;">
+        <div class="container">
+            <h2>Admin Dashboard</h2>
+            
+            <!-- Category Management -->
+            <div class="admin-section">
+                <h3><i class="fas fa-folder"></i> Category Management</h3>
+                <div class="admin-form">
+                    <div class="form-group">
+                        <label for="categoryName">Category Name</label>
+                        <input type="text" id="categoryName" placeholder="e.g., Notebooks">
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryOrder">Display Order</label>
+                        <input type="number" id="categoryOrder" placeholder="1" value="999">
+                    </div>
+                    <button id="addCategoryBtn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add Category
+                    </button>
+                </div>
+                
+                <div class="admin-table">
+                    <h4>Existing Categories</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Order</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesList">
+                            <tr>
+                                <td colspan="3">No categories found. Add some!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Product Management -->
+            <div class="admin-section">
+                <h3><i class="fas fa-box"></i> Product Management</h3>
+                <div class="admin-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">Product Name *</label>
+                            <input type="text" id="productName" placeholder="e.g., Premium A4 Notebook" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="productPrice">Price (₹) *</label>
+                            <input type="number" id="productPrice" placeholder="250" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productStock">Stock Quantity</label>
+                            <input type="number" id="productStock" placeholder="50" value="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="categorySelect">Category *</label>
+                            <select id="categorySelect" required>
+                                <option value="">Select Category</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="imageFileName">Image Filename (from GitHub)</label>
+                        <input type="text" id="imageFileName" placeholder="e.g., notebook1.jpg">
+                        <small>Upload image to GitHub repository first, then enter filename here</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="productDescription">Description</label>
+                        <textarea id="productDescription" placeholder="Product description..."></textarea>
+                    </div>
+                    <button id="addProductBtn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                </div>
+                
+                <div class="admin-table">
+                    <h4>Existing Products</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsList">
+                            <tr>
+                                <td colspan="5">No products found. Add some!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Section -->
+    <section id="loginSection" class="login-section">
+        <div class="container">
+            <div class="login-box">
+                <h2><i class="fas fa-user-shield"></i> Admin Login</h2>
+                <p>Please login to access the admin dashboard</p>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="email" placeholder="admin@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
     <!-- Notification -->
     <div id="notification" class="notification"></div>
 
