@@ -9,6 +9,363 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        /* Cart Styles */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-sidebar.show {
+            right: 0;
+        }
+        
+        .cart-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .cart-item-image {
+            width: 70px;
+            height: 70px;
+            margin-right: 15px;
+        }
+        
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-details h4 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+        }
+        
+        .cart-item-details p {
+            margin: 0;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
+        .cart-item-quantity button {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .cart-item-quantity span {
+            margin: 0 10px;
+            font-weight: 500;
+        }
+        
+        .cart-item-price {
+            text-align: right;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .remove-item {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        
+        .cart-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            display: none;
+        }
+        
+        .cart-overlay.show {
+            display: block;
+        }
+        
+        .cart-icon {
+            position: relative;
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            color: #999;
+            padding: 40px 0;
+        }
+        
+        .btn-checkout {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .btn-clear-cart {
+            width: 100%;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        /* Quotes Carousel */
+        .quotes-carousel {
+            max-width: 800px;
+            margin: 30px auto;
+        }
+        
+        .quote-slide {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .quote-slide i {
+            color: var(--primary-color);
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .quote-slide p {
+            font-size: 18px;
+            font-style: italic;
+            color: #555;
+            margin: 0;
+        }
+        
+        /* Product Card Updates */
+        .product-card {
+            position: relative;
+        }
+        
+        .product-image-slider {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .product-image-slider img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .product-images-nav {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .image-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+        }
+        
+        .image-dot.active {
+            background: white;
+        }
+        
+        .btn-add-to-cart {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            font-size: 14px;
+        }
+        
+        .product-price-cart {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .product-price-cart .price {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        /* Category Filter */
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0;
+        }
+        
+        .category-btn {
+            padding: 8px 20px;
+            border: 2px solid var(--primary-color);
+            background: white;
+            color: var(--primary-color);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .category-filter {
+                gap: 5px;
+            }
+            
+            .category-btn {
+                padding: 6px 15px;
+                font-size: 14px;
+            }
+        }
+        
+        /* Image Modal */
+        .image-modal {
+            max-width: 900px;
+            width: 90%;
+            padding: 0;
+            background: transparent;
+        }
+        
+        .product-image-carousel {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .image-modal .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            z-index: 100;
+        }
+        
+        .view-images-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <!-- Cart Sidebar -->
@@ -81,18 +438,26 @@
             <div class="quotes-carousel">
                 <div class="swiper quotesSwiper">
                     <div class="swiper-wrapper" id="quotesContainer">
-                        <!-- Quotes will be loaded here -->
-                        <div class="swiper-slide">
-                            <div class="quote">
-                                <i class="fas fa-quote-left"></i>
-                                <p>Where Thoughts Find Their Perfect Home</p>
-                            </div>
+                        <!-- Quotes will be loaded dynamically -->
+                        <div class="swiper-slide quote-slide">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Where Thoughts Find Their Perfect Home</p>
                         </div>
-                        <div class="swiper-slide">
-                            <div class="quote">
-                                <i class="fas fa-quote-left"></i>
-                                <p>Quality Pages for Lifelong Memories</p>
-                            </div>
+                        <div class="swiper-slide quote-slide">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Quality Pages for Lifelong Memories</p>
+                        </div>
+                        <div class="swiper-slide quote-slide">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Writing transforms thoughts into treasures</p>
+                        </div>
+                        <div class="swiper-slide quote-slide">
+                            <i class="fas fa-quote-left"></i>
+                            <p>Your ideas are precious. We provide the perfect canvas to preserve them</p>
+                        </div>
+                        <div class="swiper-slide quote-slide">
+                            <i class="fas fa-quote-left"></i>
+                            <p>From thoughts to tangible memories</p>
                         </div>
                     </div>
                     <!-- Add Pagination -->
@@ -287,7 +652,11 @@
                 existingItem.quantity += 1;
             } else {
                 cart.push({
-                    ...product,
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    pages: product.pages,
+                    images: product.images,
                     quantity: 1
                 });
             }
@@ -337,11 +706,12 @@
             cart.forEach(item => {
                 const itemTotal = item.price * item.quantity;
                 total += itemTotal;
+                const firstImage = item.images && item.images.length > 0 ? item.images[0] : 'default.jpg';
                 
                 itemsHTML += `
                     <div class="cart-item">
                         <div class="cart-item-image">
-                            <img src="assets/products/${item.images[0]}" alt="${item.name}">
+                            <img src="assets/products/${firstImage}" alt="${item.name}">
                         </div>
                         <div class="cart-item-details">
                             <h4>${item.name}</h4>
@@ -416,7 +786,7 @@
             cart.forEach((item, index) => {
                 const itemTotal = item.price * item.quantity;
                 total += itemTotal;
-                message += `${index + 1}. ${item.name} - ${item.quantity} x ₹${item.price} = ₹${itemTotal}%0A`;
+                message += `${index + 1}. ${item.name} (${item.pages} pages) - ${item.quantity} x ₹${item.price} = ₹${itemTotal}%0A`;
             });
             
             message += `%0ATotal: ₹${total}%0A%0APlease confirm my order.`;
@@ -434,10 +804,178 @@
             }
         });
         
+        // View product images in modal
+        function viewProductImages(product) {
+            const modal = document.getElementById('imageModal');
+            const imagesContainer = document.getElementById('modalImages');
+            
+            imagesContainer.innerHTML = '';
+            
+            if (product.images && product.images.length > 0) {
+                product.images.forEach(image => {
+                    imagesContainer.innerHTML += `
+                        <div class="swiper-slide">
+                            <img src="assets/products/${image}" alt="${product.name}" style="width: 100%; height: 500px; object-fit: contain;">
+                        </div>
+                    `;
+                });
+                
+                // Initialize or update Swiper
+                if (window.productImageSwiper) {
+                    window.productImageSwiper.update();
+                } else {
+                    window.productImageSwiper = new Swiper('.productImageSwiper', {
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
+                        loop: true,
+                        spaceBetween: 10,
+                    });
+                }
+            } else {
+                imagesContainer.innerHTML = `
+                    <div class="swiper-slide">
+                        <img src="https://via.placeholder.com/600x400?text=No+Image+Available" 
+                             alt="${product.name}" 
+                             style="width: 100%; height: 500px; object-fit: contain;">
+                    </div>
+                `;
+            }
+            
+            modal.style.display = 'block';
+        }
+        
         // Initialize cart on page load
         document.addEventListener('DOMContentLoaded', () => {
             updateCartCount();
             renderCart();
+            
+            // Initialize quotes Swiper
+            new Swiper('.quotesSwiper', {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                loop: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+            });
+            
+            // Close image modal
+            document.querySelector('#imageModal .close-modal').addEventListener('click', () => {
+                document.getElementById('imageModal').style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target.id === 'imageModal') {
+                    document.getElementById('imageModal').style.display = 'none';
+                }
+            });
+        });
+        
+        // Function to render product with multi-image support
+        function renderProduct(product) {
+            const images = product.images || [];
+            const firstImage = images.length > 0 ? images[0] : 'default.jpg';
+            
+            return `
+                <div class="product-card" data-category="${product.category || 'uncategorized'}">
+                    <div class="product-image-slider" id="slider-${product.id}">
+                        <img src="assets/products/${firstImage}" alt="${product.name}" 
+                             onerror="this.src='https://via.placeholder.com/300x300?text=Notebook'">
+                        
+                        ${images.length > 1 ? `
+                            <div class="product-images-nav" id="nav-${product.id}">
+                                ${images.map((_, index) => `
+                                    <div class="image-dot ${index === 0 ? 'active' : ''}" 
+                                         data-index="${index}"
+                                         onclick="changeProductImage('${product.id}', ${index}, ${JSON.stringify(images).replace(/"/g, '&quot;')})"></div>
+                                `).join('')}
+                            </div>
+                            <button class="view-images-btn" onclick="viewProductImages(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                                <i class="fas fa-images"></i> View All
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-header">
+                            <h3>${product.name}</h3>
+                            <p class="product-pages">${product.pages} Pages</p>
+                        </div>
+                        <p class="product-desc">${product.description || 'Premium quality notebook for all your writing needs.'}</p>
+                        
+                        ${product.features ? `
+                            <div class="product-features">
+                                ${product.features.split(',').map(feature => `
+                                    <span class="feature-tag">${feature.trim()}</span>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="product-price-cart">
+                            <div class="price">₹${product.price}</div>
+                            <button class="btn-primary btn-add-to-cart" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Function to change product image
+        function changeProductImage(productId, index, images) {
+            const slider = document.getElementById(`slider-${productId}`);
+            const img = slider.querySelector('img');
+            const dots = document.querySelectorAll(`#nav-${productId} .image-dot`);
+            
+            if (images && images[index]) {
+                img.src = `assets/products/${images[index]}`;
+                
+                // Update active dot
+                dots.forEach(dot => {
+                    dot.classList.remove('active');
+                });
+                dots[index].classList.add('active');
+            }
+        }
+        
+        // Filter products by category
+        function filterProducts(category) {
+            const products = document.querySelectorAll('.product-card');
+            const filterButtons = document.querySelectorAll('.category-btn');
+            
+            // Update active button
+            filterButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.category === category) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Filter products
+            products.forEach(product => {
+                if (category === 'all' || product.dataset.category === category) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+        
+        // Initialize category filter
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('categoryFilter').addEventListener('click', (e) => {
+                if (e.target.classList.contains('category-btn')) {
+                    filterProducts(e.target.dataset.category);
+                }
+            });
         });
     </script>
 </body>
