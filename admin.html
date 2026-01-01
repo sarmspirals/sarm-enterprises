@@ -753,39 +753,39 @@
 
     <!-- Main JavaScript -->
       <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { 
-            getFirestore, 
-            collection, 
-            getDocs, 
-            addDoc, 
-            updateDoc, 
-            deleteDoc, 
-            doc,
-            serverTimestamp 
-        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-        import { 
-            getAuth, 
-            signInWithEmailAndPassword,
-            signOut,
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+    // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-        // Your Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD6T2k0fE2R4gF7QY4V6q6Z4Qv0X1W2Y3Z4",
-            authDomain: "sarm-enterprises.firebaseapp.com",
-            projectId: "sarm-enterprises",
-            storageBucket: "sarm-enterprises.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdef1234567890"
-        };
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAZe6bywYSgnMFZsef1xgfPFQBkw4y7tco",
+  authDomain: "sarm-enterprises.firebaseapp.com",
+  projectId: "sarm-enterprises",
+  storageBucket: "sarm-enterprises.firebasestorage.app",
+  messagingSenderId: "790231205096",
+  appId: "1:790231205096:web:656c5fc47c6a675e1ef55d",
+  measurementId: "G-5M1ZM089KH"
+};
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app);
+const auth = getAuth(app);
+const storage = getStorage(app);
+
+// Make Firebase services available globally
+window.firebaseApp = app;
+window.firestore = db;
+window.firebaseAuth = auth;
+window.firebaseStorage = storage;
 
         // ==================== AUTHENTICATION SYSTEM ====================
         let currentUser = null;
