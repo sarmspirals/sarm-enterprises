@@ -42,13 +42,27 @@
                                placeholder="e.g., Spiral Notebook 200 Pages">
                     </div>
                     <div class="form-group">
-                        <label for="productPages"><i class="fas fa-file-alt"></i> Number of Pages</label>
-                        <input type="number" id="productPages" required 
-                               placeholder="e.g., 200">
+                        <label for="productCategory"><i class="fas fa-layer-group"></i> Category</label>
+                        <select id="productCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="spiral-notebooks">Spiral Notebooks</option>
+                            <option value="register-books">Register Books</option>
+                            <option value="project-books">Project Books</option>
+                            <option value="drawing-books">Drawing Books</option>
+                            <option value="premium-notebooks">Premium Notebooks</option>
+                            <option value="pocket-notebooks">Pocket Notebooks</option>
+                        </select>
+                        <input type="text" id="newCategory" placeholder="Or add new category" style="display: none; margin-top: 5px;">
+                        <button type="button" id="toggleCategory" class="btn-small">Add New Category</button>
                     </div>
                 </div>
                 
                 <div class="form-row">
+                    <div class="form-group">
+                        <label for="productPages"><i class="fas fa-file-alt"></i> Number of Pages</label>
+                        <input type="number" id="productPages" required 
+                               placeholder="e.g., 200">
+                    </div>
                     <div class="form-group">
                         <label for="productPrice"><i class="fas fa-rupee-sign"></i> Price (₹)</label>
                         <input type="number" id="productPrice" required 
@@ -61,20 +75,29 @@
                     </div>
                 </div>
                 
+                <!-- Multi-image URLs -->
                 <div class="form-group">
-                    <label for="productImage"><i class="fas fa-image"></i> Product Image</label>
-                    <div class="file-input-wrapper">
-                        <button type="button" class="btn-upload">
-                            <i class="fas fa-upload"></i> Choose Image
-                        </button>
-                        <input type="file" id="productImage" accept="image/*">
+                    <label><i class="fas fa-images"></i> Product Images (GitHub Repository)</label>
+                    <div class="images-input-container" id="imagesContainer">
+                        <div class="image-input-group">
+                            <input type="text" class="image-url" 
+                                   placeholder="Enter image filename (e.g., notebook1.jpg)" 
+                                   data-index="0">
+                            <button type="button" class="btn-remove-image" onclick="removeImageInput(this)">×</button>
+                        </div>
                     </div>
-                    <div id="imagePreviewContainer" class="image-preview-container">
-                        <img id="imagePreview" class="image-preview" src="" alt="Image Preview">
-                        <div id="imageInfo"></div>
-                    </div>
-                    <div id="uploadProgress" class="upload-progress" style="display: none;">
-                        <div id="uploadProgressBar" class="upload-progress-bar"></div>
+                    <small style="display: block; margin-top: 5px; color: #666;">
+                        Images should be uploaded to GitHub repository in 'assets/products' folder. 
+                        Enter only the filename (e.g., notebook1.jpg). Base URL: assets/products/
+                    </small>
+                    <button type="button" class="btn-add-image" onclick="addImageInput()">
+                        <i class="fas fa-plus"></i> Add Another Image
+                    </button>
+                    
+                    <div id="imagePreviewContainer" class="image-preview-container" style="margin-top: 15px;">
+                        <div class="image-previews" id="imagePreviews">
+                            <!-- Image previews will be shown here -->
+                        </div>
                     </div>
                 </div>
                 
@@ -82,6 +105,12 @@
                     <label for="productDescription"><i class="fas fa-align-left"></i> Description</label>
                     <textarea id="productDescription" rows="3" 
                               placeholder="Product description..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productFeatures"><i class="fas fa-star"></i> Features (comma separated)</label>
+                    <input type="text" id="productFeatures" 
+                           placeholder="e.g., Premium Paper, Spiral Binding, Durable Cover">
                 </div>
                 
                 <button type="submit" class="btn-primary" id="submitBtn">
@@ -94,49 +123,56 @@
             </form>
         </div>
 
+        <!-- Category Management -->
+        <div class="form-card">
+            <h3><i class="fas fa-layer-group"></i> Category Management</h3>
+            <div class="form-group">
+                <label for="manageCategories">Manage Product Categories</label>
+                <div class="categories-list" id="categoriesList">
+                    <!-- Categories will be loaded here -->
+                </div>
+                <div style="margin-top: 10px;">
+                    <input type="text" id="newCategoryInput" placeholder="Enter new category name">
+                    <button type="button" class="btn-primary" id="addCategoryBtn" style="margin-top: 5px;">
+                        <i class="fas fa-plus"></i> Add Category
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Logo Management -->
         <div class="form-card">
             <h3><i class="fas fa-image"></i> Logo Management</h3>
             <div class="form-group">
-                <label for="logoUpload">Upload New Logo</label>
-                <div class="file-input-wrapper">
-                    <button type="button" class="btn-upload">
-                        <i class="fas fa-upload"></i> Choose Logo
-                    </button>
-                    <input type="file" id="logoUpload" accept="image/*">
+                <label for="logoUpload">Upload New Logo to GitHub</label>
+                <div class="logo-upload-instructions">
+                    <p>Upload logo to GitHub repository in 'assets' folder as 'logo.png'</p>
+                    <p>Logo URL should be: <code>assets/logo.png</code></p>
                 </div>
                 <div id="logoPreviewContainer" class="image-preview-container">
                     <img id="logoPreview" class="image-preview" src="" alt="Logo Preview">
                     <div id="logoInfo"></div>
                 </div>
-                <div id="logoUploadProgress" class="upload-progress" style="display: none;">
-                    <div id="logoUploadProgressBar" class="upload-progress-bar"></div>
-                </div>
-                <button type="button" class="btn-primary" id="uploadLogoBtn" style="margin-top: 10px;">
-                    <i class="fas fa-upload"></i> Upload Logo
-                </button>
-            </div>
-        </div>
-
-        <!-- Image Gallery -->
-        <div class="form-card">
-            <h3><i class="fas fa-images"></i> Image Gallery</h3>
-            <div id="imageGallery" class="image-gallery">
-                <!-- Images will be loaded here -->
             </div>
         </div>
 
         <!-- Products List -->
         <div class="form-card">
             <h3><i class="fas fa-list"></i> Current Products</h3>
-            <div id="productsList" class="products-grid">
+            <div class="products-filter">
+                <select id="filterCategory">
+                    <option value="all">All Categories</option>
+                </select>
+                <input type="text" id="searchProduct" placeholder="Search products...">
+            </div>
+            <div id="productsList" class="admin-products-grid">
                 <!-- Products will be loaded here -->
             </div>
         </div>
 
         <!-- Quotes Management -->
         <div class="form-card">
-            <h3><i class="fas fa-quote-left"></i> Business Quotes</h3>
+            <h3><i class="fas fa-quote-left"></i> Moving Quotes Management</h3>
             <div class="form-group">
                 <label>Add New Quote</label>
                 <input type="text" id="newQuote" placeholder="Enter a motivational quote...">
@@ -144,7 +180,7 @@
                     <i class="fas fa-plus"></i> Add Quote
                 </button>
             </div>
-            <div id="quotesList">
+            <div id="quotesList" class="quotes-list">
                 <!-- Quotes will be displayed here -->
             </div>
         </div>
@@ -164,78 +200,87 @@
                 <p>No orders yet</p>
             </div>
         </div>
+
+        <!-- Customer Feedback Manager -->
+        <div class="form-card">
+            <h3><i class="fas fa-comments"></i> Customer Feedback Manager</h3>
+            <p>Review and manage testimonials submitted by customers.</p>
+            
+            <div class="admin-actions" style="margin-bottom: 1.5rem;">
+                <button class="btn-primary" id="refreshPendingBtn">
+                    <i class="fas fa-sync-alt"></i> Refresh Pending List
+                </button>
+                <button class="btn-secondary" id="viewAllBtn">
+                    <i class="fas fa-list"></i> View All
+                </button>
+            </div>
+            
+            <h4>Pending Review</h4>
+            <div id="pendingFeedbackList">
+                <!-- Pending feedback cards will be loaded here -->
+                <p><i>Click "Refresh Pending List" to load submissions.</i></p>
+            </div>
+        </div>
+
+        <!-- FAQ Management -->
+        <div class="form-card">
+            <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
+            <p>Manage Frequently Asked Questions shown on the FAQ page.</p>
+            
+            <!-- Add New FAQ Form -->
+            <h4>Add New FAQ</h4>
+            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                <div class="form-group">
+                    <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
+                    <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
+                </div>
+                <div class="form-group">
+                    <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
+                    <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
+                    <input type="number" id="faqOrder" placeholder="1" value="1">
+                    <small>Lower numbers appear first on the FAQ page.</small>
+                </div>
+                <button class="btn-primary" id="addFaqBtn">
+                    <i class="fas fa-plus-circle"></i> Add FAQ
+                </button>
+            </div>
+            
+            <!-- Existing FAQs List -->
+            <h4>Existing FAQs</h4>
+            <button class="btn-secondary" id="refreshFaqsBtn" style="margin-bottom: 1rem;">
+                <i class="fas fa-sync-alt"></i> Refresh List
+            </button>
+            <div id="faqsListAdmin">
+                <!-- FAQs will be loaded here -->
+                <p style="text-align: center; padding: 2rem; color: #999;">
+                    Click "Refresh List" to load existing FAQs.
+                </p>
+            </div>
+        </div>
+
+        <!-- GitHub Repository Info -->
+        <div class="form-card">
+            <h3><i class="fab fa-github"></i> GitHub Repository Setup</h3>
+            <div class="github-info">
+                <p><strong>Image Storage Instructions:</strong></p>
+                <ol>
+                    <li>Upload all product images to your GitHub repository</li>
+                    <li>Folder structure: <code>assets/products/</code></li>
+                    <li>Supported formats: JPG, PNG, WebP</li>
+                    <li>Recommended size: 600x600 pixels</li>
+                    <li>Use descriptive filenames: <code>spiral-notebook-200pages.jpg</code></li>
+                </ol>
+                <p><strong>Example image URLs:</strong></p>
+                <code>assets/products/notebook1.jpg</code><br>
+                <code>assets/products/notebook2.jpg</code><br>
+                <code>assets/products/notebook3.jpg</code>
+            </div>
+        </div>
     </div>
 
-    <!-- Add this new card to your admin.html -->
-<!-- Replace the entire "Customer Feedback Manager" card with this: -->
-<div class="form-card">
-    <h3><i class="fas fa-comments"></i> Customer Feedback Manager</h3>
-    <p>Review and manage testimonials submitted by customers.</p>
-    
-    <div class="admin-actions" style="margin-bottom: 1.5rem;">
-        <button class="btn-primary" id="refreshPendingBtn">
-            <i class="fas fa-sync-alt"></i> Refresh Pending List
-        </button>
-        <button class="btn-secondary" id="viewAllBtn">
-            <i class="fas fa-list"></i> View All
-        </button>
-    </div>
-    
-    <h4>Pending Review</h4>
-    <div id="pendingFeedbackList">
-        <!-- Pending feedback cards will be loaded here -->
-        <p><i>Click "Refresh Pending List" to load submissions.</i></p>
-    </div>
-</div>
-    
-    <h4>Pending Review</h4>
-    <div id="pendingFeedbackList">
-        <!-- Pending feedback cards will be loaded here -->
-        <p><i>Click "Refresh Pending List" to load submissions.</i></p>
-    </div>
-</div>
-
-    <!-- ============================================ -->
-<!-- FAQ MANAGEMENT -->
-<!-- ============================================ -->
-<!-- Replace the entire "FAQ Management" card with this: -->
-<div class="form-card">
-    <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
-    <p>Manage Frequently Asked Questions shown on the FAQ page.</p>
-    
-    <!-- Add New FAQ Form -->
-    <h4>Add New FAQ</h4>
-    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
-        <div class="form-group">
-            <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
-            <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
-        </div>
-        <div class="form-group">
-            <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
-            <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
-        </div>
-        <div class="form-group">
-            <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
-            <input type="number" id="faqOrder" placeholder="1" value="1">
-            <small>Lower numbers appear first on the FAQ page.</small>
-        </div>
-        <button class="btn-primary" id="addFaqBtn">
-            <i class="fas fa-plus-circle"></i> Add FAQ
-        </button>
-    </div>
-    
-    <!-- Existing FAQs List -->
-    <h4>Existing FAQs</h4>
-    <button class="btn-secondary" id="refreshFaqsBtn" style="margin-bottom: 1rem;">
-        <i class="fas fa-sync-alt"></i> Refresh List
-    </button>
-    <div id="faqsListAdmin">
-        <!-- FAQs will be loaded here -->
-        <p style="text-align: center; padding: 2rem; color: #999;">
-            Click "Refresh List" to load existing FAQs.
-        </p>
-    </div>
-</div>
     <!-- Success Message -->
     <div id="successMessage" style="display: none;" class="modal">
         <div class="modal-content" style="text-align: center;">
@@ -251,5 +296,117 @@
     <!-- Firebase SDK -->
     <script type="module" src="admin.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Multi-image management
+        let imageInputs = 1;
+        
+        function addImageInput() {
+            const container = document.getElementById('imagesContainer');
+            const newInput = document.createElement('div');
+            newInput.className = 'image-input-group';
+            newInput.innerHTML = `
+                <input type="text" class="image-url" 
+                       placeholder="Enter image filename (e.g., notebook${imageInputs + 1}.jpg)" 
+                       data-index="${imageInputs}"
+                       oninput="previewImage(this)">
+                <button type="button" class="btn-remove-image" onclick="removeImageInput(this)">×</button>
+            `;
+            container.appendChild(newInput);
+            imageInputs++;
+        }
+        
+        function removeImageInput(button) {
+            const container = document.getElementById('imagesContainer');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+        
+        function previewImage(input) {
+            const filename = input.value.trim();
+            const previewsContainer = document.getElementById('imagePreviews');
+            
+            if (filename) {
+                const imageUrl = `assets/products/${filename}`;
+                const index = input.dataset.index;
+                
+                let preview = previewsContainer.querySelector(`[data-index="${index}"]`);
+                
+                if (!preview) {
+                    preview = document.createElement('div');
+                    preview.className = 'image-preview-item';
+                    preview.dataset.index = index;
+                    preview.innerHTML = `
+                        <img src="${imageUrl}" alt="Preview" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
+                        <span>${filename}</span>
+                    `;
+                    previewsContainer.appendChild(preview);
+                } else {
+                    const img = preview.querySelector('img');
+                    img.src = imageUrl;
+                    preview.querySelector('span').textContent = filename;
+                }
+            }
+        }
+        
+        // Category toggle
+        document.getElementById('toggleCategory').addEventListener('click', function() {
+            const select = document.getElementById('productCategory');
+            const newCategory = document.getElementById('newCategory');
+            
+            if (select.style.display !== 'none') {
+                select.style.display = 'none';
+                newCategory.style.display = 'block';
+                this.textContent = 'Use Existing Category';
+            } else {
+                select.style.display = 'block';
+                newCategory.style.display = 'none';
+                this.textContent = 'Add New Category';
+            }
+        });
+        
+        // Get image URLs from form
+        function getImageUrls() {
+            const inputs = document.querySelectorAll('.image-url');
+            const urls = [];
+            
+            inputs.forEach(input => {
+                const value = input.value.trim();
+                if (value) {
+                    urls.push(value); // Store only filename
+                }
+            });
+            
+            return urls;
+        }
+        
+        // Set image URLs in form for editing
+        function setImageUrls(urls) {
+            const container = document.getElementById('imagesContainer');
+            container.innerHTML = '';
+            
+            urls.forEach((url, index) => {
+                const div = document.createElement('div');
+                div.className = 'image-input-group';
+                div.innerHTML = `
+                    <input type="text" class="image-url" 
+                           value="${url}" 
+                           data-index="${index}"
+                           oninput="previewImage(this)">
+                    <button type="button" class="btn-remove-image" onclick="removeImageInput(this)">×</button>
+                `;
+                container.appendChild(div);
+                previewImage(div.querySelector('.image-url'));
+            });
+            
+            imageInputs = urls.length;
+        }
+        
+        // Initialize with one image input
+        document.addEventListener('DOMContentLoaded', () => {
+            addImageInput();
+        });
+    </script>
 </body>
 </html>
