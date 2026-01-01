@@ -5,58 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SARM ENTERPRISES - Premium Notebooks</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-    <nav class="navbar">
-    <div class="nav-container">
-        <div class="nav-brand">
-            <img id="logo" src="" alt="SARM ENTERPRISES Logo" class="logo-img">
-            <div>
-                <h1>SARM ENTERPRISES</h1>
-                <p class="tagline">Quality Pages for Quality Thoughts</p>
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Your Cart</h3>
+            <button class="close-cart">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p class="empty-cart">Your cart is empty</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">₹0</span>
             </div>
+            <button class="btn-primary btn-checkout" id="checkoutBtn" disabled>
+                <i class="fas fa-check"></i> Checkout
+            </button>
+            <button class="btn-secondary btn-clear-cart" id="clearCartBtn">
+                <i class="fas fa-trash"></i> Clear Cart
+            </button>
         </div>
-        <div class="nav-menu">
-            <a href="#home"><i class="fas fa-home"></i> Home</a>
-            <a href="#products"><i class="fas fa-book"></i> Products</a>
-            <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
-            <a href="faqs.html"><i class="fas fa-question-circle"></i> FAQs</a>
-            <!-- Admin link hidden by default, shown only to logged in users -->
-            <a href="admin.html" id="adminLink" style="display: none;">
-                <i class="fas fa-user-shield"></i> Admin
-            </a>
+    </div>
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <img id="logo" src="" alt="SARM ENTERPRISES Logo" class="logo-img">
+                <div>
+                    <h1>SARM ENTERPRISES</h1>
+                    <p class="tagline">Quality Pages for Quality Thoughts</p>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <a href="#home"><i class="fas fa-home"></i> Home</a>
+                <a href="#products"><i class="fas fa-book"></i> Products</a>
+                <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
+                <a href="faqs.html"><i class="fas fa-question-circle"></i> FAQs</a>
+                <!-- Admin link hidden by default, shown only to logged in users -->
+                <a href="admin.html" id="adminLink" style="display: none;">
+                    <i class="fas fa-user-shield"></i> Admin
+                </a>
+                <a href="#" id="cartIcon" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </a>
+            </div>
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
-        <button class="menu-toggle">
-            <i class="fas fa-bars"></i>
+    </nav>
+
+    <!-- Add login button only for admin access -->
+    <div id="adminAccess" style="display: none; text-align: center; padding: 10px;">
+        <button onclick="window.location.href='admin.html'" class="btn-primary">
+            <i class="fas fa-user-shield"></i> Admin Panel
         </button>
     </div>
-</nav>
-
-<!-- Add login button only for admin access -->
-<div id="adminAccess" style="display: none; text-align: center; padding: 10px;">
-    <button onclick="window.location.href='admin.html'" class="btn-primary">
-        <i class="fas fa-user-shield"></i> Admin Panel
-    </button>
-</div>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
             <h2>Capture Your Thoughts with Our Premium Notebooks</h2>
             <p>Experience the perfect blend of quality paper, durable binding, and elegant design. Your ideas deserve the best.</p>
-            <div class="hero-quotes">
-                <div class="quote">
-                    <i class="fas fa-quote-left"></i>
-                    <p>Where Thoughts Find Their Perfect Home</p>
-                </div>
-                <div class="quote">
-                    <i class="fas fa-quote-left"></i>
-                    <p>Quality Pages for Lifelong Memories</p>
+            
+            <!-- Moving Quotes Carousel -->
+            <div class="quotes-carousel">
+                <div class="swiper quotesSwiper">
+                    <div class="swiper-wrapper" id="quotesContainer">
+                        <!-- Quotes will be loaded here -->
+                        <div class="swiper-slide">
+                            <div class="quote">
+                                <i class="fas fa-quote-left"></i>
+                                <p>Where Thoughts Find Their Perfect Home</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="quote">
+                                <i class="fas fa-quote-left"></i>
+                                <p>Quality Pages for Lifelong Memories</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
                 </div>
             </div>
+            
             <a href="#products" class="btn-primary">Shop Now</a>
         </div>
     </section>
@@ -66,6 +109,12 @@
         <div class="container">
             <h2 class="section-title">Our Premium Notebook Collection</h2>
             <p class="section-subtitle">Choose from our wide range of spiral notebooks for all your writing needs</p>
+            
+            <!-- Category Filter -->
+            <div class="category-filter" id="categoryFilter">
+                <button class="category-btn active" data-category="all">All Products</button>
+                <!-- Categories will be loaded dynamically -->
+            </div>
             
             <div class="products-grid" id="productsContainer">
                 <!-- Products will be loaded from Firestore -->
@@ -182,6 +231,22 @@
         </div>
     </footer>
 
+    <!-- Product Image Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-content image-modal">
+            <span class="close-modal">&times;</span>
+            <div class="product-image-carousel">
+                <div class="swiper productImageSwiper">
+                    <div class="swiper-wrapper" id="modalImages">
+                        <!-- Images will be loaded here -->
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Login Modal -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
@@ -203,6 +268,177 @@
     </div>
 
     <!-- Firebase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script type="module" src="app.js"></script>
+    
+    <script>
+        // Cart functionality
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+        
+        function addToCart(product) {
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    ...product,
+                    quantity: 1
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCart();
+            showNotification('Product added to cart!');
+        }
+        
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCart();
+        }
+        
+        function updateQuantity(productId, newQuantity) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                if (newQuantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    item.quantity = newQuantity;
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartCount();
+                    renderCart();
+                }
+            }
+        }
+        
+        function renderCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
+                cartTotal.textContent = '₹0';
+                checkoutBtn.disabled = true;
+                return;
+            }
+            
+            let total = 0;
+            let itemsHTML = '';
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                itemsHTML += `
+                    <div class="cart-item">
+                        <div class="cart-item-image">
+                            <img src="assets/products/${item.images[0]}" alt="${item.name}">
+                        </div>
+                        <div class="cart-item-details">
+                            <h4>${item.name}</h4>
+                            <p>${item.pages} pages</p>
+                            <div class="cart-item-quantity">
+                                <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                            </div>
+                        </div>
+                        <div class="cart-item-price">
+                            <span>₹${itemTotal}</span>
+                            <button class="remove-item" onclick="removeFromCart('${item.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartItems.innerHTML = itemsHTML;
+            cartTotal.textContent = `₹${total}`;
+            checkoutBtn.disabled = false;
+        }
+        
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+        
+        // Cart sidebar toggle
+        document.getElementById('cartIcon').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('cartSidebar').classList.add('show');
+            document.getElementById('cartOverlay').classList.add('show');
+        });
+        
+        document.querySelector('.close-cart').addEventListener('click', () => {
+            document.getElementById('cartSidebar').classList.remove('show');
+            document.getElementById('cartOverlay').classList.remove('show');
+        });
+        
+        document.getElementById('cartOverlay').addEventListener('click', () => {
+            document.getElementById('cartSidebar').classList.remove('show');
+            document.getElementById('cartOverlay').classList.remove('show');
+        });
+        
+        // Checkout functionality
+        document.getElementById('checkoutBtn').addEventListener('click', () => {
+            if (cart.length === 0) return;
+            
+            let message = "Hello SARM ENTERPRISES,%0AI would like to order:%0A%0A";
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                message += `${index + 1}. ${item.name} - ${item.quantity} x ₹${item.price} = ₹${itemTotal}%0A`;
+            });
+            
+            message += `%0ATotal: ₹${total}%0A%0APlease confirm my order.`;
+            
+            window.open(`https://wa.me/917006927825?text=${message}`, '_blank');
+        });
+        
+        // Clear cart
+        document.getElementById('clearCartBtn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear your cart?')) {
+                cart = [];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                renderCart();
+            }
+        });
+        
+        // Initialize cart on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartCount();
+            renderCart();
+        });
+    </script>
 </body>
 </html>
