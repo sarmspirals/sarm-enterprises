@@ -3,854 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SARM ENTERPRISES - Admin Panel</title>
+    <title>Admin Dashboard - SARM ENTERPRISES</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-        
-        .login-container {
-            padding: 40px;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        
-        .admin-container {
-            padding: 40px;
-            display: none;
-        }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 2rem;
-        }
-        
-        .tagline {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1rem;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 14px 30px;
-            border-radius: 8px;
-            font-family: 'Poppins', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .btn-secondary {
-            background: #6c757d;
-        }
-        
-        .btn-danger {
-            background: #e74c3c;
-        }
-        
-        .dashboard-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
-        }
-        
-        .card i {
-            font-size: 2.5rem;
-            color: #667eea;
-            margin-bottom: 15px;
-        }
-        
-        .card h3 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .card p {
-            color: #666;
-            margin-bottom: 20px;
-        }
-        
-        .table-container {
-            overflow-x: auto;
-            margin: 30px 0;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        th {
-            background: #f8f9fa;
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            color: #495057;
-            border-bottom: 2px solid #dee2e6;
-        }
-        
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #dee2e6;
-            color: #666;
-        }
-        
-        tr:hover {
-            background: #f8f9fa;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-        }
-        
-        .logo-preview {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            padding: 10px;
-            margin: 10px 0;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #27ae60;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            display: none;
-            z-index: 1001;
-        }
-        
-        .error {
-            background: #e74c3c;
-        }
-        
-        .tabs {
-            display: flex;
-            border-bottom: 2px solid #dee2e6;
-            margin-bottom: 30px;
-        }
-        
-        .tab {
-            padding: 15px 30px;
-            cursor: pointer;
-            font-weight: 500;
-            color: #666;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-        }
-        
-        .tab.active {
-            color: #667eea;
-            border-bottom: 2px solid #667eea;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                margin: 20px;
-                border-radius: 15px;
-            }
-            
-            .login-container, .admin-container {
-                padding: 30px 20px;
-            }
-            
-            .dashboard-cards {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
 <body>
-    <!-- Notification -->
-    <div id="notification" class="notification"></div>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1><i class="fas fa-user-shield"></i> Admin Dashboard</h1>
+                <p class="tagline">SARM ENTERPRISES Management</p>
+            </div>
+            <button id="logoutBtn" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
 
-    <!-- Login Container -->
-    <div class="container" id="loginContainer">
-        <div class="login-container">
-            <h1><i class="fas fa-user-shield"></i> Admin Login</h1>
-            <p class="tagline">SARM ENTERPRISES - Admin Panel</p>
-            
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="adminEmail"><i class="fas fa-envelope"></i> Email Address</label>
-                    <input type="email" id="adminEmail" placeholder="admin@example.com" required autocomplete="email">
+    <div class="admin-container">
+        <div class="admin-header">
+            <h2>Welcome to Admin Panel</h2>
+            <div class="admin-stats">
+                <span id="totalProducts">0 Products</span>
+                <span id="totalOrders">0 Orders</span>
+                <span id="lowStock">0 Low Stock</span>
+            </div>
+        </div>
+
+        <!-- Add/Edit Product Form -->
+        <div class="form-card">
+            <h3><i class="fas fa-plus-circle"></i> Add/Edit Product</h3>
+            <form id="productForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName"><i class="fas fa-tag"></i> Product Name</label>
+                        <input type="text" id="productName" required 
+                               placeholder="e.g., Spiral Notebook 200 Pages">
+                    </div>
+                    <div class="form-group">
+                        <label for="productPages"><i class="fas fa-file-alt"></i> Number of Pages</label>
+                        <input type="number" id="productPages" required 
+                               placeholder="e.g., 200">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productPrice"><i class="fas fa-rupee-sign"></i> Price (₹)</label>
+                        <input type="number" id="productPrice" required 
+                               placeholder="e.g., 69" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="productStock"><i class="fas fa-box"></i> Stock Quantity</label>
+                        <input type="number" id="productStock" required 
+                               placeholder="e.g., 50">
+                    </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="adminPassword"><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="adminPassword" placeholder="••••••••" required autocomplete="current-password">
+                    <label for="productImage"><i class="fas fa-image"></i> Product Image</label>
+                    <div class="file-input-wrapper">
+                        <button type="button" class="btn-upload">
+                            <i class="fas fa-upload"></i> Choose Image
+                        </button>
+                        <input type="file" id="productImage" accept="image/*">
+                    </div>
+                    <div id="imagePreviewContainer" class="image-preview-container">
+                        <img id="imagePreview" class="image-preview" src="" alt="Image Preview">
+                        <div id="imageInfo"></div>
+                    </div>
+                    <div id="uploadProgress" class="upload-progress" style="display: none;">
+                        <div id="uploadProgressBar" class="upload-progress-bar"></div>
+                    </div>
                 </div>
                 
-                <button type="submit" class="btn">Login to Dashboard</button>
+                <div class="form-group">
+                    <label for="productDescription"><i class="fas fa-align-left"></i> Description</label>
+                    <textarea id="productDescription" rows="3" 
+                              placeholder="Product description..."></textarea>
+                </div>
+                
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    <i class="fas fa-save"></i> Add Product
+                </button>
+                <button type="button" class="btn-secondary" id="cancelEdit" style="display: none;">
+                    <i class="fas fa-times"></i> Cancel Edit
+                </button>
+                <input type="hidden" id="editProductId">
             </form>
         </div>
-    </div>
 
-    <!-- Admin Dashboard Container -->
-    <div class="container" id="adminContainer" style="display: none;">
-        <div class="admin-container">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                <div>
-                    <h1><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
-                    <p class="tagline">Welcome back, <span id="adminName">Admin</span></p>
+        <!-- Logo Management -->
+        <div class="form-card">
+            <h3><i class="fas fa-image"></i> Logo Management</h3>
+            <div class="form-group">
+                <label for="logoUpload">Upload New Logo</label>
+                <div class="file-input-wrapper">
+                    <button type="button" class="btn-upload">
+                        <i class="fas fa-upload"></i> Choose Logo
+                    </button>
+                    <input type="file" id="logoUpload" accept="image/*">
                 </div>
-                <button onclick="logout()" class="btn btn-danger" style="width: auto;">
-                    <i class="fas fa-sign-out-alt"></i> Logout
+                <div id="logoPreviewContainer" class="image-preview-container">
+                    <img id="logoPreview" class="image-preview" src="" alt="Logo Preview">
+                    <div id="logoInfo"></div>
+                </div>
+                <div id="logoUploadProgress" class="upload-progress" style="display: none;">
+                    <div id="logoUploadProgressBar" class="upload-progress-bar"></div>
+                </div>
+                <button type="button" class="btn-primary" id="uploadLogoBtn" style="margin-top: 10px;">
+                    <i class="fas fa-upload"></i> Upload Logo
                 </button>
             </div>
-            
-            <!-- Tabs -->
-            <div class="tabs">
-                <div class="tab active" onclick="switchTab('products')">Products</div>
-                <div class="tab" onclick="switchTab('categories')">Categories</div>
-                <div class="tab" onclick="switchTab('logo')">Logo</div>
-                <div class="tab" onclick="switchTab('orders')">Orders</div>
+        </div>
+
+        <!-- Image Gallery -->
+        <div class="form-card">
+            <h3><i class="fas fa-images"></i> Image Gallery</h3>
+            <div id="imageGallery" class="image-gallery">
+                <!-- Images will be loaded here -->
             </div>
-            
-            <!-- Products Tab -->
-            <div id="productsTab" class="tab-content active">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2><i class="fas fa-box"></i> Product Management</h2>
-                    <button onclick="showAddProductModal()" class="btn" style="width: auto;">
-                        <i class="fas fa-plus"></i> Add Product
-                    </button>
-                </div>
-                
-                <div class="table-container">
-                    <table id="productsTable">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Price</th>
-                                <th>Category</th>
-                                <th>Stock</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productsTableBody">
-                            <!-- Products will be loaded here -->
-                        </tbody>
-                    </table>
-                </div>
+        </div>
+
+        <!-- Products List -->
+        <div class="form-card">
+            <h3><i class="fas fa-list"></i> Current Products</h3>
+            <div id="productsList" class="products-grid">
+                <!-- Products will be loaded here -->
             </div>
-            
-            <!-- Categories Tab -->
-            <div id="categoriesTab" class="tab-content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2><i class="fas fa-tags"></i> Category Management</h2>
-                    <button onclick="showAddCategoryModal()" class="btn" style="width: auto;">
-                        <i class="fas fa-plus"></i> Add Category
-                    </button>
-                </div>
-                
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Order</th>
-                                <th>Products</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="categoriesTableBody">
-                            <!-- Categories will be loaded here -->
-                        </tbody>
-                    </table>
-                </div>
+        </div>
+
+        <!-- Quotes Management -->
+        <div class="form-card">
+            <h3><i class="fas fa-quote-left"></i> Business Quotes</h3>
+            <div class="form-group">
+                <label>Add New Quote</label>
+                <input type="text" id="newQuote" placeholder="Enter a motivational quote...">
+                <button type="button" class="btn-primary" id="addQuoteBtn">
+                    <i class="fas fa-plus"></i> Add Quote
+                </button>
             </div>
-            
-            <!-- Logo Tab -->
-            <div id="logoTab" class="tab-content">
-                <h2><i class="fas fa-image"></i> Logo Management</h2>
-                <p style="margin-bottom: 20px;">Update the website logo that appears in the header.</p>
-                
-                <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 15px; border: 2px dashed #ddd;">
-                    <img id="logoPreview" class="logo-preview" src="" alt="Logo Preview">
-                    <p style="margin: 20px 0; color: #666;">Current Logo</p>
-                    
-                    <input type="file" id="logoFile" accept="image/*" style="margin: 20px 0;" onchange="previewLogo()">
-                    <br>
-                    <button onclick="uploadLogo()" class="btn" style="width: auto;">
-                        <i class="fas fa-upload"></i> Upload New Logo
-                    </button>
-                </div>
+            <div id="quotesList">
+                <!-- Quotes will be displayed here -->
             </div>
-            
-            <!-- Orders Tab -->
-            <div id="ordersTab" class="tab-content">
-                <h2><i class="fas fa-shopping-cart"></i> Order Management</h2>
-                <p style="margin-bottom: 20px;">View and manage customer orders.</p>
-                
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Customer</th>
-                                <th>Items</th>
-                                <th>Total</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ordersTableBody">
-                            <!-- Orders will be loaded here -->
-                        </tbody>
-                    </table>
-                </div>
+        </div>
+
+        <!-- Stock Summary -->
+        <div class="form-card">
+            <h3><i class="fas fa-chart-bar"></i> Stock Summary</h3>
+            <div class="chart-container">
+                <canvas id="stockChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Orders Management -->
+        <div class="form-card">
+            <h3><i class="fas fa-shopping-cart"></i> Recent Orders</h3>
+            <div id="ordersList">
+                <p>No orders yet</p>
             </div>
         </div>
     </div>
 
-    <!-- Add Product Modal -->
-    <div id="addProductModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('addProductModal')">&times;</span>
-            <h2><i class="fas fa-plus-circle"></i> Add New Product</h2>
-            <form id="addProductForm">
-                <div class="form-group">
-                    <label for="productName">Product Name</label>
-                    <input type="text" id="productName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="productPrice">Price (₹)</label>
-                    <input type="number" id="productPrice" step="0.01" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="productCategory">Category</label>
-                    <select id="productCategory" required>
-                        <!-- Categories will be loaded here -->
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="productStock">Stock Quantity</label>
-                    <input type="number" id="productStock" value="10" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="productDescription">Description</label>
-                    <textarea id="productDescription" rows="3"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="productImages">Image URLs (one per line)</label>
-                    <textarea id="productImages" rows="3" placeholder="https://example.com/image1.jpg"></textarea>
-                    <small style="color: #666;">Enter one image URL per line. First image will be the main display image.</small>
-                </div>
-                
-                <button type="submit" class="btn">Save Product</button>
-            </form>
+    <!-- Add this new card to your admin.html -->
+<!-- Replace the entire "Customer Feedback Manager" card with this: -->
+<div class="form-card">
+    <h3><i class="fas fa-comments"></i> Customer Feedback Manager</h3>
+    <p>Review and manage testimonials submitted by customers.</p>
+    
+    <div class="admin-actions" style="margin-bottom: 1.5rem;">
+        <button class="btn-primary" id="refreshPendingBtn">
+            <i class="fas fa-sync-alt"></i> Refresh Pending List
+        </button>
+        <button class="btn-secondary" id="viewAllBtn">
+            <i class="fas fa-list"></i> View All
+        </button>
+    </div>
+    
+    <h4>Pending Review</h4>
+    <div id="pendingFeedbackList">
+        <!-- Pending feedback cards will be loaded here -->
+        <p><i>Click "Refresh Pending List" to load submissions.</i></p>
+    </div>
+</div>
+    
+    <h4>Pending Review</h4>
+    <div id="pendingFeedbackList">
+        <!-- Pending feedback cards will be loaded here -->
+        <p><i>Click "Refresh Pending List" to load submissions.</i></p>
+    </div>
+</div>
+
+    <!-- ============================================ -->
+<!-- FAQ MANAGEMENT -->
+<!-- ============================================ -->
+<!-- Replace the entire "FAQ Management" card with this: -->
+<div class="form-card">
+    <h3><i class="fas fa-question-circle"></i> FAQ Management</h3>
+    <p>Manage Frequently Asked Questions shown on the FAQ page.</p>
+    
+    <!-- Add New FAQ Form -->
+    <h4>Add New FAQ</h4>
+    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+        <div class="form-group">
+            <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
+            <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
+        </div>
+        <div class="form-group">
+            <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
+            <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
+        </div>
+        <div class="form-group">
+            <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
+            <input type="number" id="faqOrder" placeholder="1" value="1">
+            <small>Lower numbers appear first on the FAQ page.</small>
+        </div>
+        <button class="btn-primary" id="addFaqBtn">
+            <i class="fas fa-plus-circle"></i> Add FAQ
+        </button>
+    </div>
+    
+    <!-- Existing FAQs List -->
+    <h4>Existing FAQs</h4>
+    <button class="btn-secondary" id="refreshFaqsBtn" style="margin-bottom: 1rem;">
+        <i class="fas fa-sync-alt"></i> Refresh List
+    </button>
+    <div id="faqsListAdmin">
+        <!-- FAQs will be loaded here -->
+        <p style="text-align: center; padding: 2rem; color: #999;">
+            Click "Refresh List" to load existing FAQs.
+        </p>
+    </div>
+</div>
+    <!-- Success Message -->
+    <div id="successMessage" style="display: none;" class="modal">
+        <div class="modal-content" style="text-align: center;">
+            <h2><i class="fas fa-check-circle" style="color: var(--success-color); font-size: 3rem;"></i></h2>
+            <h3>Success!</h3>
+            <p id="successText">Operation completed successfully.</p>
+            <button class="btn-primary" onclick="document.getElementById('successMessage').style.display='none'">
+                OK
+            </button>
         </div>
     </div>
 
-    <!-- Add Category Modal -->
-    <div id="addCategoryModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('addCategoryModal')">&times;</span>
-            <h2><i class="fas fa-tag"></i> Add New Category</h2>
-            <form id="addCategoryForm">
-                <div class="form-group">
-                    <label for="categoryName">Category Name</label>
-                    <input type="text" id="categoryName" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="categoryOrder">Display Order</label>
-                    <input type="number" id="categoryOrder" value="1" required>
-                    <small style="color: #666;">Lower numbers appear first</small>
-                </div>
-                
-                <button type="submit" class="btn">Save Category</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Import Firebase from CDN -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
-
-    <script>
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAZe6bywYSgnMFZsef1xgfPFQBkw4y7tco",
-            authDomain: "sarm-enterprises.firebaseapp.com",
-            projectId: "sarm-enterprises",
-            storageBucket: "sarm-enterprises.firebasestorage.app",
-            messagingSenderId: "790231205096",
-            appId: "1:790231205096:web:656c5fc47c6a675e1ef55d",
-            measurementId: "G-5M1ZM089KH"
-        };
-
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const storage = firebase.storage();
-
-        // Show notification
-        function showNotification(message, isError = false) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = isError ? 'notification error' : 'notification';
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-
-        // Login form handler
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('adminEmail').value;
-            const password = document.getElementById('adminPassword').value;
-            
-            try {
-                const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                const user = userCredential.user;
-                
-                // Show success message
-                showNotification('Login successful!');
-                
-                // Hide login, show admin dashboard
-                document.getElementById('loginContainer').style.display = 'none';
-                document.getElementById('adminContainer').style.display = 'block';
-                
-                // Load admin data
-                loadProducts();
-                loadCategories();
-                loadLogo();
-                
-            } catch (error) {
-                console.error('Login error:', error);
-                showNotification('Login failed: ' + error.message, true);
-            }
-        });
-
-        // Logout function
-        function logout() {
-            auth.signOut().then(() => {
-                showNotification('Logged out successfully');
-                document.getElementById('adminContainer').style.display = 'none';
-                document.getElementById('loginContainer').style.display = 'block';
-                
-                // Clear form
-                document.getElementById('loginForm').reset();
-            });
-        }
-
-        // Tab switching
-        function switchTab(tabName) {
-            // Update active tab
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
-            
-            // Update active content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            document.getElementById(`${tabName}Tab`).classList.add('active');
-        }
-
-        // Modal functions
-        function showAddProductModal() {
-            loadCategoryOptions();
-            document.getElementById('addProductModal').style.display = 'flex';
-        }
-
-        function showAddCategoryModal() {
-            document.getElementById('addCategoryModal').style.display = 'flex';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            if (modalId === 'addProductModal') {
-                document.getElementById('addProductForm').reset();
-            }
-        }
-
-        // Load category options for product form
-        async function loadCategoryOptions() {
-            const select = document.getElementById('productCategory');
-            select.innerHTML = '<option value="">Loading...</option>';
-            
-            try {
-                const snapshot = await db.collection('categories').get();
-                select.innerHTML = '';
-                
-                snapshot.forEach(doc => {
-                    const category = doc.data();
-                    const option = document.createElement('option');
-                    option.value = doc.id;
-                    option.textContent = category.name;
-                    select.appendChild(option);
-                });
-                
-                // Add default option
-                const defaultOption = document.createElement('option');
-                defaultOption.value = '';
-                defaultOption.textContent = 'Select a category';
-                defaultOption.selected = true;
-                select.insertBefore(defaultOption, select.firstChild);
-                
-            } catch (error) {
-                console.error('Error loading categories:', error);
-                select.innerHTML = '<option value="">Error loading categories</option>';
-            }
-        }
-
-        // Load products
-        async function loadProducts() {
-            const tbody = document.getElementById('productsTableBody');
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px;">Loading products...</td></tr>';
-            
-            try {
-                const snapshot = await db.collection('products').get();
-                
-                if (snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px; color: #666;">No products found. Add your first product!</td></tr>';
-                    return;
-                }
-                
-                let html = '';
-                snapshot.forEach(doc => {
-                    const product = doc.data();
-                    html += `
-                        <tr>
-                            <td>${product.name || 'No Name'}</td>
-                            <td>₹${product.price || 0}</td>
-                            <td>${product.categoryId || product.category || 'Uncategorized'}</td>
-                            <td>${product.stock || 0}</td>
-                            <td>
-                                <button onclick="editProduct('${doc.id}')" style="padding: 5px 10px; background: #f39c12; color: white; border: none; border-radius: 3px; cursor: pointer; margin-right: 5px;">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button onclick="deleteProduct('${doc.id}')" style="padding: 5px 10px; background: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                
-                tbody.innerHTML = html;
-            } catch (error) {
-                console.error('Error loading products:', error);
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px; color: #e74c3c;">Error loading products</td></tr>';
-            }
-        }
-
-        // Load categories
-        async function loadCategories() {
-            const tbody = document.getElementById('categoriesTableBody');
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 30px;">Loading categories...</td></tr>';
-            
-            try {
-                const snapshot = await db.collection('categories').get();
-                
-                if (snapshot.empty) {
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 30px; color: #666;">No categories found. Add your first category!</td></tr>';
-                    return;
-                }
-                
-                let html = '';
-                snapshot.forEach(doc => {
-                    const category = doc.data();
-                    html += `
-                        <tr>
-                            <td>${category.name || 'No Name'}</td>
-                            <td>${category.order || 999}</td>
-                            <td>0</td>
-                            <td>
-                                <button onclick="deleteCategory('${doc.id}')" style="padding: 5px 10px; background: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-                
-                tbody.innerHTML = html;
-            } catch (error) {
-                console.error('Error loading categories:', error);
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 30px; color: #e74c3c;">Error loading categories</td></tr>';
-            }
-        }
-
-        // Load logo
-        function loadLogo() {
-            const savedLogo = localStorage.getItem('sarmLogo');
-            if (savedLogo) {
-                document.getElementById('logoPreview').src = savedLogo;
-            } else {
-                document.getElementById('logoPreview').src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGMEYwRjAiLz48dGV4dCB4PSI1MCIgeT0iNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzY2NiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkxvZ288L3RleHQ+PC9zdmc+';
-            }
-        }
-
-        // Preview logo before upload
-        function previewLogo() {
-            const fileInput = document.getElementById('logoFile');
-            const preview = document.getElementById('logoPreview');
-            
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            }
-        }
-
-        // Upload logo
-        function uploadLogo() {
-            const fileInput = document.getElementById('logoFile');
-            const file = fileInput.files[0];
-            
-            if (!file) {
-                showNotification('Please select a logo file first!', true);
-                return;
-            }
-            
-            // Convert to Base64 and save to localStorage
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Logo = e.target.result;
-                localStorage.setItem('sarmLogo', base64Logo);
-                showNotification('Logo uploaded successfully! It will appear on the main site.');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // Add product form handler
-        document.getElementById('addProductForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const productData = {
-                name: document.getElementById('productName').value,
-                price: parseFloat(document.getElementById('productPrice').value),
-                categoryId: document.getElementById('productCategory').value,
-                stock: parseInt(document.getElementById('productStock').value) || 0,
-                description: document.getElementById('productDescription').value,
-                images: document.getElementById('productImages').value.split('\n').filter(url => url.trim() !== ''),
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-            
-            try {
-                await db.collection('products').add(productData);
-                showNotification('Product added successfully!');
-                closeModal('addProductModal');
-                loadProducts();
-            } catch (error) {
-                console.error('Error adding product:', error);
-                showNotification('Error adding product: ' + error.message, true);
-            }
-        });
-
-        // Add category form handler
-        document.getElementById('addCategoryForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const categoryData = {
-                name: document.getElementById('categoryName').value,
-                order: parseInt(document.getElementById('categoryOrder').value) || 999,
-                createdAt: new Date().toISOString()
-            };
-            
-            try {
-                await db.collection('categories').add(categoryData);
-                showNotification('Category added successfully!');
-                closeModal('addCategoryModal');
-                loadCategories();
-                loadCategoryOptions(); // Refresh dropdown
-            } catch (error) {
-                console.error('Error adding category:', error);
-                showNotification('Error adding category: ' + error.message, true);
-            }
-        });
-
-        // Delete product
-        async function deleteProduct(productId) {
-            if (!confirm('Are you sure you want to delete this product?')) return;
-            
-            try {
-                await db.collection('products').doc(productId).delete();
-                showNotification('Product deleted successfully!');
-                loadProducts();
-            } catch (error) {
-                console.error('Error deleting product:', error);
-                showNotification('Error deleting product: ' + error.message, true);
-            }
-        }
-
-        // Delete category
-        async function deleteCategory(categoryId) {
-            if (!confirm('Are you sure you want to delete this category?')) return;
-            
-            try {
-                await db.collection('categories').doc(categoryId).delete();
-                showNotification('Category deleted successfully!');
-                loadCategories();
-                loadCategoryOptions(); // Refresh dropdown
-            } catch (error) {
-                console.error('Error deleting category:', error);
-                showNotification('Error deleting category: ' + error.message, true);
-            }
-        }
-
-        // Close modals when clicking outside
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
-            }
-        };
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check if user is already logged in
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    // User is signed in
-                    document.getElementById('loginContainer').style.display = 'none';
-                    document.getElementById('adminContainer').style.display = 'block';
-                    document.getElementById('adminName').textContent = user.email;
-                    
-                    // Load admin data
-                    loadProducts();
-                    loadCategories();
-                    loadLogo();
-                }
-            });
-        });
-    </script>
+    <!-- Firebase SDK -->
+    <script type="module" src="admin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
