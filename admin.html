@@ -7,6 +7,327 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Admin Styles */
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .admin-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .admin-stats span {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+        
+        .form-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        
+        /* Multi-image input */
+        .images-input-container {
+            margin-bottom: 15px;
+        }
+        
+        .image-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .image-input-group input {
+            flex: 1;
+        }
+        
+        .btn-add-image {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px dashed #1976d2;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .btn-remove-image {
+            background: #ffebee;
+            color: #d32f2f;
+            border: 1px solid #ffcdd2;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .image-previews {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .image-preview-item {
+            width: 100px;
+            text-align: center;
+        }
+        
+        .image-preview-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .image-preview-item span {
+            display: block;
+            font-size: 11px;
+            margin-top: 5px;
+            word-break: break-all;
+        }
+        
+        /* Categories */
+        .categories-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .category-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .category-tag button {
+            background: none;
+            border: none;
+            color: #f44336;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        /* Products Grid in Admin */
+        .admin-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .admin-product-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .admin-product-images {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px;
+            background: #f8f9fa;
+        }
+        
+        .admin-product-images img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .admin-product-info {
+            padding: 15px;
+        }
+        
+        .admin-product-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .product-status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .product-status.in-stock {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .product-status.low-stock {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .product-status.out-of-stock {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        /* Quotes List */
+        .quotes-list {
+            margin-top: 20px;
+        }
+        
+        .quote-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .quote-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+        
+        /* Products Filter */
+        .products-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .products-filter select,
+        .products-filter input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .products-filter input {
+            flex: 1;
+        }
+        
+        /* GitHub Info */
+        .github-info {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        
+        .github-info ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .github-info code {
+            background: #e0e0e0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .admin-stats {
+                flex-direction: column;
+            }
+            
+            .products-filter {
+                flex-direction: column;
+            }
+            
+            .admin-products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -28,6 +349,8 @@
                 <span id="totalProducts">0 Products</span>
                 <span id="totalOrders">0 Orders</span>
                 <span id="lowStock">0 Low Stock</span>
+                <span id="totalCategories">0 Categories</span>
+                <span id="totalQuotes">5 Quotes</span>
             </div>
         </div>
 
@@ -37,59 +360,64 @@
             <form id="productForm">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="productName"><i class="fas fa-tag"></i> Product Name</label>
+                        <label for="productName"><i class="fas fa-tag"></i> Product Name *</label>
                         <input type="text" id="productName" required 
                                placeholder="e.g., Spiral Notebook 200 Pages">
                     </div>
                     <div class="form-group">
-                        <label for="productCategory"><i class="fas fa-layer-group"></i> Category</label>
-                        <select id="productCategory" required>
-                            <option value="">Select Category</option>
-                            <option value="spiral-notebooks">Spiral Notebooks</option>
-                            <option value="register-books">Register Books</option>
-                            <option value="project-books">Project Books</option>
-                            <option value="drawing-books">Drawing Books</option>
-                            <option value="premium-notebooks">Premium Notebooks</option>
-                            <option value="pocket-notebooks">Pocket Notebooks</option>
-                        </select>
-                        <input type="text" id="newCategory" placeholder="Or add new category" style="display: none; margin-top: 5px;">
-                        <button type="button" id="toggleCategory" class="btn-small">Add New Category</button>
+                        <label for="productCategory"><i class="fas fa-layer-group"></i> Category *</label>
+                        <div style="display: flex; gap: 10px;">
+                            <select id="productCategory" required style="flex: 1;">
+                                <option value="">Select Category</option>
+                                <option value="spiral-notebooks">Spiral Notebooks</option>
+                                <option value="register-books">Register Books</option>
+                                <option value="project-books">Project Books</option>
+                                <option value="drawing-books">Drawing Books</option>
+                                <option value="premium-notebooks">Premium Notebooks</option>
+                                <option value="pocket-notebooks">Pocket Notebooks</option>
+                                <option value="school-notebooks">School Notebooks</option>
+                                <option value="office-notebooks">Office Notebooks</option>
+                            </select>
+                            <button type="button" id="refreshCategories" class="btn-small" title="Refresh Categories">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="productPages"><i class="fas fa-file-alt"></i> Number of Pages</label>
+                        <label for="productPages"><i class="fas fa-file-alt"></i> Number of Pages *</label>
                         <input type="number" id="productPages" required 
-                               placeholder="e.g., 200">
+                               placeholder="e.g., 200" min="1">
                     </div>
                     <div class="form-group">
-                        <label for="productPrice"><i class="fas fa-rupee-sign"></i> Price (₹)</label>
+                        <label for="productPrice"><i class="fas fa-rupee-sign"></i> Price (₹) *</label>
                         <input type="number" id="productPrice" required 
-                               placeholder="e.g., 69" step="0.01">
+                               placeholder="e.g., 69" step="0.01" min="1">
                     </div>
                     <div class="form-group">
-                        <label for="productStock"><i class="fas fa-box"></i> Stock Quantity</label>
+                        <label for="productStock"><i class="fas fa-box"></i> Stock Quantity *</label>
                         <input type="number" id="productStock" required 
-                               placeholder="e.g., 50">
+                               placeholder="e.g., 50" min="0">
                     </div>
                 </div>
                 
                 <!-- Multi-image URLs -->
                 <div class="form-group">
-                    <label><i class="fas fa-images"></i> Product Images (GitHub Repository)</label>
+                    <label><i class="fas fa-images"></i> Product Images (GitHub Repository) *</label>
+                    <p style="font-size: 12px; color: #666; margin-bottom: 10px;">
+                        Add image filenames that are uploaded to GitHub repository in 'assets/products/' folder.
+                        First image will be the main product image.
+                    </p>
                     <div class="images-input-container" id="imagesContainer">
                         <div class="image-input-group">
                             <input type="text" class="image-url" 
                                    placeholder="Enter image filename (e.g., notebook1.jpg)" 
-                                   data-index="0">
+                                   data-index="0" required>
                             <button type="button" class="btn-remove-image" onclick="removeImageInput(this)">×</button>
                         </div>
                     </div>
-                    <small style="display: block; margin-top: 5px; color: #666;">
-                        Images should be uploaded to GitHub repository in 'assets/products' folder. 
-                        Enter only the filename (e.g., notebook1.jpg). Base URL: assets/products/
-                    </small>
                     <button type="button" class="btn-add-image" onclick="addImageInput()">
                         <i class="fas fa-plus"></i> Add Another Image
                     </button>
@@ -104,21 +432,24 @@
                 <div class="form-group">
                     <label for="productDescription"><i class="fas fa-align-left"></i> Description</label>
                     <textarea id="productDescription" rows="3" 
-                              placeholder="Product description..."></textarea>
+                              placeholder="Describe the product features, quality, and specifications..."></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="productFeatures"><i class="fas fa-star"></i> Features (comma separated)</label>
                     <input type="text" id="productFeatures" 
-                           placeholder="e.g., Premium Paper, Spiral Binding, Durable Cover">
+                           placeholder="e.g., Premium Paper, Spiral Binding, Durable Cover, Waterproof">
+                    <small style="color: #666;">Separate features with commas</small>
                 </div>
                 
-                <button type="submit" class="btn-primary" id="submitBtn">
-                    <i class="fas fa-save"></i> Add Product
-                </button>
-                <button type="button" class="btn-secondary" id="cancelEdit" style="display: none;">
-                    <i class="fas fa-times"></i> Cancel Edit
-                </button>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        <i class="fas fa-save"></i> Add Product
+                    </button>
+                    <button type="button" class="btn-secondary" id="cancelEdit" style="display: none;">
+                        <i class="fas fa-times"></i> Cancel Edit
+                    </button>
+                </div>
                 <input type="hidden" id="editProductId">
             </form>
         </div>
@@ -127,15 +458,21 @@
         <div class="form-card">
             <h3><i class="fas fa-layer-group"></i> Category Management</h3>
             <div class="form-group">
-                <label for="manageCategories">Manage Product Categories</label>
+                <label>Current Categories</label>
                 <div class="categories-list" id="categoriesList">
                     <!-- Categories will be loaded here -->
                 </div>
-                <div style="margin-top: 10px;">
-                    <input type="text" id="newCategoryInput" placeholder="Enter new category name">
-                    <button type="button" class="btn-primary" id="addCategoryBtn" style="margin-top: 5px;">
-                        <i class="fas fa-plus"></i> Add Category
-                    </button>
+                <div style="margin-top: 20px;">
+                    <h4>Add New Category</h4>
+                    <div style="display: flex; gap: 10px; align-items: flex-end;">
+                        <div style="flex: 1;">
+                            <input type="text" id="newCategoryInput" placeholder="Enter new category name">
+                            <small style="color: #666;">Use lowercase with hyphens (e.g., premium-notebooks)</small>
+                        </div>
+                        <button type="button" class="btn-primary" id="addCategoryBtn">
+                            <i class="fas fa-plus"></i> Add Category
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -144,14 +481,13 @@
         <div class="form-card">
             <h3><i class="fas fa-image"></i> Logo Management</h3>
             <div class="form-group">
-                <label for="logoUpload">Upload New Logo to GitHub</label>
-                <div class="logo-upload-instructions">
-                    <p>Upload logo to GitHub repository in 'assets' folder as 'logo.png'</p>
-                    <p>Logo URL should be: <code>assets/logo.png</code></p>
+                <label>Current Logo</label>
+                <div class="logo-preview">
+                    <img id="logoPreview" src="" alt="Logo Preview" style="max-width: 200px; max-height: 100px;">
                 </div>
-                <div id="logoPreviewContainer" class="image-preview-container">
-                    <img id="logoPreview" class="image-preview" src="" alt="Logo Preview">
-                    <div id="logoInfo"></div>
+                <div style="margin-top: 15px;">
+                    <p><strong>Instructions:</strong> Upload logo to GitHub repository as <code>assets/logo.png</code></p>
+                    <p>The logo should be a PNG file with transparent background, recommended size: 200x80 pixels.</p>
                 </div>
             </div>
         </div>
@@ -163,7 +499,10 @@
                 <select id="filterCategory">
                     <option value="all">All Categories</option>
                 </select>
-                <input type="text" id="searchProduct" placeholder="Search products...">
+                <input type="text" id="searchProduct" placeholder="Search products by name or description...">
+                <button type="button" class="btn-secondary" id="refreshProducts">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
             </div>
             <div id="productsList" class="admin-products-grid">
                 <!-- Products will be loaded here -->
@@ -173,15 +512,56 @@
         <!-- Quotes Management -->
         <div class="form-card">
             <h3><i class="fas fa-quote-left"></i> Moving Quotes Management</h3>
+            <p style="color: #666; margin-bottom: 20px;">Manage quotes displayed in the moving carousel on homepage (Minimum 5 quotes required)</p>
+            
             <div class="form-group">
-                <label>Add New Quote</label>
-                <input type="text" id="newQuote" placeholder="Enter a motivational quote...">
-                <button type="button" class="btn-primary" id="addQuoteBtn">
-                    <i class="fas fa-plus"></i> Add Quote
-                </button>
+                <label for="newQuote">Add New Quote</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="newQuote" placeholder="Enter a motivational quote..." style="flex: 1;">
+                    <button type="button" class="btn-primary" id="addQuoteBtn">
+                        <i class="fas fa-plus"></i> Add Quote
+                    </button>
+                </div>
             </div>
+            
+            <h4>Current Quotes</h4>
             <div id="quotesList" class="quotes-list">
                 <!-- Quotes will be displayed here -->
+                <div class="quote-item">
+                    <span>Where Thoughts Find Their Perfect Home</span>
+                    <div class="quote-actions">
+                        <button class="btn-small edit-quote" onclick="editQuote(this)">Edit</button>
+                        <button class="btn-small delete-quote" onclick="deleteQuote(this)" disabled>Delete</button>
+                    </div>
+                </div>
+                <div class="quote-item">
+                    <span>Quality Pages for Lifelong Memories</span>
+                    <div class="quote-actions">
+                        <button class="btn-small edit-quote" onclick="editQuote(this)">Edit</button>
+                        <button class="btn-small delete-quote" onclick="deleteQuote(this)" disabled>Delete</button>
+                    </div>
+                </div>
+                <div class="quote-item">
+                    <span>Writing transforms thoughts into treasures</span>
+                    <div class="quote-actions">
+                        <button class="btn-small edit-quote" onclick="editQuote(this)">Edit</button>
+                        <button class="btn-small delete-quote" onclick="deleteQuote(this)" disabled>Delete</button>
+                    </div>
+                </div>
+                <div class="quote-item">
+                    <span>Your ideas are precious. We provide the perfect canvas to preserve them</span>
+                    <div class="quote-actions">
+                        <button class="btn-small edit-quote" onclick="editQuote(this)">Edit</button>
+                        <button class="btn-small delete-quote" onclick="deleteQuote(this)" disabled>Delete</button>
+                    </div>
+                </div>
+                <div class="quote-item">
+                    <span>From thoughts to tangible memories</span>
+                    <div class="quote-actions">
+                        <button class="btn-small edit-quote" onclick="editQuote(this)">Edit</button>
+                        <button class="btn-small delete-quote" onclick="deleteQuote(this)" disabled>Delete</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -265,18 +645,34 @@
         <div class="form-card">
             <h3><i class="fab fa-github"></i> GitHub Repository Setup</h3>
             <div class="github-info">
-                <p><strong>Image Storage Instructions:</strong></p>
-                <ol>
-                    <li>Upload all product images to your GitHub repository</li>
-                    <li>Folder structure: <code>assets/products/</code></li>
-                    <li>Supported formats: JPG, PNG, WebP</li>
+                <p><strong>📁 Folder Structure for Images:</strong></p>
+                <pre style="background: #2d2d2d; color: #fff; padding: 15px; border-radius: 5px; overflow-x: auto;">
+/assets
+  ├── logo.png            (Store logo here)
+  └── products/           (Store all product images here)
+        ├── notebook1.jpg
+        ├── notebook2.jpg
+        ├── notebook3.jpg
+        └── ...
+                </pre>
+                
+                <p><strong>📋 Image Requirements:</strong></p>
+                <ul style="margin: 10px 0 10px 20px;">
+                    <li>Format: JPG, PNG, or WebP</li>
                     <li>Recommended size: 600x600 pixels</li>
-                    <li>Use descriptive filenames: <code>spiral-notebook-200pages.jpg</code></li>
-                </ol>
-                <p><strong>Example image URLs:</strong></p>
-                <code>assets/products/notebook1.jpg</code><br>
-                <code>assets/products/notebook2.jpg</code><br>
-                <code>assets/products/notebook3.jpg</code>
+                    <li>Max file size: 1MB per image</li>
+                    <li>Use descriptive filenames without spaces</li>
+                </ul>
+                
+                <p><strong>🔗 Example Usage in Forms:</strong></p>
+                <p>When adding product images, simply enter the filename:</p>
+                <code>notebook-200pages.jpg</code><br>
+                <code>spiral-notebook-red.jpg</code><br>
+                <code>premium-notebook-cover.jpg</code>
+                
+                <p style="margin-top: 15px; padding: 10px; background: #e3f2fd; border-radius: 5px;">
+                    <strong>Note:</strong> The system will automatically prepend <code>assets/products/</code> to all image filenames.
+                </p>
             </div>
         </div>
     </div>
@@ -300,6 +696,13 @@
     <script>
         // Multi-image management
         let imageInputs = 1;
+        let currentQuotes = [
+            "Where Thoughts Find Their Perfect Home",
+            "Quality Pages for Lifelong Memories",
+            "Writing transforms thoughts into treasures",
+            "Your ideas are precious. We provide the perfect canvas to preserve them",
+            "From thoughts to tangible memories"
+        ];
         
         function addImageInput() {
             const container = document.getElementById('imagesContainer');
@@ -320,51 +723,36 @@
             const container = document.getElementById('imagesContainer');
             if (container.children.length > 1) {
                 button.parentElement.remove();
+                updateImagePreviews();
             }
         }
         
         function previewImage(input) {
             const filename = input.value.trim();
-            const previewsContainer = document.getElementById('imagePreviews');
-            
             if (filename) {
-                const imageUrl = `assets/products/${filename}`;
-                const index = input.dataset.index;
-                
-                let preview = previewsContainer.querySelector(`[data-index="${index}"]`);
-                
-                if (!preview) {
-                    preview = document.createElement('div');
+                updateImagePreviews();
+            }
+        }
+        
+        function updateImagePreviews() {
+            const inputs = document.querySelectorAll('.image-url');
+            const previewsContainer = document.getElementById('imagePreviews');
+            previewsContainer.innerHTML = '';
+            
+            inputs.forEach((input, index) => {
+                const filename = input.value.trim();
+                if (filename) {
+                    const imageUrl = `assets/products/${filename}`;
+                    const preview = document.createElement('div');
                     preview.className = 'image-preview-item';
-                    preview.dataset.index = index;
                     preview.innerHTML = `
                         <img src="${imageUrl}" alt="Preview" onerror="this.src='https://via.placeholder.com/150?text=Image+Not+Found'">
                         <span>${filename}</span>
                     `;
                     previewsContainer.appendChild(preview);
-                } else {
-                    const img = preview.querySelector('img');
-                    img.src = imageUrl;
-                    preview.querySelector('span').textContent = filename;
                 }
-            }
+            });
         }
-        
-        // Category toggle
-        document.getElementById('toggleCategory').addEventListener('click', function() {
-            const select = document.getElementById('productCategory');
-            const newCategory = document.getElementById('newCategory');
-            
-            if (select.style.display !== 'none') {
-                select.style.display = 'none';
-                newCategory.style.display = 'block';
-                this.textContent = 'Use Existing Category';
-            } else {
-                select.style.display = 'block';
-                newCategory.style.display = 'none';
-                this.textContent = 'Add New Category';
-            }
-        });
         
         // Get image URLs from form
         function getImageUrls() {
@@ -386,27 +774,246 @@
             const container = document.getElementById('imagesContainer');
             container.innerHTML = '';
             
-            urls.forEach((url, index) => {
-                const div = document.createElement('div');
-                div.className = 'image-input-group';
-                div.innerHTML = `
-                    <input type="text" class="image-url" 
-                           value="${url}" 
-                           data-index="${index}"
-                           oninput="previewImage(this)">
-                    <button type="button" class="btn-remove-image" onclick="removeImageInput(this)">×</button>
-                `;
-                container.appendChild(div);
-                previewImage(div.querySelector('.image-url'));
-            });
+            if (urls && urls.length > 0) {
+                urls.forEach((url, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'image-input-group';
+                    div.innerHTML = `
+                        <input type="text" class="image-url" 
+                               value="${url}" 
+                               data-index="${index}"
+                               oninput="previewImage(this)">
+                        <button type="button" class="btn-remove-image" onclick="removeImageInput(this)">×</button>
+                    `;
+                    container.appendChild(div);
+                });
+                imageInputs = urls.length;
+            } else {
+                // Add one empty input if no images
+                addImageInput();
+            }
             
-            imageInputs = urls.length;
+            updateImagePreviews();
         }
         
         // Initialize with one image input
         document.addEventListener('DOMContentLoaded', () => {
+            // Add initial image input
             addImageInput();
+            
+            // Initialize default quotes
+            renderQuotesList();
+            
+            // Add category button event
+            document.getElementById('addCategoryBtn').addEventListener('click', addNewCategory);
+            
+            // Refresh categories button
+            document.getElementById('refreshCategories').addEventListener('click', loadCategories);
+            
+            // Add quote button
+            document.getElementById('addQuoteBtn').addEventListener('click', addNewQuote);
+            
+            // Refresh products button
+            document.getElementById('refreshProducts').addEventListener('click', loadProducts);
         });
+        
+        // Category management
+        function addNewCategory() {
+            const input = document.getElementById('newCategoryInput');
+            const categoryName = input.value.trim().toLowerCase().replace(/\s+/g, '-');
+            
+            if (!categoryName) {
+                alert('Please enter a category name');
+                return;
+            }
+            
+            // Add to categories list
+            const categoriesList = document.getElementById('categoriesList');
+            const categoryTag = document.createElement('div');
+            categoryTag.className = 'category-tag';
+            categoryTag.innerHTML = `
+                ${categoryName}
+                <button onclick="removeCategory(this)"><i class="fas fa-times"></i></button>
+            `;
+            categoriesList.appendChild(categoryTag);
+            
+            // Add to category select in product form
+            const select = document.getElementById('productCategory');
+            const option = document.createElement('option');
+            option.value = categoryName;
+            option.textContent = categoryName.split('-').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+            select.appendChild(option);
+            
+            // Also add to filter select
+            const filterSelect = document.getElementById('filterCategory');
+            const filterOption = option.cloneNode(true);
+            filterSelect.appendChild(filterOption);
+            
+            input.value = '';
+            showSuccess('Category added successfully!');
+        }
+        
+        function removeCategory(button) {
+            if (confirm('Are you sure you want to remove this category?')) {
+                const categoryTag = button.parentElement;
+                const categoryName = categoryTag.textContent.trim();
+                
+                // Remove from DOM
+                categoryTag.remove();
+                
+                // Remove from select options
+                const select = document.getElementById('productCategory');
+                const filterSelect = document.getElementById('filterCategory');
+                
+                Array.from(select.options).forEach(option => {
+                    if (option.value === categoryName) {
+                        option.remove();
+                    }
+                });
+                
+                Array.from(filterSelect.options).forEach(option => {
+                    if (option.value === categoryName) {
+                        option.remove();
+                    }
+                });
+                
+                showSuccess('Category removed successfully!');
+            }
+        }
+        
+        // Quote management
+        function renderQuotesList() {
+            const quotesList = document.getElementById('quotesList');
+            quotesList.innerHTML = '';
+            
+            currentQuotes.forEach((quote, index) => {
+                const quoteItem = document.createElement('div');
+                quoteItem.className = 'quote-item';
+                quoteItem.innerHTML = `
+                    <span>${quote}</span>
+                    <div class="quote-actions">
+                        <button class="btn-small edit-quote" onclick="editQuote(${index})">Edit</button>
+                        <button class="btn-small delete-quote" onclick="deleteQuote(${index})" 
+                                ${currentQuotes.length <= 5 ? 'disabled' : ''}>Delete</button>
+                    </div>
+                `;
+                quotesList.appendChild(quoteItem);
+            });
+            
+            // Update quotes count
+            document.getElementById('totalQuotes').textContent = `${currentQuotes.length} Quotes`;
+        }
+        
+        function addNewQuote() {
+            const input = document.getElementById('newQuote');
+            const quote = input.value.trim();
+            
+            if (!quote) {
+                alert('Please enter a quote');
+                return;
+            }
+            
+            currentQuotes.push(quote);
+            renderQuotesList();
+            input.value = '';
+            showSuccess('Quote added successfully!');
+        }
+        
+        function editQuote(index) {
+            const newQuote = prompt('Edit quote:', currentQuotes[index]);
+            if (newQuote !== null && newQuote.trim() !== '') {
+                currentQuotes[index] = newQuote.trim();
+                renderQuotesList();
+                showSuccess('Quote updated successfully!');
+            }
+        }
+        
+        function deleteQuote(index) {
+            if (currentQuotes.length <= 5) {
+                alert('You must have at least 5 quotes');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to delete this quote?')) {
+                currentQuotes.splice(index, 1);
+                renderQuotesList();
+                showSuccess('Quote deleted successfully!');
+            }
+        }
+        
+        function loadCategories() {
+            // This function will be implemented in admin.js
+            showSuccess('Refreshing categories...');
+        }
+        
+        function loadProducts() {
+            // This function will be implemented in admin.js
+            showSuccess('Refreshing products...');
+        }
+        
+        function showSuccess(message) {
+            const successElement = document.getElementById('successMessage');
+            document.getElementById('successText').textContent = message;
+            successElement.style.display = 'flex';
+        }
+        
+        // Function to render admin product card
+        function renderAdminProduct(product) {
+            const images = product.images || [];
+            const status = product.stock > 20 ? 'in-stock' : 
+                          product.stock > 0 ? 'low-stock' : 'out-of-stock';
+            const statusText = product.stock > 20 ? 'In Stock' : 
+                              product.stock > 0 ? 'Low Stock' : 'Out of Stock';
+            
+            return `
+                <div class="admin-product-card" data-category="${product.category || 'uncategorized'}">
+                    <div class="admin-product-images">
+                        ${images.length > 0 ? 
+                            images.map(img => `
+                                <img src="assets/products/${img}" alt="${product.name}" 
+                                     onerror="this.src='https://via.placeholder.com/80?text=Image'">
+                            `).join('') 
+                            : '<img src="https://via.placeholder.com/80?text=No+Image">'
+                        }
+                    </div>
+                    <div class="admin-product-info">
+                        <h4>${product.name} 
+                            <span class="product-status ${status}">${statusText}</span>
+                        </h4>
+                        <p><strong>Pages:</strong> ${product.pages} | <strong>Price:</strong> ₹${product.price}</p>
+                        <p><strong>Category:</strong> ${product.category || 'Uncategorized'}</p>
+                        <p><strong>Stock:</strong> ${product.stock} units</p>
+                        <p><strong>Images:</strong> ${images.length} image(s)</p>
+                        
+                        ${product.description ? `<p style="margin-top: 10px;">${product.description}</p>` : ''}
+                        
+                        <div class="admin-product-actions">
+                            <button class="btn-small edit-product" onclick="editProduct('${product.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn-small delete-product" onclick="deleteProduct('${product.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // These functions will be implemented in admin.js
+        function editProduct(productId) {
+            console.log('Edit product:', productId);
+            // Will be implemented in admin.js
+        }
+        
+        function deleteProduct(productId) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                console.log('Delete product:', productId);
+                // Will be implemented in admin.js
+            }
+        }
     </script>
 </body>
 </html>
