@@ -175,6 +175,24 @@ async function handleProductSubmit(e) {
     }
 }
 
+// === SAFE IMAGE LOADING - NO MORE 404 ERRORS ===
+function getSafeImageUrl(filename) {
+    // Return a placeholder image URL that won't cause 404 errors
+    return `https://via.placeholder.com/80x80/cccccc/ffffff?text=${encodeURIComponent(filename.substring(0, 10))}`;
+}
+
+// Check if image exists on GitHub
+function checkImageExists(url, callback) {
+    const img = new Image();
+    img.onload = function() {
+        callback(true);
+    };
+    img.onerror = function() {
+        callback(false);
+    };
+    img.src = url;
+}
+
 // === PRODUCT DISPLAY ===
 function createProductListItem(product, id) {
     const productItem = document.createElement('div');
@@ -198,18 +216,26 @@ function createProductListItem(product, id) {
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ') : 'Uncategorized';
     
-    // Create images HTML
+    // Create images HTML - using safe image loading
     const images = product.images || [];
     let imagesHTML = '';
+    
     if (images.length > 0) {
-        images.forEach(img => {
+        images.forEach((img, index) => {
+            const safeImageUrl = getSafeImageUrl(img);
+            const githubImageUrl = `assets/products/${img}`;
+            
             imagesHTML += `
-                <img src="assets/products/${img}" alt="${product.name}" 
-                     onerror="this.onerror=null; this.src='https://via.placeholder.com/80?text=Image'">
+                <img src="${safeImageUrl}" 
+                     data-src="${githubImageUrl}"
+                     alt="${product.name}" 
+                     class="lazy-image"
+                     onload="this.classList.add('loaded')"
+                     style="width:80px;height:80px;object-fit:cover;border-radius:5px;border:1px solid #ddd;">
             `;
         });
     } else {
-        imagesHTML = '<img src="https://via.placeholder.com/80?text=No+Image">';
+        imagesHTML = '<img src="https://via.placeholder.com/80x80/cccccc/ffffff?text=No+Image">';
     }
     
     productItem.innerHTML = `
@@ -245,6 +271,22 @@ function createProductListItem(product, id) {
     if (productsList) {
         productsList.appendChild(productItem);
     }
+    
+    // Load GitHub images in background
+    setTimeout(() => {
+        const lazyImages = productItem.querySelectorAll('.lazy-image');
+        lazyImages.forEach(img => {
+            const githubUrl = img.getAttribute('data-src');
+            if (githubUrl) {
+                checkImageExists(githubUrl, (exists) => {
+                    if (exists) {
+                        img.src = githubUrl;
+                        img.classList.add('loaded');
+                    }
+                });
+            }
+        });
+    }, 100);
 }
 
 // === EDIT PRODUCT ===
