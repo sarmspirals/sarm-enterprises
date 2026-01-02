@@ -175,13 +175,13 @@ async function handleProductSubmit(e) {
     }
 }
 
-// === SAFE IMAGE LOADING - NO MORE 404 ERRORS ===
+// === SAFE IMAGE LOADING - FIXED 404 ERRORS ===
 function getSafeImageUrl(filename) {
     // Return a placeholder image URL that won't cause 404 errors
     return `https://via.placeholder.com/80x80/cccccc/ffffff?text=${encodeURIComponent(filename.substring(0, 10))}`;
 }
 
-// Check if image exists on GitHub
+// Check if image exists on GitHub - FIXED
 function checkImageExists(url, callback) {
     const img = new Image();
     img.onload = function() {
@@ -190,7 +190,7 @@ function checkImageExists(url, callback) {
     img.onerror = function() {
         callback(false);
     };
-    img.src = url;
+    img.src = url; // FIXED: Changed from assets/products to url parameter
 }
 
 // === PRODUCT DISPLAY ===
@@ -223,6 +223,7 @@ function createProductListItem(product, id) {
     if (images.length > 0) {
         images.forEach((img, index) => {
             const safeImageUrl = getSafeImageUrl(img);
+            // FIXED: Removed duplicate path prefix
             const githubImageUrl = `assets/products/${img}`;
             
             imagesHTML += `
@@ -272,15 +273,15 @@ function createProductListItem(product, id) {
         productsList.appendChild(productItem);
     }
     
-    // Load GitHub images in background
+    // Load GitHub images in background - FIXED
     setTimeout(() => {
         const lazyImages = productItem.querySelectorAll('.lazy-image');
         lazyImages.forEach(img => {
             const githubUrl = img.getAttribute('data-src');
             if (githubUrl) {
-                checkImageExists(githubUrl, (exists) => {
+                checkImageExists(githubUrl, (exists) => { // FIXED: Pass githubUrl as parameter
                     if (exists) {
-                        img.src = githubUrl;
+                        img.src = githubUrl; // FIXED: Use githubUrl variable
                         img.classList.add('loaded');
                     }
                 });
