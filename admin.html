@@ -488,6 +488,26 @@
             margin-top: 5px;
             display: block;
         }
+        
+        /* Image validation */
+        .image-validation {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .image-validation i {
+            font-size: 16px;
+        }
+        
+        .valid {
+            color: #4caf50;
+        }
+        
+        .invalid {
+            color: #f44336;
+        }
     </style>
 </head>
 <body>
@@ -575,7 +595,7 @@
                     <label><i class="fas fa-images"></i> Product Images (GitHub Repository) *</label>
                     <div class="file-info">
                         <p><i class="fas fa-info-circle"></i> Upload images to GitHub in <code>assets/products/</code> folder. Enter only filenames below.</p>
-                        <p><strong>Example:</strong> If you uploaded <code>notebook1.jpg</code>, just enter <code>notebook1.jpg</code></p>
+                        <p><strong>Example:</strong> If you uploaded <code>notebook1.jpg</code> to GitHub, just enter <code>notebook1.jpg</code> below</p>
                     </div>
                     <div class="images-input-container" id="imagesContainer">
                         <div class="image-input-group">
@@ -594,9 +614,13 @@
                             <!-- Image previews will be shown here -->
                             <div style="width: 100%; text-align: center; padding: 30px; color: #999;">
                                 <i class="fas fa-images" style="font-size: 40px; margin-bottom: 10px;"></i>
-                                <p>Image previews will appear here</p>
+                                <p>Image previews will appear here after entering filenames</p>
                             </div>
                         </div>
+                    </div>
+                    <div id="imageValidation" class="image-validation" style="display: none;">
+                        <i class="fas fa-check-circle valid"></i>
+                        <span id="validationText"></span>
                     </div>
                     <span class="error-message" id="imageError"></span>
                 </div>
@@ -871,6 +895,98 @@
             "From thoughts to tangible memories"
         ];
         
+        // Add event listener to form to handle submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const productForm = document.getElementById('productForm');
+            if (productForm) {
+                productForm.addEventListener('submit', handleProductFormSubmit);
+            }
+            
+            // Initialize default quotes
+            renderQuotesList();
+            
+            // Add category button event
+            document.getElementById('addCategoryBtn').addEventListener('click', addNewCategory);
+            
+            // Add quote button
+            document.getElementById('addQuoteBtn').addEventListener('click', addNewQuote);
+            
+            // Initialize image previews
+            updateImagePreviews();
+        });
+        
+        function handleProductFormSubmit(event) {
+            event.preventDefault();
+            
+            // Collect form data
+            const productName = document.getElementById('productName').value.trim();
+            const productCategory = document.getElementById('productCategory').value;
+            const productPages = document.getElementById('productPages').value;
+            const productPrice = document.getElementById('productPrice').value;
+            const productStock = document.getElementById('productStock').value;
+            const productDescription = document.getElementById('productDescription').value.trim();
+            const productFeatures = document.getElementById('productFeatures').value.trim();
+            const editProductId = document.getElementById('editProductId').value;
+            
+            // Get image URLs
+            const imageUrls = getImageUrls();
+            
+            // Validate required fields
+            if (!productName) {
+                alert('Please enter product name');
+                return;
+            }
+            
+            if (!productCategory) {
+                alert('Please select a category');
+                return;
+            }
+            
+            if (!productPages || productPages < 1) {
+                alert('Please enter valid number of pages');
+                return;
+            }
+            
+            if (!productPrice || productPrice < 1) {
+                alert('Please enter valid price');
+                return;
+            }
+            
+            if (productStock === '' || productStock < 0) {
+                alert('Please enter valid stock quantity');
+                return;
+            }
+            
+            if (imageUrls.length === 0) {
+                alert('Please enter at least one image filename');
+                return;
+            }
+            
+            // Create product object
+            const product = {
+                name: productName,
+                category: productCategory,
+                pages: parseInt(productPages),
+                price: parseFloat(productPrice),
+                stock: parseInt(productStock),
+                description: productDescription,
+                features: productFeatures,
+                images: imageUrls,
+                createdAt: editProductId ? undefined : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            
+            console.log('Submitting product:', product);
+            
+            // Call the Firebase function from admin.js
+            if (window.submitProductForm) {
+                window.submitProductForm(product, editProductId);
+            } else {
+                // Fallback if admin.js is not loaded
+                alert('Admin functions not loaded. Please check admin.js');
+            }
+        }
+        
         function addImageInput() {
             const container = document.getElementById('imagesContainer');
             const newInput = document.createElement('div');
@@ -916,17 +1032,24 @@
             const inputs = document.querySelectorAll('.image-url');
             const previewsContainer = document.getElementById('imagePreviews');
             const imageError = document.getElementById('imageError');
+            const validationDiv = document.getElementById('imageValidation');
             
             // Clear previous previews
             previewsContainer.innerHTML = '';
             
             let hasImages = false;
-            let hasErrors = false;
+            let validImages = 0;
+            let totalImages = 0;
             
             inputs.forEach((input, index) => {
                 const filename = input.value.trim();
                 if (filename) {
                     hasImages = true;
+                    totalImages++;
+                    
+                    // Remove any existing error class
+                    input.classList.remove('image-error');
+                    
                     const imageUrl = `assets/products/${filename}`;
                     const preview = document.createElement('div');
                     preview.className = 'image-preview-item';
@@ -936,20 +1059,21 @@
                     const img = new Image();
                     img.onload = function() {
                         preview.innerHTML = `
-                            <img src="${imageUrl}" alt="Preview">
+                            <img src="${imageUrl}" alt="Preview" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x100?text=Image+Error'">
                             <span>${filename}</span>
                         `;
+                        validImages++;
+                        updateValidationMessage(validImages, totalImages);
                     };
                     img.onerror = function() {
                         preview.innerHTML = `
-                            <div style="background:#ffebee;height:100px;display:flex;align-items:center;justify-content:center;border-radius:3px;">
-                                <i class="fas fa-exclamation-triangle" style="color:#d32f2f;font-size:24px;"></i>
+                            <div style="background:#fff3e0;height:100px;display:flex;align-items:center;justify-content:center;border-radius:3px;">
+                                <i class="fas fa-exclamation-triangle" style="color:#ff9800;font-size:24px;"></i>
                             </div>
-                            <span style="color:#d32f2f;">${filename} (Not found)</span>
+                            <span style="color:#ff9800;">${filename} (Not found on GitHub)</span>
                         `;
                         input.classList.add('image-error');
-                        hasErrors = true;
-                        imageError.textContent = `Warning: Some images may not exist in GitHub repository.`;
+                        updateValidationMessage(validImages, totalImages);
                     };
                     img.src = imageUrl;
                     
@@ -965,12 +1089,31 @@
                     </div>
                 `;
                 imageError.textContent = '';
-            } else if (!hasErrors) {
+                validationDiv.style.display = 'none';
+            } else {
+                validationDiv.style.display = 'flex';
                 imageError.textContent = '';
             }
+        }
+        
+        function updateValidationMessage(valid, total) {
+            const validationDiv = document.getElementById('imageValidation');
+            const validationText = document.getElementById('validationText');
+            const icon = validationDiv.querySelector('i');
             
-            // Remove error class from all inputs initially
-            inputs.forEach(input => input.classList.remove('image-error'));
+            if (valid === total) {
+                icon.className = 'fas fa-check-circle valid';
+                validationText.textContent = `All ${total} image(s) are valid`;
+                validationText.style.color = '#4caf50';
+            } else if (valid === 0) {
+                icon.className = 'fas fa-exclamation-triangle invalid';
+                validationText.textContent = `None of the ${total} image(s) were found on GitHub`;
+                validationText.style.color = '#f44336';
+            } else {
+                icon.className = 'fas fa-exclamation-triangle';
+                validationText.textContent = `${valid} of ${total} image(s) found on GitHub`;
+                validationText.style.color = '#ff9800';
+            }
         }
         
         // Get image URLs from form
@@ -1032,27 +1175,6 @@
             
             updateImagePreviews();
         }
-        
-        // Initialize with one image input
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize default quotes
-            renderQuotesList();
-            
-            // Add category button event
-            document.getElementById('addCategoryBtn').addEventListener('click', addNewCategory);
-            
-            // Refresh categories button
-            document.getElementById('refreshCategories').addEventListener('click', loadCategories);
-            
-            // Add quote button
-            document.getElementById('addQuoteBtn').addEventListener('click', addNewQuote);
-            
-            // Refresh products button
-            document.getElementById('refreshProducts').addEventListener('click', loadProducts);
-            
-            // Initialize image previews
-            updateImagePreviews();
-        });
         
         // Category management
         function addNewCategory() {
@@ -1184,12 +1306,10 @@
         }
         
         function loadCategories() {
-            // This function will be implemented in admin.js
             showSuccess('Refreshing categories...');
         }
         
         function loadProducts() {
-            // This function will be implemented in admin.js
             showSuccess('Refreshing products...');
         }
         
@@ -1198,6 +1318,37 @@
             document.getElementById('successText').textContent = message;
             successElement.style.display = 'flex';
         }
+        
+        // Global functions to be called from admin.js
+        window.setProductFormData = function(product) {
+            document.getElementById('productName').value = product.name || '';
+            document.getElementById('productCategory').value = product.category || '';
+            document.getElementById('productPages').value = product.pages || '';
+            document.getElementById('productPrice').value = product.price || '';
+            document.getElementById('productStock').value = product.stock || '';
+            document.getElementById('productDescription').value = product.description || '';
+            document.getElementById('productFeatures').value = product.features || '';
+            document.getElementById('editProductId').value = product.id || '';
+            
+            // Set images
+            setImageUrls(product.images || []);
+            
+            // Update button text
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Update Product';
+            document.getElementById('submitBtn').textContent = 'Update Product';
+            document.getElementById('cancelEdit').style.display = 'inline-block';
+        };
+        
+        window.resetProductForm = function() {
+            document.getElementById('productForm').reset();
+            document.getElementById('editProductId').value = '';
+            document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Add Product';
+            document.getElementById('submitBtn').textContent = 'Add Product';
+            document.getElementById('cancelEdit').style.display = 'none';
+            
+            // Reset images to one input
+            setImageUrls([]);
+        };
         
         // Function to render admin product card
         function renderAdminProduct(product) {
@@ -1241,10 +1392,10 @@
                         ` : ''}
                         
                         <div class="admin-product-actions">
-                            <button class="btn-small edit-product" onclick="editProduct('${product.id}')" style="background:#e3f2fd;color:#1976d2;">
+                            <button class="btn-small edit-product" onclick="window.editProduct('${product.id}')" style="background:#e3f2fd;color:#1976d2;">
                                 <i class="fas fa-edit"></i> Edit
                             </button>
-                            <button class="btn-small delete-product" onclick="deleteProduct('${product.id}')" style="background:#ffebee;color:#d32f2f;">
+                            <button class="btn-small delete-product" onclick="window.deleteProduct('${product.id}')" style="background:#ffebee;color:#d32f2f;">
                                 <i class="fas fa-trash"></i> Delete
                             </button>
                         </div>
@@ -1280,18 +1431,10 @@
             }
         };
         
-        // These functions will be implemented in admin.js
-        function editProduct(productId) {
-            console.log('Edit product:', productId);
-            // Will be implemented in admin.js
-        }
-        
-        function deleteProduct(productId) {
-            if (confirm('Are you sure you want to delete this product?')) {
-                console.log('Delete product:', productId);
-                // Will be implemented in admin.js
-            }
-        }
+        // Cancel edit button
+        document.getElementById('cancelEdit').addEventListener('click', function() {
+            window.resetProductForm();
+        });
     </script>
 </body>
 </html>
