@@ -175,13 +175,41 @@ async function handleProductSubmit(e) {
     }
 }
 
-// === SAFE IMAGE LOADING - NO MORE 404 ERRORS ===
+// === GLOBAL FUNCTION FOR FORM SUBMISSION (used by admin.html) ===
+window.submitProductForm = async function(product, editProductId = '') {
+    try {
+        if (editProductId) {
+            // Update existing product
+            await updateDoc(doc(db, "products", editProductId), product);
+            showNotification('Product updated successfully!');
+        } else {
+            // Add new product
+            product.createdAt = new Date().toISOString();
+            await addDoc(collection(db, "products"), product);
+            showNotification('Product added successfully!');
+        }
+        
+        // Reset form
+        if (window.resetProductForm) {
+            window.resetProductForm();
+        }
+        
+        // Reload products
+        await loadProducts();
+        
+    } catch (error) {
+        console.error('Error saving product:', error);
+        alert('Error saving product: ' + error.message);
+    }
+};
+
+// === SAFE IMAGE LOADING ===
 function getSafeImageUrl(filename) {
-    // Return a placeholder image URL that won't cause 404 errors
-    return `https://via.placeholder.com/80x80/cccccc/ffffff?text=${encodeURIComponent(filename.substring(0, 10))}`;
+    // Return a placeholder image URL
+    const encodedText = encodeURIComponent(filename.substring(0, 10));
+    return `https://via.placeholder.com/80x80/cccccc/ffffff?text=${encodedText}`;
 }
 
-// Check if image exists on GitHub
 function checkImageExists(url, callback) {
     const img = new Image();
     img.onload = function() {
@@ -193,7 +221,7 @@ function checkImageExists(url, callback) {
     img.src = url;
 }
 
-// === PRODUCT DISPLAY ===
+// === PRODUCT DISPLAY - FIXED MULTI-IMAGE SUPPORT ===
 function createProductListItem(product, id) {
     const productItem = document.createElement('div');
     productItem.className = 'admin-product-card';
@@ -216,7 +244,7 @@ function createProductListItem(product, id) {
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ') : 'Uncategorized';
     
-    // Create images HTML - using safe image loading
+    // Create images HTML - FIXED: Show all images
     const images = product.images || [];
     let imagesHTML = '';
     
@@ -228,40 +256,51 @@ function createProductListItem(product, id) {
             imagesHTML += `
                 <img src="${safeImageUrl}" 
                      data-src="${githubImageUrl}"
-                     alt="${product.name}" 
+                     alt="${product.name} - Image ${index + 1}" 
                      class="lazy-image"
-                     onload="this.classList.add('loaded')"
-                     style="width:80px;height:80px;object-fit:cover;border-radius:5px;border:1px solid #ddd;">
+                     style="width:80px;height:80px;object-fit:cover;border-radius:5px;border:1px solid #ddd;margin-right:5px;">
             `;
         });
     } else {
-        imagesHTML = '<img src="https://via.placeholder.com/80x80/cccccc/ffffff?text=No+Image">';
+        imagesHTML = '<img src="https://via.placeholder.com/80x80/cccccc/ffffff?text=No+Image" style="width:80px;height:80px;border:1px solid #ddd;">';
     }
     
     productItem.innerHTML = `
-        <div class="admin-product-images">
+        <div class="admin-product-images" style="min-height:90px;display:flex;overflow-x:auto;padding:10px;">
             ${imagesHTML}
         </div>
-        <div class="admin-product-info">
-            <h4>${product.name} 
-                <span class="product-status ${stockClass}">${stockText}</span>
+        <div class="admin-product-info" style="padding:15px;">
+            <h4 style="margin:0 0 10px 0;font-size:16px;color:#333;">
+                ${product.name} 
+                <span class="product-status ${stockClass}" style="display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;margin-left:10px;">
+                    ${stockText}
+                </span>
             </h4>
-            <p><strong>Pages:</strong> ${product.pages} | <strong>Price:</strong> ₹${product.price}</p>
-            <p><strong>Category:</strong> ${categoryName}</p>
-            <p><strong>Stock:</strong> ${product.stock} units</p>
-            <p><strong>Images:</strong> ${images.length} image(s)</p>
+            <p style="margin:5px 0;color:#666;font-size:13px;">
+                <strong>Pages:</strong> ${product.pages} | 
+                <strong>Price:</strong> ₹${product.price} | 
+                <strong>Stock:</strong> ${product.stock} units
+            </p>
+            <p style="margin:5px 0;color:#666;font-size:13px;">
+                <strong>Category:</strong> ${categoryName}
+            </p>
+            <p style="margin:5px 0;color:#666;font-size:13px;">
+                <strong>Images:</strong> ${images.length} image(s)
+            </p>
             
             ${product.description ? `
-                <p style="margin-top: 10px; font-size: 14px; color: #666;">
+                <p style="margin-top:10px;font-size:13px;color:#666;border-top:1px solid #eee;padding-top:10px;">
                     ${product.description.length > 100 ? product.description.substring(0, 100) + '...' : product.description}
                 </p>
             ` : ''}
             
-            <div class="admin-product-actions">
-                <button class="btn-small edit-product" onclick="editProduct('${id}')">
+            <div class="admin-product-actions" style="display:flex;gap:10px;margin-top:15px;">
+                <button class="btn-small edit-product" onclick="window.editProduct('${id}')" 
+                        style="background:#e3f2fd;color:#1976d2;border:1px solid #1976d2;padding:5px 10px;border-radius:3px;cursor:pointer;font-size:12px;">
                     <i class="fas fa-edit"></i> Edit
                 </button>
-                <button class="btn-small delete-product" onclick="deleteProduct('${id}', '${product.name.replace(/'/g, "\\'")}')">
+                <button class="btn-small delete-product" onclick="window.deleteProduct('${id}', '${product.name.replace(/'/g, "\\'")}')" 
+                        style="background:#ffebee;color:#d32f2f;border:1px solid #ffcdd2;padding:5px 10px;border-radius:3px;cursor:pointer;font-size:12px;">
                     <i class="fas fa-trash"></i> Delete
                 </button>
             </div>
@@ -281,7 +320,6 @@ function createProductListItem(product, id) {
                 checkImageExists(githubUrl, (exists) => {
                     if (exists) {
                         img.src = githubUrl;
-                        img.classList.add('loaded');
                     }
                 });
             }
@@ -290,7 +328,7 @@ function createProductListItem(product, id) {
 }
 
 // === EDIT PRODUCT ===
-async function editProduct(productId) {
+window.editProduct = async function(productId) {
     try {
         const productRef = doc(db, "products", productId);
         const productDoc = await getDoc(productRef);
@@ -332,10 +370,10 @@ async function editProduct(productId) {
         console.error('Error loading product:', error);
         showNotification('Error loading product: ' + error.message, true);
     }
-}
+};
 
 // === DELETE PRODUCT ===
-async function deleteProduct(productId, productName) {
+window.deleteProduct = async function(productId, productName) {
     if (confirm(`Are you sure you want to delete "${productName}"?`)) {
         try {
             await deleteDoc(doc(db, "products", productId));
@@ -346,7 +384,7 @@ async function deleteProduct(productId, productName) {
             showNotification('Error deleting product: ' + error.message, true);
         }
     }
-}
+};
 
 // === RESET FORM ===
 function resetForm() {
@@ -368,6 +406,9 @@ function resetForm() {
         window.resetProductForm();
     }
 }
+
+// Expose resetForm globally
+window.resetProductForm = resetForm;
 
 // === LOAD PRODUCTS ===
 async function loadProducts() {
@@ -464,7 +505,7 @@ function filterProducts() {
     productCards.forEach(card => {
         const productName = card.querySelector('h4').textContent.toLowerCase();
         const productCategory = card.getAttribute('data-category');
-        const productDescription = card.querySelector('p[style*="margin-top: 10px"]')?.textContent.toLowerCase() || '';
+        const productDescription = card.querySelector('p[style*="margin-top:10px"]')?.textContent.toLowerCase() || '';
         
         const matchesSearch = productName.includes(searchTerm) || productDescription.includes(searchTerm);
         const matchesCategory = categoryFilter === 'all' || productCategory === categoryFilter;
@@ -503,7 +544,7 @@ async function loadCategories() {
                     categoryTag.className = 'category-tag';
                     categoryTag.innerHTML = `
                         ${category}
-                        <button onclick="removeCategory('${category}')"><i class="fas fa-times"></i></button>
+                        <button onclick="window.removeCategory('${category}')"><i class="fas fa-times"></i></button>
                     `;
                     categoriesList.appendChild(categoryTag);
                 }
@@ -542,7 +583,7 @@ async function loadCategories() {
 }
 
 // === ADD NEW CATEGORY ===
-async function addNewCategory() {
+window.addNewCategory = async function() {
     const input = document.getElementById('newCategoryInput');
     let categoryName = input.value.trim().toLowerCase().replace(/\s+/g, '-');
     
@@ -571,10 +612,10 @@ async function addNewCategory() {
         console.error('Error adding category:', error);
         showNotification('Error adding category: ' + error.message, true);
     }
-}
+};
 
 // === REMOVE CATEGORY ===
-async function removeCategory(categoryName) {
+window.removeCategory = async function(categoryName) {
     if (confirm(`Are you sure you want to remove category "${categoryName}"?`)) {
         try {
             // Find and delete category from Firestore
@@ -596,7 +637,7 @@ async function removeCategory(categoryName) {
             showNotification('Error removing category: ' + error.message, true);
         }
     }
-}
+};
 
 // === QUOTES MANAGEMENT ===
 async function loadQuotes() {
@@ -649,10 +690,10 @@ function createQuoteItem(quote, id) {
     quoteItem.innerHTML = `
         <span>${quote.text}</span>
         <div class="quote-actions">
-            <button class="btn-small edit-quote" onclick="editQuote('${id}', '${quote.text.replace(/'/g, "\\'")}')">
+            <button class="btn-small edit-quote" onclick="window.editQuote('${id}', '${quote.text.replace(/'/g, "\\'")}')">
                 Edit
             </button>
-            <button class="btn-small delete-quote" onclick="deleteQuote('${id}')">
+            <button class="btn-small delete-quote" onclick="window.deleteQuote('${id}')">
                 Delete
             </button>
         </div>
@@ -688,7 +729,7 @@ async function addQuote() {
     }
 }
 
-async function editQuote(id, currentText) {
+window.editQuote = async function(id, currentText) {
     const newText = prompt('Edit quote:', currentText);
     if (newText === null || newText.trim() === '') return;
     
@@ -704,9 +745,9 @@ async function editQuote(id, currentText) {
         console.error('Error updating quote:', error);
         showNotification('Error updating quote: ' + error.message, true);
     }
-}
+};
 
-async function deleteQuote(id) {
+window.deleteQuote = async function(id) {
     if (confirm('Are you sure you want to delete this quote?')) {
         try {
             await deleteDoc(doc(db, "quotes", id));
@@ -716,7 +757,7 @@ async function deleteQuote(id) {
             showNotification('Error deleting quote: ' + error.message, true);
         }
     }
-}
+};
 
 // === STOCK CHART ===
 function updateStockChart(productsData) {
@@ -1063,15 +1104,34 @@ window.deleteFAQ = async function(faqId) {
     }
 };
 
+// === GLOBAL RENDER FUNCTIONS ===
+window.renderAdminProducts = function(products) {
+    const productsList = document.getElementById('productsList');
+    if (productsList) {
+        productsList.innerHTML = '';
+        
+        if (products.length === 0) {
+            productsList.innerHTML = `
+                <div style="text-align: center; padding: 50px; width: 100%; grid-column: 1 / -1;">
+                    <i class="fas fa-book" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
+                    <p style="color: #999; font-size: 18px;">No products found. Add your first product above.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        products.forEach(product => {
+            const productElement = document.createElement('div');
+            productElement.innerHTML = createProductListItem(product, product.id);
+            productsList.appendChild(productElement);
+        });
+        
+        // Update total products count
+        document.getElementById('totalProducts').textContent = `${products.length} Products`;
+    }
+};
+
 // === INITIALIZE ===
 document.addEventListener('DOMContentLoaded', () => {
     initAdmin();
 });
-
-// Export functions for global access
-window.editProduct = editProduct;
-window.deleteProduct = deleteProduct;
-window.addNewCategory = addNewCategory;
-window.removeCategory = removeCategory;
-window.editQuote = editQuote;
-window.deleteQuote = deleteQuote;
