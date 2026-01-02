@@ -1,6 +1,18 @@
 // === IMPORTS ===
 import { auth, db, showNotification } from './app.js';
-import { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import { 
+    collection, 
+    addDoc, 
+    getDocs, 
+    getDoc, 
+    updateDoc, 
+    deleteDoc, 
+    doc, 
+    onSnapshot, 
+    query, 
+    where, 
+    orderBy 
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
 // === DOM ELEMENTS ===
 const productForm = document.getElementById('productForm');
@@ -9,7 +21,7 @@ const logoutBtn = document.getElementById('logoutBtn');
 const submitBtn = document.getElementById('submitBtn');
 const cancelEdit = document.getElementById('cancelEdit');
 const editProductId = document.getElementById('editProductId');
-// Note: 'imagePreview' and 'imageInfo' are still used but referenced by ID
+const refreshProductsBtn = document.getElementById('refreshProducts');
 
 // Chart variable
 let stockChart;
@@ -28,29 +40,73 @@ async function initAdmin() {
 
 async function setupAdmin() {
     logoutBtn.addEventListener('click', handleLogout);
-    loadProducts();
-    loadQuotes();
-    loadPendingFeedback();
-    loadFAQsAdmin();
+    
+    // Load initial data
+    await loadProducts();
+    await loadCategories();
+    await loadQuotes();
+    await loadPendingFeedback();
+    await loadFAQsAdmin();
 
+    // Setup event listeners
     if (productForm) {
         productForm.addEventListener('submit', handleProductSubmit);
     }
     if (cancelEdit) {
         cancelEdit.addEventListener('click', resetForm);
     }
+    
+    // Refresh button
+    if (refreshProductsBtn) {
+        refreshProductsBtn.addEventListener('click', loadProducts);
+    }
+    
+    // Add quote button
     const addQuoteBtn = document.getElementById('addQuoteBtn');
     if (addQuoteBtn) {
         addQuoteBtn.addEventListener('click', addQuote);
     }
     
-    // Add event listeners for image preview on the 4 text inputs
-    ['productImage1', 'productImage2', 'productImage3', 'productImage4'].forEach(id => {
-        const input = document.getElementById(id);
-        if (input) {
-            input.addEventListener('input', previewImagesFromInputs);
-        }
-    });
+    // Add FAQ button
+    const addFaqBtn = document.getElementById('addFaqBtn');
+    if (addFaqBtn) {
+        addFaqBtn.addEventListener('click', window.addFAQ);
+    }
+    
+    // Refresh FAQs button
+    const refreshFaqsBtn = document.getElementById('refreshFaqsBtn');
+    if (refreshFaqsBtn) {
+        refreshFaqsBtn.addEventListener('click', loadFAQsAdmin);
+    }
+    
+    // Refresh pending feedback button
+    const refreshPendingBtn = document.getElementById('refreshPendingBtn');
+    if (refreshPendingBtn) {
+        refreshPendingBtn.addEventListener('click', loadPendingFeedback);
+    }
+    
+    // View all feedback button
+    const viewAllBtn = document.getElementById('viewAllBtn');
+    if (viewAllBtn) {
+        viewAllBtn.addEventListener('click', viewAllFeedback);
+    }
+    
+    // Category management
+    const addCategoryBtn = document.getElementById('addCategoryBtn');
+    if (addCategoryBtn) {
+        addCategoryBtn.addEventListener('click', addNewCategory);
+    }
+    
+    // Search and filter products
+    const searchProduct = document.getElementById('searchProduct');
+    if (searchProduct) {
+        searchProduct.addEventListener('input', filterProducts);
+    }
+    
+    const filterCategory = document.getElementById('filterCategory');
+    if (filterCategory) {
+        filterCategory.addEventListener('change', filterProducts);
+    }
 }
 
 async function handleLogout() {
@@ -63,117 +119,41 @@ async function handleLogout() {
     }
 }
 
-// === NEW: Function to preview images from text inputs ===
-function previewImagesFromInputs() {
-    const previewContainer = document.getElementById('multipleImagePreview');
-    const imageInfo = document.getElementById('imageInfo');
-    if (!previewContainer || !imageInfo) return;
-    
-    previewContainer.innerHTML = '';
-    
-    // Collect filenames from all 4 inputs
-    const imageFilenames = [];
-    for (let i = 1; i <= 4; i++) {
-        const input = document.getElementById(`productImage${i}`);
-        if (input && input.value.trim()) {
-            imageFilenames.push(input.value.trim());
-        }
-    }
-    
-    // Show previews
-    if (imageFilenames.length > 0) {
-        imageInfo.innerHTML = `<strong>✅ ${imageFilenames.length} image(s) configured</strong><br>
-                               <small>Image 1 will be the main thumbnail. Make sure files exist in <code>assets/products/</code>.</small>`;
-        
-        imageFilenames.forEach((filename, index) => {
-            const imgContainer = document.createElement('div');
-            imgContainer.style.cssText = `
-                position: relative;
-                width: 100px;
-                margin: 5px;
-            `;
-            
-            // Create image element
-            const img = document.createElement('img');
-            // Construct the full local path for preview
-            img.src = `assets/products/${filename}`;
-            img.alt = `Preview ${index + 1}`;
-            img.style.cssText = `
-                width: 100px;
-                height: 100px;
-                object-fit: cover;
-                border-radius: 5px;
-                border: 2px solid ${index === 0 ? '#3498db' : '#ddd'};
-            `;
-            // Handle missing image files gracefully
-            img.onerror = function() {
-                this.style.borderColor = '#e74c3c';
-                this.style.opacity = '0.7';
-            };
-            
-            // Add caption
-            const caption = document.createElement('div');
-            caption.textContent = `Img ${index + 1}`;
-            caption.style.cssText = `
-                font-size: 0.7rem;
-                text-align: center;
-                margin-top: 5px;
-                color: #666;
-            `;
-            
-            imgContainer.appendChild(img);
-            imgContainer.appendChild(caption);
-            previewContainer.appendChild(imgContainer);
-        });
-    } else {
-        // No filenames entered yet
-        imageInfo.innerHTML = `<strong>📝 Image Guidelines:</strong><br>
-                               1. Upload images to <code>assets/products/</code> folder first.<br>
-                               2. Enter exact filenames above.<br>
-                               3. Image 1 is the main thumbnail.`;
-    }
-}
-
-// === UPDATED: Main product submission function ===
+// === PRODUCT FORM HANDLING ===
 async function handleProductSubmit(e) {
     e.preventDefault();
     
-    // 1. Collect images from the 4 text inputs
-    const imageFilenames = [];
-    for (let i = 1; i <= 4; i++) {
-        const input = document.getElementById(`productImage${i}`);
-        if (input && input.value.trim()) {
-            imageFilenames.push(input.value.trim());
+    // Get all image URLs from the input groups
+    const imageInputs = document.querySelectorAll('.image-url');
+    const imageUrls = [];
+    
+    imageInputs.forEach(input => {
+        const value = input.value.trim();
+        if (value) {
+            // Store only filename, not full path
+            imageUrls.push(value);
         }
-    }
+    });
     
     // Validate at least one image
-    if (imageFilenames.length === 0) {
-        showNotification('Please enter at least one image filename (Image 1 is required).', true);
+    if (imageUrls.length === 0) {
+        showNotification('Please enter at least one image filename.', true);
         return;
     }
     
-    // 2. Build array of full local paths
-    const imagePaths = imageFilenames.map(filename => `assets/products/${filename}`);
-    
-    // 3. Get pages value - can be empty for stationery
-    const pagesInput = document.getElementById('productPages');
-    const pagesValue = pagesInput.value.trim();
-    
-    // 4. Create the product data object
+    // Collect form data
     const productData = {
-        name: document.getElementById('productName').value,
-        // Store pages as a number if provided, otherwise as `null`
-        pages: pagesValue ? parseInt(pagesValue) : null,
+        name: document.getElementById('productName').value.trim(),
+        category: document.getElementById('productCategory').value,
+        pages: parseInt(document.getElementById('productPages').value) || 0,
         price: parseFloat(document.getElementById('productPrice').value),
         stock: parseInt(document.getElementById('productStock').value),
-        description: document.getElementById('productDescription').value || '',
-        // Store the array of image paths
-        images: imagePaths,
+        description: document.getElementById('productDescription').value.trim(),
+        features: document.getElementById('productFeatures').value.trim(),
+        images: imageUrls,
         updatedAt: new Date().toISOString()
     };
     
-    // 5. Save to Firestore
     try {
         if (editProductId.value) {
             // Update existing product
@@ -185,88 +165,77 @@ async function handleProductSubmit(e) {
             await addDoc(collection(db, "products"), productData);
             showNotification('Product added successfully!');
         }
+        
         resetForm();
+        loadProducts();
+        
     } catch (error) {
         console.error('Error saving product:', error);
-        showNotification('Error saving product. Please try again.', true);
+        showNotification('Error saving product: ' + error.message, true);
     }
 }
 
-// === UPDATED: Product display function for admin panel ===
+// === PRODUCT DISPLAY ===
 function createProductListItem(product, id) {
     const productItem = document.createElement('div');
-    productItem.className = 'product-card';
+    productItem.className = 'admin-product-card';
+    productItem.setAttribute('data-category', product.category || 'uncategorized');
     
-    // Stock status logic
-    let stockClass = 'stock-in';
+    // Stock status
+    let stockClass = 'in-stock';
     let stockText = 'In Stock';
     if (product.stock <= 0) {
-        stockClass = 'stock-out';
+        stockClass = 'out-of-stock';
         stockText = 'Out of Stock';
     } else if (product.stock <= 10) {
-        stockClass = 'stock-low';
+        stockClass = 'low-stock';
         stockText = 'Low Stock';
     }
     
-    // --- IMAGE HANDLING: Supports old and new format ---
-    let productImages = [];
-    let imageCount = 0;
-    let mainImageUrl = 'assets/products/default-notebook.jpg';
+    // Format category name for display
+    const categoryName = product.category ? 
+        product.category.split('-').map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ') : 'Uncategorized';
     
-    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-        // NEW FORMAT: Product has an 'images' array
-        productImages = product.images;
-        imageCount = productImages.length;
-        mainImageUrl = productImages[0];
-    } else if (product.imagePath) {
-        // OLD FORMAT (Backward Compatibility): Product has single 'imagePath'
-        productImages = [product.imagePath];
-        imageCount = 1;
-        mainImageUrl = product.imagePath;
+    // Create images HTML
+    const images = product.images || [];
+    let imagesHTML = '';
+    if (images.length > 0) {
+        images.forEach(img => {
+            imagesHTML += `
+                <img src="assets/products/${img}" alt="${product.name}" 
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/80?text=Image'">
+            `;
+        });
     } else {
-        // No image defined, use default
-        productImages = ['assets/products/default-notebook.jpg'];
-        imageCount = 1;
-    }
-    
-    // --- PAGES DISPLAY: Different label for notebooks vs stationery ---
-    let pagesOrTypeHtml = '';
-    if (product.pages) {
-        pagesOrTypeHtml = `<p><i class="fas fa-file-alt"></i> ${product.pages} Pages</p>`;
-    } else {
-        // Product has no pages (like a pen or umbrella)
-        pagesOrTypeHtml = `<p><i class="fas fa-tag"></i> Stationery Item</p>`;
+        imagesHTML = '<img src="https://via.placeholder.com/80?text=No+Image">';
     }
     
     productItem.innerHTML = `
-        <div style="position: relative;">
-            <img src="${mainImageUrl}" 
-                 alt="${product.name}" 
-                 class="product-image"
-                 style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px;"
-                 onerror="this.src='assets/products/default-notebook.jpg'">
-            
-            ${imageCount > 1 ? `
-                <div style="position: absolute; top: 10px; right: 10px; 
-                            background: rgba(0,0,0,0.7); color: white; 
-                            padding: 3px 8px; border-radius: 10px; font-size: 0.8rem;">
-                    <i class="fas fa-images"></i> ${imageCount}
-                </div>
-            ` : ''}
+        <div class="admin-product-images">
+            ${imagesHTML}
         </div>
-        <div class="product-info">
-            <h3 class="product-title">${product.name}</h3>
-            <div class="product-price">₹${product.price}</div>
-            <span class="product-stock ${stockClass}">
-                <i class="fas fa-box"></i> ${stockText} (${product.stock})
-            </span>
-            ${pagesOrTypeHtml}
-            <p>${product.description || 'No description'}</p>
-            <div class="admin-actions" style="display: flex; gap: 10px; margin-top: 10px;">
-                <button class="btn-primary edit-btn" data-id="${id}">
+        <div class="admin-product-info">
+            <h4>${product.name} 
+                <span class="product-status ${stockClass}">${stockText}</span>
+            </h4>
+            <p><strong>Pages:</strong> ${product.pages} | <strong>Price:</strong> ₹${product.price}</p>
+            <p><strong>Category:</strong> ${categoryName}</p>
+            <p><strong>Stock:</strong> ${product.stock} units</p>
+            <p><strong>Images:</strong> ${images.length} image(s)</p>
+            
+            ${product.description ? `
+                <p style="margin-top: 10px; font-size: 14px; color: #666;">
+                    ${product.description.length > 100 ? product.description.substring(0, 100) + '...' : product.description}
+                </p>
+            ` : ''}
+            
+            <div class="admin-product-actions">
+                <button class="btn-small edit-product" onclick="editProduct('${id}')">
                     <i class="fas fa-edit"></i> Edit
                 </button>
-                <button class="btn-secondary delete-btn" data-id="${id}">
+                <button class="btn-small delete-product" onclick="deleteProduct('${id}', '${product.name.replace(/'/g, "\\'")}')">
                     <i class="fas fa-trash"></i> Delete
                 </button>
             </div>
@@ -276,155 +245,422 @@ function createProductListItem(product, id) {
     if (productsList) {
         productsList.appendChild(productItem);
     }
-    
-    // Add event listeners for edit and delete
-    productItem.querySelector('.edit-btn')?.addEventListener('click', () => editProduct(id, product));
-    productItem.querySelector('.delete-btn')?.addEventListener('click', () => deleteProduct(id, product.name));
 }
 
-// === UPDATED: Edit product function ===
-function editProduct(id, product) {
-    // Fill basic fields
-    document.getElementById('productName').value = product.name;
-    document.getElementById('productPages').value = product.pages || '';
-    document.getElementById('productPrice').value = product.price;
-    document.getElementById('productStock').value = product.stock;
-    document.getElementById('productDescription').value = product.description || '';
-    editProductId.value = id;
-    
-    // --- Populate the 4 image text inputs ---
-    // First, clear all 4 inputs
-    for (let i = 1; i <= 4; i++) {
-        const input = document.getElementById(`productImage${i}`);
-        if (input) input.value = '';
-    }
-    
-    // Determine which images to load (support old and new format)
-    let imagesToLoad = [];
-    if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-        imagesToLoad = product.images;
-    } else if (product.imagePath) {
-        imagesToLoad = [product.imagePath];
-    }
-    
-    // Fill the inputs with just the filename (strip the path)
-    imagesToLoad.forEach((fullPath, index) => {
-        if (index < 4) { // Only fill first 4 inputs
-            const input = document.getElementById(`productImage${index + 1}`);
-            if (input) {
-                // Extract "filename.jpg" from "assets/products/filename.jpg"
-                const filename = fullPath.replace('assets/products/', '');
-                input.value = filename;
+// === EDIT PRODUCT ===
+async function editProduct(productId) {
+    try {
+        const productRef = doc(db, "products", productId);
+        const productDoc = await getDoc(productRef);
+        
+        if (productDoc.exists()) {
+            const product = {
+                id: productId,
+                ...productDoc.data()
+            };
+            
+            // Call global function to set form data
+            if (window.setProductFormData) {
+                window.setProductFormData(product);
+            } else {
+                // Fallback
+                document.getElementById('productName').value = product.name || '';
+                document.getElementById('productCategory').value = product.category || '';
+                document.getElementById('productPages').value = product.pages || '';
+                document.getElementById('productPrice').value = product.price || '';
+                document.getElementById('productStock').value = product.stock || '';
+                document.getElementById('productDescription').value = product.description || '';
+                document.getElementById('productFeatures').value = product.features || '';
+                editProductId.value = productId;
+                
+                // Set images
+                if (window.setImageUrls) {
+                    window.setImageUrls(product.images || []);
+                }
+                
+                // Update button text
+                document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Update Product';
+                document.getElementById('cancelEdit').style.display = 'inline-block';
             }
+            
+            // Scroll to form
+            document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth' });
         }
-    });
-    
-    // Trigger the preview to update
-    previewImagesFromInputs();
-    
-    // Update UI for edit mode
-    if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Product';
-    if (cancelEdit) cancelEdit.style.display = 'inline-block';
-    
-    // Scroll to the form
-    const formCard = document.querySelector('.form-card');
-    if (formCard) formCard.scrollIntoView({ behavior: 'smooth' });
+    } catch (error) {
+        console.error('Error loading product:', error);
+        showNotification('Error loading product: ' + error.message, true);
+    }
 }
 
-async function deleteProduct(id, productName) {
+// === DELETE PRODUCT ===
+async function deleteProduct(productId, productName) {
     if (confirm(`Are you sure you want to delete "${productName}"?`)) {
         try {
-            await deleteDoc(doc(db, "products", id));
+            await deleteDoc(doc(db, "products", productId));
             showNotification('Product deleted successfully!');
+            loadProducts();
         } catch (error) {
             console.error('Error deleting product:', error);
-            showNotification('Error deleting product. Please try again.', true);
+            showNotification('Error deleting product: ' + error.message, true);
         }
     }
 }
 
-// === UPDATED: Reset form function ===
+// === RESET FORM ===
 function resetForm() {
     if (productForm) productForm.reset();
     editProductId.value = '';
     
-    // Clear image previews and reset info text
-    const previewContainer = document.getElementById('multipleImagePreview');
-    const imageInfo = document.getElementById('imageInfo');
-    
-    if (previewContainer) previewContainer.innerHTML = '';
-    if (imageInfo) {
-        imageInfo.innerHTML = `<strong>📝 Image Guidelines:</strong><br>
-                               1. Upload images to <code>assets/products/</code> folder first.<br>
-                               2. Enter exact filenames above.<br>
-                               3. Image 1 is the main thumbnail.`;
+    // Reset submit button text
+    if (submitBtn) {
+        submitBtn.innerHTML = '<i class="fas fa-save"></i> Add Product';
     }
     
-    if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-save"></i> Add Product';
-    if (cancelEdit) cancelEdit.style.display = 'none';
+    // Hide cancel button
+    if (cancelEdit) {
+        cancelEdit.style.display = 'none';
+    }
+    
+    // Reset images
+    if (window.resetProductForm) {
+        window.resetProductForm();
+    }
 }
 
-// === OTHER ADMIN FUNCTIONS (Mostly unchanged) ===
-function loadProducts() {
-    onSnapshot(collection(db, "products"), (snapshot) => {
-        if (productsList) productsList.innerHTML = '';
-        let totalProducts = 0, lowStockCount = 0;
+// === LOAD PRODUCTS ===
+async function loadProducts() {
+    try {
+        const productsRef = collection(db, "products");
+        const q = query(productsRef, orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+        
+        if (productsList) {
+            productsList.innerHTML = '';
+        }
+        
+        let totalProducts = 0;
+        let lowStockCount = 0;
         const productsData = [];
         
-        snapshot.forEach((doc) => {
+        querySnapshot.forEach((doc) => {
             const product = doc.data();
+            const productId = doc.id;
+            
             totalProducts++;
-            if (product.stock <= 10) lowStockCount++;
-            productsData.push({ id: doc.id, ...product });
-            if (productsList) createProductListItem(product, doc.id);
+            if (product.stock <= 10 && product.stock > 0) {
+                lowStockCount++;
+            }
+            
+            productsData.push({ id: productId, ...product });
+            createProductListItem(product, productId);
         });
         
+        // Update stats
         const totalProductsEl = document.getElementById('totalProducts');
         const lowStockEl = document.getElementById('lowStock');
-        if (totalProductsEl) totalProductsEl.textContent = `${totalProducts} Products`;
-        if (lowStockEl) lowStockEl.textContent = `${lowStockCount} Low Stock`;
+        
+        if (totalProductsEl) {
+            totalProductsEl.textContent = `${totalProducts} Products`;
+        }
+        if (lowStockEl) {
+            lowStockEl.textContent = `${lowStockCount} Low Stock`;
+        }
+        
+        // Update chart
         updateStockChart(productsData);
+        
+        // Update categories in filter
+        updateCategoryFilter(productsData);
+        
+    } catch (error) {
+        console.error('Error loading products:', error);
+        if (productsList) {
+            productsList.innerHTML = `
+                <div style="text-align: center; padding: 50px; width: 100%; grid-column: 1 / -1;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 60px; color: #e74c3c; margin-bottom: 20px;"></i>
+                    <p style="color: #e74c3c; font-size: 18px;">Error loading products. Please check your connection.</p>
+                </div>
+            `;
+        }
+    }
+}
+
+// === UPDATE CATEGORY FILTER ===
+function updateCategoryFilter(productsData) {
+    const filterSelect = document.getElementById('filterCategory');
+    if (!filterSelect) return;
+    
+    // Get unique categories from products
+    const categories = ['all'];
+    productsData.forEach(product => {
+        if (product.category && !categories.includes(product.category)) {
+            categories.push(product.category);
+        }
+    });
+    
+    // Update filter options
+    filterSelect.innerHTML = '<option value="all">All Categories</option>';
+    categories.forEach(category => {
+        if (category !== 'all') {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category.split('-').map(word => 
+                word.charAt(0).toUpperCase() + word.slice(1)
+            ).join(' ');
+            filterSelect.appendChild(option);
+        }
     });
 }
 
+// === FILTER PRODUCTS ===
+function filterProducts() {
+    const searchTerm = document.getElementById('searchProduct')?.value.toLowerCase() || '';
+    const categoryFilter = document.getElementById('filterCategory')?.value || 'all';
+    
+    const productCards = document.querySelectorAll('.admin-product-card');
+    
+    productCards.forEach(card => {
+        const productName = card.querySelector('h4').textContent.toLowerCase();
+        const productCategory = card.getAttribute('data-category');
+        const productDescription = card.querySelector('p[style*="margin-top: 10px"]')?.textContent.toLowerCase() || '';
+        
+        const matchesSearch = productName.includes(searchTerm) || productDescription.includes(searchTerm);
+        const matchesCategory = categoryFilter === 'all' || productCategory === categoryFilter;
+        
+        if (matchesSearch && matchesCategory) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// === LOAD CATEGORIES ===
+async function loadCategories() {
+    try {
+        const categoriesRef = collection(db, "categories");
+        const querySnapshot = await getDocs(categoriesRef);
+        
+        const categoriesList = document.getElementById('categoriesList');
+        const categorySelect = document.getElementById('productCategory');
+        const filterSelect = document.getElementById('filterCategory');
+        
+        if (categoriesList) {
+            categoriesList.innerHTML = '';
+        }
+        
+        const categories = [];
+        querySnapshot.forEach((doc) => {
+            const category = doc.data().name;
+            if (category && !categories.includes(category)) {
+                categories.push(category);
+                
+                // Add to categories list
+                if (categoriesList) {
+                    const categoryTag = document.createElement('div');
+                    categoryTag.className = 'category-tag';
+                    categoryTag.innerHTML = `
+                        ${category}
+                        <button onclick="removeCategory('${category}')"><i class="fas fa-times"></i></button>
+                    `;
+                    categoriesList.appendChild(categoryTag);
+                }
+                
+                // Add to category select
+                if (categorySelect) {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category.split('-').map(word => 
+                        word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ');
+                    categorySelect.appendChild(option);
+                }
+                
+                // Add to filter select
+                if (filterSelect) {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category.split('-').map(word => 
+                        word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ');
+                    filterSelect.appendChild(option);
+                }
+            }
+        });
+        
+        // Update categories count
+        const totalCategoriesEl = document.getElementById('totalCategories');
+        if (totalCategoriesEl) {
+            totalCategoriesEl.textContent = `${categories.length} Categories`;
+        }
+        
+    } catch (error) {
+        console.error('Error loading categories:', error);
+    }
+}
+
+// === ADD NEW CATEGORY ===
+async function addNewCategory() {
+    const input = document.getElementById('newCategoryInput');
+    let categoryName = input.value.trim().toLowerCase().replace(/\s+/g, '-');
+    
+    if (!categoryName) {
+        alert('Please enter a category name');
+        return;
+    }
+    
+    // Remove special characters
+    categoryName = categoryName.replace(/[^a-z0-9-]/g, '');
+    
+    try {
+        // Add to Firestore
+        await addDoc(collection(db, "categories"), {
+            name: categoryName,
+            createdAt: new Date().toISOString()
+        });
+        
+        showNotification('Category added successfully!');
+        input.value = '';
+        
+        // Reload categories
+        await loadCategories();
+        
+    } catch (error) {
+        console.error('Error adding category:', error);
+        showNotification('Error adding category: ' + error.message, true);
+    }
+}
+
+// === REMOVE CATEGORY ===
+async function removeCategory(categoryName) {
+    if (confirm(`Are you sure you want to remove category "${categoryName}"?`)) {
+        try {
+            // Find and delete category from Firestore
+            const categoriesRef = collection(db, "categories");
+            const q = query(categoriesRef, where("name", "==", categoryName));
+            const querySnapshot = await getDocs(q);
+            
+            querySnapshot.forEach(async (doc) => {
+                await deleteDoc(doc.ref);
+            });
+            
+            showNotification('Category removed successfully!');
+            
+            // Reload categories
+            await loadCategories();
+            
+        } catch (error) {
+            console.error('Error removing category:', error);
+            showNotification('Error removing category: ' + error.message, true);
+        }
+    }
+}
+
+// === QUOTES MANAGEMENT ===
 async function loadQuotes() {
-    onSnapshot(collection(db, "quotes"), (snapshot) => {
+    try {
+        const quotesRef = collection(db, "quotes");
+        const q = query(quotesRef, orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+        
         const quotesList = document.getElementById('quotesList');
         if (!quotesList) return;
+        
         quotesList.innerHTML = '';
-        snapshot.forEach((doc) => createQuoteItem(doc.data(), doc.id));
-    });
+        
+        if (querySnapshot.empty) {
+            // Add default quotes if none exist
+            const defaultQuotes = [
+                "Where Thoughts Find Their Perfect Home",
+                "Quality Pages for Lifelong Memories",
+                "Writing transforms thoughts into treasures",
+                "Your ideas are precious. We provide the perfect canvas to preserve them",
+                "From thoughts to tangible memories"
+            ];
+            
+            for (const quoteText of defaultQuotes) {
+                await addDoc(collection(db, "quotes"), {
+                    text: quoteText,
+                    createdAt: new Date().toISOString()
+                });
+            }
+            
+            // Reload quotes
+            await loadQuotes();
+            return;
+        }
+        
+        querySnapshot.forEach((doc) => {
+            const quote = doc.data();
+            createQuoteItem(quote, doc.id);
+        });
+        
+    } catch (error) {
+        console.error('Error loading quotes:', error);
+    }
 }
 
 function createQuoteItem(quote, id) {
     const quoteItem = document.createElement('div');
-    quoteItem.className = 'quote-card';
-    quoteItem.style.margin = '10px 0';
+    quoteItem.className = 'quote-item';
+    
     quoteItem.innerHTML = `
-        <p>"${quote.text}"</p>
-        <button class="btn-secondary delete-quote-btn" data-id="${id}" style="margin-top: 10px; padding: 5px 10px;">
-            <i class="fas fa-trash"></i> Delete
-        </button>
+        <span>${quote.text}</span>
+        <div class="quote-actions">
+            <button class="btn-small edit-quote" onclick="editQuote('${id}', '${quote.text.replace(/'/g, "\\'")}')">
+                Edit
+            </button>
+            <button class="btn-small delete-quote" onclick="deleteQuote('${id}')">
+                Delete
+            </button>
+        </div>
     `;
+    
     const quotesList = document.getElementById('quotesList');
-    if (quotesList) quotesList.appendChild(quoteItem);
-    quoteItem.querySelector('.delete-quote-btn')?.addEventListener('click', () => deleteQuote(id));
+    if (quotesList) {
+        quotesList.appendChild(quoteItem);
+    }
 }
 
 async function addQuote() {
     const newQuoteInput = document.getElementById('newQuote');
     const text = newQuoteInput.value.trim();
+    
     if (!text) {
         showNotification('Please enter a quote', true);
         return;
     }
+    
     try {
-        await addDoc(collection(db, "quotes"), { text: text, createdAt: new Date().toISOString() });
+        await addDoc(collection(db, "quotes"), {
+            text: text,
+            createdAt: new Date().toISOString()
+        });
+        
         newQuoteInput.value = '';
         showNotification('Quote added successfully!');
+        
     } catch (error) {
         console.error('Error adding quote:', error);
-        showNotification('Error adding quote. Please try again.', true);
+        showNotification('Error adding quote: ' + error.message, true);
+    }
+}
+
+async function editQuote(id, currentText) {
+    const newText = prompt('Edit quote:', currentText);
+    if (newText === null || newText.trim() === '') return;
+    
+    try {
+        await updateDoc(doc(db, "quotes", id), {
+            text: newText.trim(),
+            updatedAt: new Date().toISOString()
+        });
+        
+        showNotification('Quote updated successfully!');
+        
+    } catch (error) {
+        console.error('Error updating quote:', error);
+        showNotification('Error updating quote: ' + error.message, true);
     }
 }
 
@@ -435,14 +671,21 @@ async function deleteQuote(id) {
             showNotification('Quote deleted successfully!');
         } catch (error) {
             console.error('Error deleting quote:', error);
-            showNotification('Error deleting quote. Please try again.', true);
+            showNotification('Error deleting quote: ' + error.message, true);
         }
     }
 }
 
+// === STOCK CHART ===
 function updateStockChart(productsData) {
     const ctx = document.getElementById('stockChart');
     if (!ctx) return;
+    
+    // Destroy existing chart
+    if (stockChart) {
+        stockChart.destroy();
+    }
+    
     const productNames = productsData.map(p => p.name);
     const stockData = productsData.map(p => p.stock);
     const colors = stockData.map(stock => {
@@ -450,27 +693,53 @@ function updateStockChart(productsData) {
         if (stock <= 10) return '#f39c12';
         return '#27ae60';
     });
-    if (stockChart) stockChart.destroy();
+    
     const chartCtx = ctx.getContext('2d');
     stockChart = new Chart(chartCtx, {
         type: 'bar',
-        data: { labels: productNames, datasets: [{ label: 'Stock Quantity', data: stockData, backgroundColor: colors, borderColor: colors, borderWidth: 1 }] },
+        data: {
+            labels: productNames,
+            datasets: [{
+                label: 'Stock Quantity',
+                data: stockData,
+                backgroundColor: colors,
+                borderColor: colors,
+                borderWidth: 1
+            }]
+        },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: { beginAtZero: true, title: { display: true, text: 'Quantity' } },
-                x: { title: { display: true, text: 'Products' }, ticks: { autoSkip: false, maxRotation: 45, minRotation: 45 } }
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Quantity'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Products'
+                    },
+                    ticks: {
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 45
+                    }
+                }
             },
-            plugins: { legend: { display: false } }
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
         }
     });
 }
 
-// ======================================================
-// FEEDBACK MANAGEMENT FUNCTIONS
-// ======================================================
-
+// === FEEDBACK MANAGEMENT ===
 async function loadPendingFeedback() {
     try {
         const q = query(
@@ -478,23 +747,25 @@ async function loadPendingFeedback() {
             where("status", "==", "pending"),
             orderBy("createdAt", "desc")
         );
+        
         const querySnapshot = await getDocs(q);
-
         const container = document.getElementById('pendingFeedbackList');
-        if (!container) {
-            console.log('Feedback container not found on this page');
-            return;
-        }
+        
+        if (!container) return;
+        
         container.innerHTML = '';
+        
         if (querySnapshot.empty) {
             container.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No pending feedback to review.</p>';
             return;
         }
+        
         querySnapshot.forEach((doc) => {
             const feedback = doc.data();
             const item = document.createElement('div');
             item.className = 'form-card';
             item.style.marginBottom = '1rem';
+            
             item.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: start;">
                     <h4 style="margin: 0;">${feedback.customerName}</h4>
@@ -515,8 +786,10 @@ async function loadPendingFeedback() {
                     </button>
                 </div>
             `;
+            
             container.appendChild(item);
         });
+        
     } catch (error) {
         console.error("Error loading pending feedback:", error);
         const container = document.getElementById('pendingFeedbackList');
@@ -526,50 +799,125 @@ async function loadPendingFeedback() {
     }
 }
 
+async function viewAllFeedback() {
+    try {
+        const q = query(
+            collection(db, "feedback_submissions"),
+            orderBy("createdAt", "desc")
+        );
+        
+        const querySnapshot = await getDocs(q);
+        const container = document.getElementById('pendingFeedbackList');
+        
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+            container.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No feedback submissions.</p>';
+            return;
+        }
+        
+        querySnapshot.forEach((doc) => {
+            const feedback = doc.data();
+            const statusColor = feedback.status === 'approved' ? '#27ae60' : 
+                              feedback.status === 'pending' ? '#f39c12' : '#e74c3c';
+            
+            const item = document.createElement('div');
+            item.className = 'form-card';
+            item.style.marginBottom = '1rem';
+            
+            item.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <h4 style="margin: 0;">${feedback.customerName}</h4>
+                    <div>
+                        <span style="background: ${statusColor}; color: white; padding: 3px 10px; border-radius: 3px; font-size: 0.8rem;">
+                            ${feedback.status}
+                        </span>
+                        <div style="color: #f39c12; font-size: 1.2rem; margin-top: 5px;">
+                            ${'★'.repeat(feedback.rating)}${'☆'.repeat(5 - feedback.rating)}
+                        </div>
+                    </div>
+                </div>
+                <p><small>Submitted: ${new Date(feedback.createdAt).toLocaleDateString('en-IN')}</small></p>
+                <p style="background: #f8f9fa; padding: 1rem; border-radius: 5px; margin: 1rem 0;">
+                    "${feedback.message}"
+                </p>
+                ${feedback.status === 'pending' ? `
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-primary" onclick="window.approveFeedback('${doc.id}')">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button class="btn-secondary" onclick="window.rejectFeedback('${doc.id}')">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                    </div>
+                ` : ''}
+            `;
+            
+            container.appendChild(item);
+        });
+        
+    } catch (error) {
+        console.error("Error loading all feedback:", error);
+        showNotification('Error loading feedback: ' + error.message, true);
+    }
+}
+
 window.approveFeedback = async function(feedbackId) {
     if (!confirm("Approve this testimonial to publish it on the website?")) return;
+    
     try {
-        await updateDoc(doc(db, "feedback_submissions", feedbackId), { status: "approved" });
+        await updateDoc(doc(db, "feedback_submissions", feedbackId), {
+            status: "approved",
+            updatedAt: new Date().toISOString()
+        });
+        
         showNotification('Feedback approved and published on the website!');
         loadPendingFeedback();
+        
     } catch (error) {
         console.error("Error approving feedback:", error);
-        showNotification('Error approving feedback.', true);
+        showNotification('Error approving feedback: ' + error.message, true);
     }
 };
 
 window.rejectFeedback = async function(feedbackId) {
     if (!confirm("Reject this submission? It will be deleted.")) return;
+    
     try {
         await deleteDoc(doc(db, "feedback_submissions", feedbackId));
         showNotification('Feedback submission rejected and deleted.');
         loadPendingFeedback();
+        
     } catch (error) {
         console.error("Error rejecting feedback:", error);
-        showNotification('Error rejecting feedback.', true);
+        showNotification('Error rejecting feedback: ' + error.message, true);
     }
 };
 
-// ============================================
-// FAQ MANAGEMENT FUNCTIONS
-// ============================================
-
+// === FAQ MANAGEMENT ===
 async function loadFAQsAdmin() {
     try {
         const q = query(collection(db, "faqs"), orderBy("order", "asc"));
         const querySnapshot = await getDocs(q);
         const container = document.getElementById('faqsListAdmin');
+        
         if (!container) return;
+        
         container.innerHTML = '';
+        
         if (querySnapshot.empty) {
             container.innerHTML = '<p style="text-align: center; padding: 2rem; color: #666;">No FAQs added yet.</p>';
             return;
         }
+        
         querySnapshot.forEach((doc) => {
             const faq = doc.data();
             const item = document.createElement('div');
             item.className = 'form-card';
             item.style.marginBottom = '1rem';
+            
             item.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: start;">
                     <h4 style="margin: 0; flex: 1;">${faq.question}</h4>
@@ -585,8 +933,10 @@ async function loadFAQsAdmin() {
                     </button>
                 </div>
             `;
+            
             container.appendChild(item);
         });
+        
     } catch (error) {
         console.error("Error loading FAQs for admin:", error);
         const container = document.getElementById('faqsListAdmin');
@@ -600,10 +950,12 @@ window.addFAQ = async function() {
     const question = document.getElementById('faqQuestion').value.trim();
     const answer = document.getElementById('faqAnswer').value.trim();
     const order = parseInt(document.getElementById('faqOrder').value) || 1;
+    
     if (!question || !answer) {
         showNotification('Please enter both question and answer.', true);
         return;
     }
+    
     try {
         await addDoc(collection(db, "faqs"), {
             question: question,
@@ -611,47 +963,61 @@ window.addFAQ = async function() {
             order: order,
             createdAt: new Date().toISOString()
         });
+        
         showNotification('FAQ added successfully!');
+        
+        // Clear form
         document.getElementById('faqQuestion').value = '';
         document.getElementById('faqAnswer').value = '';
         document.getElementById('faqOrder').value = '';
+        
+        // Reload FAQs
         loadFAQsAdmin();
+        
     } catch (error) {
         console.error("Error adding FAQ:", error);
-        showNotification('Error adding FAQ.', true);
+        showNotification('Error adding FAQ: ' + error.message, true);
     }
 };
 
 window.editFAQ = async function(faqId, currentQuestion, currentAnswer, currentOrder) {
     const newQuestion = prompt("Edit question:", currentQuestion);
     if (newQuestion === null) return;
+    
     const newAnswer = prompt("Edit answer:", currentAnswer);
     if (newAnswer === null) return;
+    
     const newOrder = prompt("Edit display order (lower numbers show first):", currentOrder);
     if (newOrder === null) return;
+    
     try {
         await updateDoc(doc(db, "faqs", faqId), {
             question: newQuestion,
             answer: newAnswer,
-            order: parseInt(newOrder) || 1
+            order: parseInt(newOrder) || 1,
+            updatedAt: new Date().toISOString()
         });
+        
         showNotification('FAQ updated successfully!');
         loadFAQsAdmin();
+        
     } catch (error) {
         console.error("Error updating FAQ:", error);
-        showNotification('Error updating FAQ.', true);
+        showNotification('Error updating FAQ: ' + error.message, true);
     }
 };
 
 window.deleteFAQ = async function(faqId) {
     if (!confirm("Are you sure you want to delete this FAQ?")) return;
+    
     try {
         await deleteDoc(doc(db, "faqs", faqId));
         showNotification('FAQ deleted successfully!');
         loadFAQsAdmin();
+        
     } catch (error) {
         console.error("Error deleting FAQ:", error);
-        showNotification('Error deleting FAQ.', true);
+        showNotification('Error deleting FAQ: ' + error.message, true);
     }
 };
 
@@ -659,3 +1025,11 @@ window.deleteFAQ = async function(faqId) {
 document.addEventListener('DOMContentLoaded', () => {
     initAdmin();
 });
+
+// Export functions for global access
+window.editProduct = editProduct;
+window.deleteProduct = deleteProduct;
+window.addNewCategory = addNewCategory;
+window.removeCategory = removeCategory;
+window.editQuote = editQuote;
+window.deleteQuote = deleteQuote;
