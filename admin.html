@@ -556,16 +556,9 @@
                         <div style="display: flex; gap: 10px;">
                             <select id="productCategory" name="productCategory" required style="flex: 1;">
                                 <option value="">Select Category</option>
-                                <option value="spiral-notebooks">Spiral Notebooks</option>
-                                <option value="register-books">Register Books</option>
-                                <option value="project-books">Project Books</option>
-                                <option value="drawing-books">Drawing Books</option>
-                                <option value="premium-notebooks">Premium Notebooks</option>
-                                <option value="pocket-notebooks">Pocket Notebooks</option>
-                                <option value="school-notebooks">School Notebooks</option>
-                                <option value="office-notebooks">Office Notebooks</option>
+                                <!-- Categories will be loaded dynamically -->
                             </select>
-                            <button type="button" id="refreshCategories" class="btn-small" title="Refresh Categories">
+                            <button type="button" id="refreshCategories" class="btn-small" title="Refresh Categories" onclick="loadCategories()">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
@@ -592,14 +585,14 @@
                 
                 <!-- Multi-image URLs -->
                 <div class="form-group">
-                    <label for="imagesContainer"><i class="fas fa-images"></i> Product Images (GitHub Repository) *</label>
+                    <label><i class="fas fa-images"></i> Product Images *</label>
                     <div class="file-info">
-                        <p><i class="fas fa-info-circle"></i> Upload images to GitHub in <code>assets/products/</code> folder. Enter only filenames below.</p>
-                        <p><strong>Example:</strong> If you uploaded <code>notebook1.jpg</code> to GitHub, just enter <code>notebook1.jpg</code> below</p>
+                        <p><i class="fas fa-info-circle"></i> Enter image filenames (e.g., <code>notebook1.jpg</code>)</p>
+                        <p><strong>Example:</strong> If your image is at <code>assets/products/notebook1.jpg</code>, just enter <code>notebook1.jpg</code></p>
                     </div>
                     <div class="images-input-container" id="imagesContainer">
                         <div class="image-input-group">
-                            <input type="text" class="image-url" name="image-url[]"
+                            <input type="text" class="image-url" 
                                    placeholder="Enter image filename (e.g., notebook1.jpg)" 
                                    data-index="0" required>
                             <button type="button" class="btn-remove-image" onclick="removeImageInput(this)" disabled>×</button>
@@ -618,11 +611,6 @@
                             </div>
                         </div>
                     </div>
-                    <div id="imageValidation" class="image-validation" style="display: none;">
-                        <i class="fas fa-check-circle valid"></i>
-                        <span id="validationText"></span>
-                    </div>
-                    <span class="error-message" id="imageError"></span>
                 </div>
                 
                 <div class="form-group">
@@ -646,7 +634,7 @@
                         <i class="fas fa-times"></i> Cancel Edit
                     </button>
                 </div>
-                <input type="hidden" id="editProductId" name="editProductId">
+                <input type="hidden" id="editProductId">
             </form>
         </div>
 
@@ -657,29 +645,12 @@
                 <label>Current Categories</label>
                 <div class="categories-list" id="categoriesList">
                     <!-- Categories will be loaded here -->
-                    <div class="category-tag">
-                        spiral-notebooks
-                        <button onclick="removeCategory(this)"><i class="fas fa-times"></i></button>
-                    </div>
-                    <div class="category-tag">
-                        register-books
-                        <button onclick="removeCategory(this)"><i class="fas fa-times"></i></button>
-                    </div>
-                    <div class="category-tag">
-                        project-books
-                        <button onclick="removeCategory(this)"><i class="fas fa-times"></i></button>
-                    </div>
-                    <div class="category-tag">
-                        drawing-books
-                        <button onclick="removeCategory(this)"><i class="fas fa-times"></i></button>
-                    </div>
                 </div>
                 <div style="margin-top: 20px;">
                     <h4>Add New Category</h4>
                     <div style="display: flex; gap: 10px; align-items: flex-end;">
                         <div style="flex: 1;">
-                            <label for="newCategoryInput" style="display: none;">New Category Name</label>
-                            <input type="text" id="newCategoryInput" name="newCategoryInput" placeholder="Enter new category name">
+                            <input type="text" id="newCategoryInput" placeholder="Enter new category name">
                             <small style="color: #666; display: block; margin-top: 5px;">Use lowercase with hyphens (e.g., premium-notebooks)</small>
                         </div>
                         <button type="button" class="btn-primary" id="addCategoryBtn">
@@ -715,7 +686,7 @@
             <div class="form-group">
                 <label for="newQuote">Add New Quote</label>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="newQuote" name="newQuote" placeholder="Enter a motivational quote..." style="flex: 1;">
+                    <input type="text" id="newQuote" placeholder="Enter a motivational quote..." style="flex: 1;">
                     <button type="button" class="btn-primary" id="addQuoteBtn">
                         <i class="fas fa-plus"></i> Add Quote
                     </button>
@@ -724,42 +695,7 @@
             
             <h4>Current Quotes (5 Minimum)</h4>
             <div id="quotesList" class="quotes-list">
-                <!-- Quotes will be displayed here -->
-                <div class="quote-item">
-                    <span>Where Thoughts Find Their Perfect Home</span>
-                    <div class="quote-actions">
-                        <button class="btn-small edit-quote" onclick="editQuote(this, 0)">Edit</button>
-                        <button class="btn-small delete-quote" onclick="deleteQuote(0)" disabled>Delete</button>
-                    </div>
-                </div>
-                <div class="quote-item">
-                    <span>Quality Pages for Lifelong Memories</span>
-                    <div class="quote-actions">
-                        <button class="btn-small edit-quote" onclick="editQuote(this, 1)">Edit</button>
-                        <button class="btn-small delete-quote" onclick="deleteQuote(1)" disabled>Delete</button>
-                    </div>
-                </div>
-                <div class="quote-item">
-                    <span>Writing transforms thoughts into treasures</span>
-                    <div class="quote-actions">
-                        <button class="btn-small edit-quote" onclick="editQuote(this, 2)">Edit</button>
-                        <button class="btn-small delete-quote" onclick="deleteQuote(2)" disabled>Delete</button>
-                    </div>
-                </div>
-                <div class="quote-item">
-                    <span>Your ideas are precious. We provide the perfect canvas to preserve them</span>
-                    <div class="quote-actions">
-                        <button class="btn-small edit-quote" onclick="editQuote(this, 3)">Edit</button>
-                        <button class="btn-small delete-quote" onclick="deleteQuote(3)" disabled>Delete</button>
-                    </div>
-                </div>
-                <div class="quote-item">
-                    <span>From thoughts to tangible memories</span>
-                    <div class="quote-actions">
-                        <button class="btn-small edit-quote" onclick="editQuote(this, 4)">Edit</button>
-                        <button class="btn-small delete-quote" onclick="deleteQuote(4)" disabled>Delete</button>
-                    </div>
-                </div>
+                <!-- Quotes will be loaded here -->
             </div>
         </div>
 
@@ -801,15 +737,15 @@
             <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
                 <div class="form-group">
                     <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
-                    <input type="text" id="faqQuestion" name="faqQuestion" placeholder="e.g., What is your delivery area?">
+                    <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
                 </div>
                 <div class="form-group">
                     <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
-                    <textarea id="faqAnswer" name="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
+                    <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
                 </div>
                 <div class="form-group">
                     <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
-                    <input type="number" id="faqOrder" name="faqOrder" placeholder="1" value="1">
+                    <input type="number" id="faqOrder" placeholder="1" value="1">
                     <small>Lower numbers appear first on the FAQ page.</small>
                 </div>
                 <button class="btn-primary" id="addFaqBtn">
@@ -828,57 +764,6 @@
                 </p>
             </div>
         </div>
-
-        <!-- GitHub Repository Info -->
-        <div class="form-card">
-            <h3><i class="fab fa-github"></i> GitHub Repository Setup</h3>
-            <div class="github-info">
-                <p><strong>📁 Folder Structure for Images:</strong></p>
-                <pre>
-/assets
-  ├── logo.png            (Store logo here)
-  └── products/           (Store all product images here)
-        ├── notebook1.jpg
-        ├── notebook2.jpg
-        ├── notebook3.jpg
-        └── ...
-                </pre>
-                
-                <p><strong>📋 Image Requirements:</strong></p>
-                <ul>
-                    <li><strong>Format:</strong> JPG, PNG, or WebP</li>
-                    <li><strong>Recommended size:</strong> 600x600 pixels</li>
-                    <li><strong>Max file size:</strong> 1MB per image</li>
-                    <li><strong>Naming:</strong> Use descriptive filenames without spaces (use hyphens or underscores)</li>
-                    <li><strong>Examples:</strong> <code>spiral-notebook-200pages.jpg</code>, <code>premium_notebook.jpg</code></li>
-                </ul>
-                
-                <p><strong>✅ How to Add Images:</strong></p>
-                <ol>
-                    <li>Upload images to your GitHub repository in the <code>assets/products/</code> folder</li>
-                    <li>In the admin panel, enter only the filename (e.g., <code>notebook1.jpg</code>)</li>
-                    <li>The system will automatically look for: <code>assets/products/notebook1.jpg</code></li>
-                    <li>If image doesn't exist, a placeholder will be shown instead</li>
-                </ol>
-                
-                <div class="file-info" style="margin-top: 20px;">
-                    <p><i class="fas fa-exclamation-triangle"></i> <strong>Current Issue:</strong> The 404 errors mean images don't exist at the specified paths.</p>
-                    <p><strong>Solution:</strong> Upload the actual image files to your GitHub repository.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Success Message -->
-    <div id="successMessage" style="display: none;" class="modal">
-        <div class="modal-content" style="text-align: center;">
-            <h2><i class="fas fa-check-circle" style="color: var(--success-color); font-size: 3rem;"></i></h2>
-            <h3>Success!</h3>
-            <p id="successText">Operation completed successfully.</p>
-            <button class="btn-primary" onclick="document.getElementById('successMessage').style.display='none'">
-                OK
-            </button>
-        </div>
     </div>
 
     <!-- Firebase SDK -->
@@ -888,112 +773,24 @@
     <script>
         // Multi-image management
         let imageInputs = 1;
-        let currentQuotes = [
-            "Where Thoughts Find Their Perfect Home",
-            "Quality Pages for Lifelong Memories",
-            "Writing transforms thoughts into treasures",
-            "Your ideas are precious. We provide the perfect canvas to preserve them",
-            "From thoughts to tangible memories"
-        ];
         
         // Add event listener to form to handle submission
         document.addEventListener('DOMContentLoaded', function() {
-            const productForm = document.getElementById('productForm');
-            if (productForm) {
-                productForm.addEventListener('submit', handleProductFormSubmit);
+            // Load categories when page loads
+            if (window.loadCategories) {
+                loadCategories();
             }
-            
-            // Initialize default quotes
-            renderQuotesList();
-            
-            // Add category button event
-            document.getElementById('addCategoryBtn').addEventListener('click', addNewCategory);
-            
-            // Add quote button
-            document.getElementById('addQuoteBtn').addEventListener('click', addNewQuote);
             
             // Initialize image previews
             updateImagePreviews();
         });
-        
-        function handleProductFormSubmit(event) {
-            event.preventDefault();
-            
-            // Collect form data
-            const productName = document.getElementById('productName').value.trim();
-            const productCategory = document.getElementById('productCategory').value;
-            const productPages = document.getElementById('productPages').value;
-            const productPrice = document.getElementById('productPrice').value;
-            const productStock = document.getElementById('productStock').value;
-            const productDescription = document.getElementById('productDescription').value.trim();
-            const productFeatures = document.getElementById('productFeatures').value.trim();
-            const editProductId = document.getElementById('editProductId').value;
-            
-            // Get image URLs
-            const imageUrls = getImageUrls();
-            
-            // Validate required fields
-            if (!productName) {
-                alert('Please enter product name');
-                return;
-            }
-            
-            if (!productCategory) {
-                alert('Please select a category');
-                return;
-            }
-            
-            if (!productPages || productPages < 1) {
-                alert('Please enter valid number of pages');
-                return;
-            }
-            
-            if (!productPrice || productPrice < 1) {
-                alert('Please enter valid price');
-                return;
-            }
-            
-            if (productStock === '' || productStock < 0) {
-                alert('Please enter valid stock quantity');
-                return;
-            }
-            
-            if (imageUrls.length === 0) {
-                alert('Please enter at least one image filename');
-                return;
-            }
-            
-            // Create product object
-            const product = {
-                name: productName,
-                category: productCategory,
-                pages: parseInt(productPages),
-                price: parseFloat(productPrice),
-                stock: parseInt(productStock),
-                description: productDescription,
-                features: productFeatures,
-                images: imageUrls,
-                createdAt: editProductId ? undefined : new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-            
-            console.log('Submitting product:', product);
-            
-            // Call the Firebase function from admin.js
-            if (window.submitProductForm) {
-                window.submitProductForm(product, editProductId);
-            } else {
-                // Fallback if admin.js is not loaded
-                alert('Admin functions not loaded. Please check admin.js');
-            }
-        }
         
         function addImageInput() {
             const container = document.getElementById('imagesContainer');
             const newInput = document.createElement('div');
             newInput.className = 'image-input-group';
             newInput.innerHTML = `
-                <input type="text" class="image-url" name="image-url[]"
+                <input type="text" class="image-url" 
                        placeholder="Enter image filename (e.g., notebook${imageInputs + 1}.jpg)" 
                        data-index="${imageInputs}"
                        oninput="previewImage(this)">
@@ -1032,51 +829,30 @@
         function updateImagePreviews() {
             const inputs = document.querySelectorAll('.image-url');
             const previewsContainer = document.getElementById('imagePreviews');
-            const imageError = document.getElementById('imageError');
-            const validationDiv = document.getElementById('imageValidation');
             
             // Clear previous previews
             previewsContainer.innerHTML = '';
             
             let hasImages = false;
-            let validImages = 0;
-            let totalImages = 0;
             
             inputs.forEach((input, index) => {
                 const filename = input.value.trim();
                 if (filename) {
                     hasImages = true;
-                    totalImages++;
                     
                     // Remove any existing error class
                     input.classList.remove('image-error');
                     
+                    // SIMPLE IMAGE SOURCE - Fixed to prevent 404 errors
                     const imageUrl = `assets/products/${filename}`;
                     const preview = document.createElement('div');
                     preview.className = 'image-preview-item';
                     preview.dataset.index = index;
                     
-                    // Test if image exists
-                    const img = new Image();
-                    img.onload = function() {
-                        preview.innerHTML = `
-                            <img src="${imageUrl}" alt="Preview" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x100?text=Image+Error'">
-                            <span>${filename}</span>
-                        `;
-                        validImages++;
-                        updateValidationMessage(validImages, totalImages);
-                    };
-                    img.onerror = function() {
-                        preview.innerHTML = `
-                            <div style="background:#fff3e0;height:100px;display:flex;align-items:center;justify-content:center;border-radius:3px;">
-                                <i class="fas fa-exclamation-triangle" style="color:#ff9800;font-size:24px;"></i>
-                            </div>
-                            <span style="color:#ff9800;">${filename} (Not found on GitHub)</span>
-                        `;
-                        input.classList.add('image-error');
-                        updateValidationMessage(validImages, totalImages);
-                    };
-                    img.src = imageUrl;
+                    preview.innerHTML = `
+                        <img src="${imageUrl}" alt="Preview" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x100?text=Image+${index + 1}'">
+                        <span>${filename}</span>
+                    `;
                     
                     previewsContainer.appendChild(preview);
                 }
@@ -1089,31 +865,6 @@
                         <p>Enter image filenames above to see previews</p>
                     </div>
                 `;
-                imageError.textContent = '';
-                validationDiv.style.display = 'none';
-            } else {
-                validationDiv.style.display = 'flex';
-                imageError.textContent = '';
-            }
-        }
-        
-        function updateValidationMessage(valid, total) {
-            const validationDiv = document.getElementById('imageValidation');
-            const validationText = document.getElementById('validationText');
-            const icon = validationDiv.querySelector('i');
-            
-            if (valid === total) {
-                icon.className = 'fas fa-check-circle valid';
-                validationText.textContent = `All ${total} image(s) are valid`;
-                validationText.style.color = '#4caf50';
-            } else if (valid === 0) {
-                icon.className = 'fas fa-exclamation-triangle invalid';
-                validationText.textContent = `None of the ${total} image(s) were found on GitHub`;
-                validationText.style.color = '#f44336';
-            } else {
-                icon.className = 'fas fa-exclamation-triangle';
-                validationText.textContent = `${valid} of ${total} image(s) found on GitHub`;
-                validationText.style.color = '#ff9800';
             }
         }
         
@@ -1125,7 +876,7 @@
             inputs.forEach(input => {
                 const value = input.value.trim();
                 if (value) {
-                    urls.push(value); // Store only filename
+                    urls.push(value);
                 }
             });
             
@@ -1142,7 +893,7 @@
                     const div = document.createElement('div');
                     div.className = 'image-input-group';
                     div.innerHTML = `
-                        <input type="text" class="image-url" name="image-url[]"
+                        <input type="text" class="image-url" 
                                value="${url}" 
                                data-index="${index}"
                                oninput="previewImage(this)">
@@ -1156,7 +907,7 @@
                 const div = document.createElement('div');
                 div.className = 'image-input-group';
                 div.innerHTML = `
-                    <input type="text" class="image-url" name="image-url[]"
+                    <input type="text" class="image-url" 
                            placeholder="Enter image filename (e.g., notebook1.jpg)" 
                            data-index="0" required
                            oninput="previewImage(this)">
@@ -1177,149 +928,6 @@
             updateImagePreviews();
         }
         
-        // Category management
-        function addNewCategory() {
-            const input = document.getElementById('newCategoryInput');
-            let categoryName = input.value.trim().toLowerCase().replace(/\s+/g, '-');
-            
-            if (!categoryName) {
-                alert('Please enter a category name');
-                return;
-            }
-            
-            // Remove special characters
-            categoryName = categoryName.replace(/[^a-z0-9-]/g, '');
-            
-            // Add to categories list
-            const categoriesList = document.getElementById('categoriesList');
-            const categoryTag = document.createElement('div');
-            categoryTag.className = 'category-tag';
-            categoryTag.innerHTML = `
-                ${categoryName}
-                <button onclick="removeCategory(this)"><i class="fas fa-times"></i></button>
-            `;
-            categoriesList.appendChild(categoryTag);
-            
-            // Add to category select in product form
-            const select = document.getElementById('productCategory');
-            const option = document.createElement('option');
-            option.value = categoryName;
-            option.textContent = categoryName.split('-').map(word => 
-                word.charAt(0).toUpperCase() + word.slice(1)
-            ).join(' ');
-            select.appendChild(option);
-            
-            // Also add to filter select
-            const filterSelect = document.getElementById('filterCategory');
-            const filterOption = option.cloneNode(true);
-            filterSelect.appendChild(filterOption);
-            
-            input.value = '';
-            showSuccess('Category added successfully!');
-        }
-        
-        function removeCategory(button) {
-            if (confirm('Are you sure you want to remove this category?')) {
-                const categoryTag = button.parentElement;
-                const categoryName = categoryTag.textContent.trim().replace('×', '').trim();
-                
-                // Remove from DOM
-                categoryTag.remove();
-                
-                // Remove from select options
-                const select = document.getElementById('productCategory');
-                const filterSelect = document.getElementById('filterCategory');
-                
-                Array.from(select.options).forEach(option => {
-                    if (option.value === categoryName) {
-                        option.remove();
-                    }
-                });
-                
-                Array.from(filterSelect.options).forEach(option => {
-                    if (option.value === categoryName) {
-                        option.remove();
-                    }
-                });
-                
-                showSuccess('Category removed successfully!');
-            }
-        }
-        
-        // Quote management
-        function renderQuotesList() {
-            const quotesList = document.getElementById('quotesList');
-            quotesList.innerHTML = '';
-            
-            currentQuotes.forEach((quote, index) => {
-                const quoteItem = document.createElement('div');
-                quoteItem.className = 'quote-item';
-                quoteItem.innerHTML = `
-                    <span>${quote}</span>
-                    <div class="quote-actions">
-                        <button class="btn-small edit-quote" onclick="editQuote(this, ${index})">Edit</button>
-                        <button class="btn-small delete-quote" onclick="deleteQuote(${index})" 
-                                ${currentQuotes.length <= 5 ? 'disabled' : ''}>Delete</button>
-                    </div>
-                `;
-                quotesList.appendChild(quoteItem);
-            });
-            
-            // Update quotes count
-            document.getElementById('totalQuotes').textContent = `${currentQuotes.length} Quotes`;
-        }
-        
-        function addNewQuote() {
-            const input = document.getElementById('newQuote');
-            const quote = input.value.trim();
-            
-            if (!quote) {
-                alert('Please enter a quote');
-                return;
-            }
-            
-            currentQuotes.push(quote);
-            renderQuotesList();
-            input.value = '';
-            showSuccess('Quote added successfully!');
-        }
-        
-        function editQuote(button, index) {
-            const newQuote = prompt('Edit quote:', currentQuotes[index]);
-            if (newQuote !== null && newQuote.trim() !== '') {
-                currentQuotes[index] = newQuote.trim();
-                renderQuotesList();
-                showSuccess('Quote updated successfully!');
-            }
-        }
-        
-        function deleteQuote(index) {
-            if (currentQuotes.length <= 5) {
-                alert('You must have at least 5 quotes');
-                return;
-            }
-            
-            if (confirm('Are you sure you want to delete this quote?')) {
-                currentQuotes.splice(index, 1);
-                renderQuotesList();
-                showSuccess('Quote deleted successfully!');
-            }
-        }
-        
-        function loadCategories() {
-            showSuccess('Refreshing categories...');
-        }
-        
-        function loadProducts() {
-            showSuccess('Refreshing products...');
-        }
-        
-        function showSuccess(message) {
-            const successElement = document.getElementById('successMessage');
-            document.getElementById('successText').textContent = message;
-            successElement.style.display = 'flex';
-        }
-        
         // Global functions to be called from admin.js
         window.setProductFormData = function(product) {
             document.getElementById('productName').value = product.name || '';
@@ -1336,7 +944,6 @@
             
             // Update button text
             document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Update Product';
-            document.getElementById('submitBtn').textContent = 'Update Product';
             document.getElementById('cancelEdit').style.display = 'inline-block';
         };
         
@@ -1344,97 +951,19 @@
             document.getElementById('productForm').reset();
             document.getElementById('editProductId').value = '';
             document.getElementById('submitBtn').innerHTML = '<i class="fas fa-save"></i> Add Product';
-            document.getElementById('submitBtn').textContent = 'Add Product';
             document.getElementById('cancelEdit').style.display = 'none';
             
             // Reset images to one input
             setImageUrls([]);
         };
         
-        // Function to render admin product card
-        function renderAdminProduct(product) {
-            const images = product.images || [];
-            const status = product.stock > 20 ? 'in-stock' : 
-                          product.stock > 0 ? 'low-stock' : 'out-of-stock';
-            const statusText = product.stock > 20 ? 'In Stock' : 
-                              product.stock > 0 ? 'Low Stock' : 'Out of Stock';
-            
-            // Format category name
-            const categoryName = product.category ? 
-                product.category.split('-').map(word => 
-                    word.charAt(0).toUpperCase() + word.slice(1)
-                ).join(' ') : 'Uncategorized';
-            
-            return `
-                <div class="admin-product-card" data-category="${product.category || 'uncategorized'}">
-                    <div class="admin-product-images">
-                        ${images.length > 0 ? 
-                            images.map((img, index) => `
-                                <img src="assets/products/${img}" alt="${product.name}" 
-                                     onerror="this.onerror=null; this.src='https://via.placeholder.com/80x80?text=Image+${index + 1}'">
-                            `).join('') 
-                            : '<img src="https://via.placeholder.com/80x80?text=No+Image" style="width:80px;height:80px;">'
-                        }
-                    </div>
-                    <div class="admin-product-info">
-                        <h4 style="margin:0 0 10px 0;font-size:16px;color:#333;">
-                            ${product.name} 
-                            <span class="product-status ${status}">${statusText}</span>
-                        </h4>
-                        <p style="margin:5px 0;color:#666;"><strong>Pages:</strong> ${product.pages} | <strong>Price:</strong> ₹${product.price}</p>
-                        <p style="margin:5px 0;color:#666;"><strong>Category:</strong> ${categoryName}</p>
-                        <p style="margin:5px 0;color:#666;"><strong>Stock:</strong> ${product.stock} units</p>
-                        <p style="margin:5px 0;color:#666;"><strong>Images:</strong> ${images.length} image(s)</p>
-                        
-                        ${product.description ? `
-                            <p style="margin:10px 0 0 0;padding:10px 0;border-top:1px solid #eee;color:#777;font-size:13px;">
-                                ${product.description.length > 100 ? product.description.substring(0, 100) + '...' : product.description}
-                            </p>
-                        ` : ''}
-                        
-                        <div class="admin-product-actions">
-                            <button class="btn-small edit-product" onclick="window.editProduct('${product.id}')" style="background:#e3f2fd;color:#1976d2;">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="btn-small delete-product" onclick="window.deleteProduct('${product.id}')" style="background:#ffebee;color:#d32f2f;">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Global function to render products in admin (called from admin.js)
-        window.renderAdminProducts = function(products) {
-            const productsList = document.getElementById('productsList');
-            if (productsList) {
-                productsList.innerHTML = '';
-                
-                if (products.length === 0) {
-                    productsList.innerHTML = `
-                        <div style="text-align: center; padding: 50px; width: 100%; grid-column: 1 / -1;">
-                            <i class="fas fa-book" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
-                            <p style="color: #999; font-size: 18px;">No products found. Add your first product above.</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                products.forEach(product => {
-                    const productElement = document.createElement('div');
-                    productElement.innerHTML = renderAdminProduct(product);
-                    productsList.appendChild(productElement);
-                });
-                
-                // Update total products count
-                document.getElementById('totalProducts').textContent = `${products.length} Products`;
-            }
-        };
-        
         // Cancel edit button
         document.getElementById('cancelEdit').addEventListener('click', function() {
-            window.resetProductForm();
+            if (window.resetForm) {
+                window.resetForm();
+            } else if (window.resetProductForm) {
+                window.resetProductForm();
+            }
         });
     </script>
 </body>
