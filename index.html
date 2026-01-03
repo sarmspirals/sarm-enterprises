@@ -596,23 +596,27 @@
         </div>
     </section>
 
-    <!-- Products Section -->
-    <section id="products" class="products-section">
-        <div class="container">
-            <h2 class="section-title">Our Premium Notebook Collection</h2>
-            <p class="section-subtitle">Choose from our wide range of spiral notebooks for all your writing needs</p>
-            
-            <!-- Category Filter -->
-            <div class="category-filter" id="categoryFilter">
-                <button class="category-btn active" data-category="all">All Products</button>
-                <!-- Categories will be loaded dynamically -->
-            </div>
-            
-            <div class="products-grid" id="productsContainer">
-                <!-- Products will be loaded from Firestore -->
+   <!-- Products Section -->
+<section class="products-section">
+    <div class="container">
+        <h2 class="section-title">Our Premium Products</h2>
+        <p class="section-subtitle">Discover our wide range of high-quality notebooks and registers</p>
+        
+        <!-- Category Filter -->
+        <div class="category-filter" id="categoryFilter">
+            <!-- Filter buttons will be generated here -->
+        </div>
+        
+        <!-- Products Grid -->
+        <div class="products-grid" id="productsContainer">
+            <!-- Products will be loaded here -->
+            <div class="loading-products" style="text-align: center; padding: 50px; grid-column: 1 / -1;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 40px; color: #667eea;"></i>
+                <p>Loading products...</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Features Section -->
     <section class="features">
