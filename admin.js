@@ -175,22 +175,10 @@ async function handleProductSubmit(e) {
     }
 }
 
-// === SAFE IMAGE LOADING - FIXED 404 ERRORS ===
-function getSafeImageUrl(filename) {
-    // Return a placeholder image URL that won't cause 404 errors
-    return `https://via.placeholder.com/80x80/cccccc/ffffff?text=${encodeURIComponent(filename.substring(0, 10))}`;
-}
-
-// Check if image exists on GitHub - FIXED
-function checkImageExists(url, callback) {
-    const img = new Image();
-    img.onload = function() {
-        callback(true);
-    };
-    img.onerror = function() {
-        callback(false);
-    };
-    img.src = url; // FIXED: Changed from assets/products to url parameter
+// === SIMPLE IMAGE LOADING - NO MORE COMPLEX LOGIC ===
+function getImageUrl(filename) {
+    // Simple path - just assets/products/filename
+    return `assets/products/${filename}`;
 }
 
 // === PRODUCT DISPLAY ===
@@ -216,27 +204,22 @@ function createProductListItem(product, id) {
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ') : 'Uncategorized';
     
-    // Create images HTML - using safe image loading
+    // Create images HTML - SIMPLE PATH
     const images = product.images || [];
     let imagesHTML = '';
     
     if (images.length > 0) {
         images.forEach((img, index) => {
-            const safeImageUrl = getSafeImageUrl(img);
-            // FIXED: Removed duplicate path prefix
-            const githubImageUrl = `assets/products/${img}`;
-            
+            const imageUrl = getImageUrl(img);
             imagesHTML += `
-                <img src="${safeImageUrl}" 
-                     data-src="${githubImageUrl}"
+                <img src="${imageUrl}" 
                      alt="${product.name}" 
-                     class="lazy-image"
-                     onload="this.classList.add('loaded')"
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/80x80?text=Image+${index + 1}'"
                      style="width:80px;height:80px;object-fit:cover;border-radius:5px;border:1px solid #ddd;">
             `;
         });
     } else {
-        imagesHTML = '<img src="https://via.placeholder.com/80x80/cccccc/ffffff?text=No+Image">';
+        imagesHTML = '<img src="https://via.placeholder.com/80x80/cccccc/ffffff?text=No+Image" style="width:80px;height:80px;">';
     }
     
     productItem.innerHTML = `
@@ -272,22 +255,6 @@ function createProductListItem(product, id) {
     if (productsList) {
         productsList.appendChild(productItem);
     }
-    
-    // Load GitHub images in background - FIXED
-    setTimeout(() => {
-        const lazyImages = productItem.querySelectorAll('.lazy-image');
-        lazyImages.forEach(img => {
-            const githubUrl = img.getAttribute('data-src');
-            if (githubUrl) {
-                checkImageExists(githubUrl, (exists) => { // FIXED: Pass githubUrl as parameter
-                    if (exists) {
-                        img.src = githubUrl; // FIXED: Use githubUrl variable
-                        img.classList.add('loaded');
-                    }
-                });
-            }
-        });
-    }, 100);
 }
 
 // === EDIT PRODUCT ===
@@ -486,10 +453,14 @@ async function loadCategories() {
         
         const categoriesList = document.getElementById('categoriesList');
         const categorySelect = document.getElementById('productCategory');
-        const filterSelect = document.getElementById('filterCategory');
         
         if (categoriesList) {
             categoriesList.innerHTML = '';
+        }
+        
+        if (categorySelect) {
+            // Keep only the first option
+            categorySelect.innerHTML = '<option value="">Select Category</option>';
         }
         
         const categories = [];
@@ -518,16 +489,6 @@ async function loadCategories() {
                     ).join(' ');
                     categorySelect.appendChild(option);
                 }
-                
-                // Add to filter select
-                if (filterSelect) {
-                    const option = document.createElement('option');
-                    option.value = category;
-                    option.textContent = category.split('-').map(word => 
-                        word.charAt(0).toUpperCase() + word.slice(1)
-                    ).join(' ');
-                    filterSelect.appendChild(option);
-                }
             }
         });
         
@@ -548,7 +509,7 @@ async function addNewCategory() {
     let categoryName = input.value.trim().toLowerCase().replace(/\s+/g, '-');
     
     if (!categoryName) {
-        alert('Please enter a category name');
+        showNotification('Please enter a category name', true);
         return;
     }
     
@@ -1076,3 +1037,4 @@ window.addNewCategory = addNewCategory;
 window.removeCategory = removeCategory;
 window.editQuote = editQuote;
 window.deleteQuote = deleteQuote;
+window.loadCategories = loadCategories;
