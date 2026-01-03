@@ -175,13 +175,13 @@ async function handleProductSubmit(e) {
     }
 }
 
-// === SIMPLE IMAGE LOADING - NO MORE COMPLEX LOGIC ===
+// === SIMPLE IMAGE LOADING ===
 function getImageUrl(filename) {
     // Simple path - just assets/products/filename
     return `assets/products/${filename}`;
 }
 
-// === PRODUCT DISPLAY ===
+// === PRODUCT DISPLAY IN ADMIN ===
 function createProductListItem(product, id) {
     const productItem = document.createElement('div');
     productItem.className = 'admin-product-card';
@@ -204,7 +204,7 @@ function createProductListItem(product, id) {
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ') : 'Uncategorized';
     
-    // Create images HTML - SIMPLE PATH
+    // Create images HTML - MULTIPLE IMAGES
     const images = product.images || [];
     let imagesHTML = '';
     
