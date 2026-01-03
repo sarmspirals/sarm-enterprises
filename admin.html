@@ -548,13 +548,13 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="productName"><i class="fas fa-tag"></i> Product Name *</label>
-                        <input type="text" id="productName" required 
+                        <input type="text" id="productName" name="productName" required 
                                placeholder="e.g., Spiral Notebook 200 Pages">
                     </div>
                     <div class="form-group">
                         <label for="productCategory"><i class="fas fa-layer-group"></i> Category *</label>
                         <div style="display: flex; gap: 10px;">
-                            <select id="productCategory" required style="flex: 1;">
+                            <select id="productCategory" name="productCategory" required style="flex: 1;">
                                 <option value="">Select Category</option>
                                 <option value="spiral-notebooks">Spiral Notebooks</option>
                                 <option value="register-books">Register Books</option>
@@ -575,31 +575,31 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="productPages"><i class="fas fa-file-alt"></i> Number of Pages *</label>
-                        <input type="number" id="productPages" required 
+                        <input type="number" id="productPages" name="productPages" required 
                                placeholder="e.g., 200" min="1">
                     </div>
                     <div class="form-group">
                         <label for="productPrice"><i class="fas fa-rupee-sign"></i> Price (₹) *</label>
-                        <input type="number" id="productPrice" required 
+                        <input type="number" id="productPrice" name="productPrice" required 
                                placeholder="e.g., 69" step="0.01" min="1">
                     </div>
                     <div class="form-group">
                         <label for="productStock"><i class="fas fa-box"></i> Stock Quantity *</label>
-                        <input type="number" id="productStock" required 
+                        <input type="number" id="productStock" name="productStock" required 
                                placeholder="e.g., 50" min="0">
                     </div>
                 </div>
                 
                 <!-- Multi-image URLs -->
                 <div class="form-group">
-                    <label><i class="fas fa-images"></i> Product Images (GitHub Repository) *</label>
+                    <label for="imagesContainer"><i class="fas fa-images"></i> Product Images (GitHub Repository) *</label>
                     <div class="file-info">
                         <p><i class="fas fa-info-circle"></i> Upload images to GitHub in <code>assets/products/</code> folder. Enter only filenames below.</p>
                         <p><strong>Example:</strong> If you uploaded <code>notebook1.jpg</code> to GitHub, just enter <code>notebook1.jpg</code> below</p>
                     </div>
                     <div class="images-input-container" id="imagesContainer">
                         <div class="image-input-group">
-                            <input type="text" class="image-url" 
+                            <input type="text" class="image-url" name="image-url[]"
                                    placeholder="Enter image filename (e.g., notebook1.jpg)" 
                                    data-index="0" required>
                             <button type="button" class="btn-remove-image" onclick="removeImageInput(this)" disabled>×</button>
@@ -627,13 +627,13 @@
                 
                 <div class="form-group">
                     <label for="productDescription"><i class="fas fa-align-left"></i> Description</label>
-                    <textarea id="productDescription" rows="3" 
+                    <textarea id="productDescription" name="productDescription" rows="3" 
                               placeholder="Describe the product features, quality, and specifications..."></textarea>
                 </div>
                 
                 <div class="form-group">
                     <label for="productFeatures"><i class="fas fa-star"></i> Features (comma separated)</label>
-                    <input type="text" id="productFeatures" 
+                    <input type="text" id="productFeatures" name="productFeatures"
                            placeholder="e.g., Premium Paper, Spiral Binding, Durable Cover, Waterproof">
                     <small style="color: #666; display: block; margin-top: 5px;">Separate features with commas</small>
                 </div>
@@ -646,7 +646,7 @@
                         <i class="fas fa-times"></i> Cancel Edit
                     </button>
                 </div>
-                <input type="hidden" id="editProductId">
+                <input type="hidden" id="editProductId" name="editProductId">
             </form>
         </div>
 
@@ -678,7 +678,8 @@
                     <h4>Add New Category</h4>
                     <div style="display: flex; gap: 10px; align-items: flex-end;">
                         <div style="flex: 1;">
-                            <input type="text" id="newCategoryInput" placeholder="Enter new category name">
+                            <label for="newCategoryInput" style="display: none;">New Category Name</label>
+                            <input type="text" id="newCategoryInput" name="newCategoryInput" placeholder="Enter new category name">
                             <small style="color: #666; display: block; margin-top: 5px;">Use lowercase with hyphens (e.g., premium-notebooks)</small>
                         </div>
                         <button type="button" class="btn-primary" id="addCategoryBtn">
@@ -714,7 +715,7 @@
             <div class="form-group">
                 <label for="newQuote">Add New Quote</label>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="newQuote" placeholder="Enter a motivational quote..." style="flex: 1;">
+                    <input type="text" id="newQuote" name="newQuote" placeholder="Enter a motivational quote..." style="flex: 1;">
                     <button type="button" class="btn-primary" id="addQuoteBtn">
                         <i class="fas fa-plus"></i> Add Quote
                     </button>
@@ -800,15 +801,15 @@
             <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
                 <div class="form-group">
                     <label for="faqQuestion"><i class="fas fa-question"></i> Question</label>
-                    <input type="text" id="faqQuestion" placeholder="e.g., What is your delivery area?">
+                    <input type="text" id="faqQuestion" name="faqQuestion" placeholder="e.g., What is your delivery area?">
                 </div>
                 <div class="form-group">
                     <label for="faqAnswer"><i class="fas fa-comment-alt"></i> Answer</label>
-                    <textarea id="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
+                    <textarea id="faqAnswer" name="faqAnswer" rows="3" placeholder="e.g., We offer free delivery within 5km..."></textarea>
                 </div>
                 <div class="form-group">
                     <label for="faqOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
-                    <input type="number" id="faqOrder" placeholder="1" value="1">
+                    <input type="number" id="faqOrder" name="faqOrder" placeholder="1" value="1">
                     <small>Lower numbers appear first on the FAQ page.</small>
                 </div>
                 <button class="btn-primary" id="addFaqBtn">
@@ -992,7 +993,7 @@
             const newInput = document.createElement('div');
             newInput.className = 'image-input-group';
             newInput.innerHTML = `
-                <input type="text" class="image-url" 
+                <input type="text" class="image-url" name="image-url[]"
                        placeholder="Enter image filename (e.g., notebook${imageInputs + 1}.jpg)" 
                        data-index="${imageInputs}"
                        oninput="previewImage(this)">
@@ -1141,7 +1142,7 @@
                     const div = document.createElement('div');
                     div.className = 'image-input-group';
                     div.innerHTML = `
-                        <input type="text" class="image-url" 
+                        <input type="text" class="image-url" name="image-url[]"
                                value="${url}" 
                                data-index="${index}"
                                oninput="previewImage(this)">
@@ -1155,7 +1156,7 @@
                 const div = document.createElement('div');
                 div.className = 'image-input-group';
                 div.innerHTML = `
-                    <input type="text" class="image-url" 
+                    <input type="text" class="image-url" name="image-url[]"
                            placeholder="Enter image filename (e.g., notebook1.jpg)" 
                            data-index="0" required
                            oninput="previewImage(this)">
