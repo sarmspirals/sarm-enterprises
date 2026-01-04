@@ -244,9 +244,10 @@ body {
 /* Hero Section */
 .hero {
     background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), 
-                url('https://unsplash.com/photos/the-sun-is-setting-over-the-ocean-waves-uDlDUb1T_4M&auto=format&fit=crop&w=1200&q=80');
+                url('https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3');
     background-size: cover;1WH7QxTQqjBq+O3metM
     background-position: center;
+    color: white;
     padding: 120px 20px 80px;
     text-align: center;
     margin-top: 70px;
