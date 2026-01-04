@@ -14,6 +14,22 @@ import {
     orderBy 
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
+// === FIXED: GET CORRECT IMAGE PATH ===
+function getImageUrl(filename) {
+    // If filename is already a full URL or placeholder, return as-is
+    if (filename.includes('http://') || filename.includes('https://') || filename.includes('data:')) {
+        return filename;
+    }
+    
+    // If filename has no extension, add .jpg
+    if (!filename.includes('.')) {
+        filename = filename + '.jpg';
+    }
+    
+    // Return local path for project images
+    return `assets/products/${filename}`;
+}
+
 // === DOM ELEMENTS ===
 const productForm = document.getElementById('productForm');
 const productsList = document.getElementById('productsList');
@@ -123,20 +139,20 @@ async function handleLogout() {
 async function handleProductSubmit(e) {
     e.preventDefault();
     
-    // Get all image URLs from the input groups
+    // Get all image filenames from the input groups
     const imageInputs = document.querySelectorAll('.image-url');
-    const imageUrls = [];
+    const imageFilenames = [];
     
     imageInputs.forEach(input => {
         const value = input.value.trim();
         if (value) {
-            // Store only filename, not full path
-            imageUrls.push(value);
+            // Store only filename
+            imageFilenames.push(value);
         }
     });
     
     // Validate at least one image
-    if (imageUrls.length === 0) {
+    if (imageFilenames.length === 0) {
         showNotification('Please enter at least one image filename.', true);
         return;
     }
@@ -150,7 +166,7 @@ async function handleProductSubmit(e) {
         stock: parseInt(document.getElementById('productStock').value),
         description: document.getElementById('productDescription').value.trim(),
         features: document.getElementById('productFeatures').value.trim(),
-        images: imageUrls,
+        images: imageFilenames,
         updatedAt: new Date().toISOString()
     };
     
@@ -175,13 +191,7 @@ async function handleProductSubmit(e) {
     }
 }
 
-// === SIMPLE IMAGE LOADING ===
-function getImageUrl(filename) {
-    // Simple path - just assets/products/filename
-    return `assets/products/${filename}`;
-}
-
-// === PRODUCT DISPLAY IN ADMIN ===
+// === FIXED PRODUCT DISPLAY IN ADMIN ===
 function createProductListItem(product, id) {
     const productItem = document.createElement('div');
     productItem.className = 'admin-product-card';
@@ -215,7 +225,7 @@ function createProductListItem(product, id) {
                 <img src="${imageUrl}" 
                      alt="${product.name}" 
                      onerror="this.onerror=null; this.src='https://via.placeholder.com/80x80?text=Image+${index + 1}'"
-                     style="width:80px;height:80px;object-fit:cover;border-radius:5px;border:1px solid #ddd;">
+                     style="width:80px;height:80px;object-fit:contain;border-radius:5px;border:1px solid #ddd;background:white;padding:5px;">
             `;
         });
     } else {
@@ -690,7 +700,7 @@ function updateStockChart(productsData) {
         stockChart.destroy();
     }
     
-    const productNames = productsData.map(p => p.name);
+    const productNames = productsData.map(p => p.name.substring(0, 15) + (p.name.length > 15 ? '...' : ''));
     const stockData = productsData.map(p => p.stock);
     const colors = stockData.map(stock => {
         if (stock <= 0) return '#e74c3c';
