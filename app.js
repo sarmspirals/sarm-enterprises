@@ -60,19 +60,28 @@ async function loadLogo() {
     }
 }
 
-// === FIXED: GET CORRECT IMAGE PATH ===
+// === FIXED: GET CORRECT IMAGE PATH (NO DUPLICATION) ===
 function getImagePath(filename) {
-    // If filename is already a full URL or placeholder, return as-is
-    if (filename.includes('http://') || filename.includes('https://') || filename.includes('data:')) {
+    if (!filename) {
+        return 'https://via.placeholder.com/300x300?text=No+Image';
+    }
+    
+    // If already a full URL, return as-is
+    if (filename.startsWith('http://') || filename.startsWith('https://') || filename.startsWith('data:')) {
         return filename;
     }
     
-    // If filename has no extension, add .jpg
-    if (!filename.includes('.')) {
-        filename = filename + '.jpg';
+    // If already starts with assets/products/, return as-is (remove duplicate prefix)
+    if (filename.startsWith('assets/products/')) {
+        return filename;
     }
     
-    // Return local path for project images
+    // If starts with /, it's already a full path
+    if (filename.startsWith('/')) {
+        return filename;
+    }
+    
+    // Default: just return the filename (assuming it's in assets/products/)
     return `assets/products/${filename}`;
 }
 
@@ -87,7 +96,7 @@ function displayProductOnWebsite(product, id) {
     let imagesHTML = '';
     
     if (images.length > 0) {
-        // Get main image path
+        // Get main image path (FIXED: no duplicate prefix)
         const mainImagePath = getImagePath(images[0]);
         
         imagesHTML = `
@@ -130,6 +139,9 @@ function displayProductOnWebsite(product, id) {
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ') : 'Uncategorized';
     
+    // Get first image for cart
+    const firstImagePath = images.length > 0 ? getImagePath(images[0]) : '';
+    
     // Create WhatsApp message
     const whatsappMessage = `Hello SARM ENTERPRISES,%0AI would like to order:%0AProduct: ${product.name}%0APages: ${product.pages}%0APrice: ₹${product.price}%0A%0APlease confirm availability and delivery time.`;
     
@@ -161,7 +173,7 @@ function displayProductOnWebsite(product, id) {
                 </div>
             ` : ''}
             <div class="product-actions">
-                <button class="btn-primary add-to-cart-btn" onclick="addToCart('${id}', '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${getImagePath(images[0] || "")}')" ${product.stock <= 0 ? 'disabled' : ''}>
+                <button class="btn-primary add-to-cart-btn" onclick="addToCart('${id}', '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${firstImagePath}')" ${product.stock <= 0 ? 'disabled' : ''}>
                     <i class="fas fa-cart-plus"></i> Add to Cart
                 </button>
                 <a href="https://wa.me/917006927825?text=${whatsappMessage}" 
@@ -210,7 +222,7 @@ async function loadWebsiteProducts() {
         querySnapshot.forEach((doc) => {
             const product = doc.data();
             const productId = doc.id;
-            console.log(`Product: ${product.name}, Images: ${product.images ? product.images.length : 0}`);
+            console.log(`Product: ${product.name}, Images:`, product.images);
             
             productsData.push({ id: productId, ...product });
             const productElement = displayProductOnWebsite(product, productId);
@@ -327,14 +339,6 @@ async function loadQuotes() {
                     <p>${text}</p>
                 `;
                 quotesContainer.appendChild(quoteElement);
-            });
-            
-            // Save default quotes to Firestore
-            defaultQuotes.forEach(async (text) => {
-                await addDoc(collection(db, "quotes"), {
-                    text: text,
-                    createdAt: new Date().toISOString()
-                });
             });
             
         } else {
@@ -489,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Export for admin.js
-export { auth, db, showNotification };
+export { auth, db, showNotification, getImagePath };
 
 // === TEMPORARY DEBUG CODE ===
 document.addEventListener('DOMContentLoaded', function() {
@@ -507,8 +511,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Set error handler for each image
             img.onerror = function() {
                 console.warn(`Image failed to load: ${this.src}`);
-                if (this.src.includes('assets/products/')) {
-                    this.src = 'https://via.placeholder.com/300x300?text=Image+Not+Found';
+                // Fix duplicate paths
+                if (this.src.includes('assets/products/assets/products/')) {
+                    const fixedSrc = this.src.replace('assets/products/assets/products/', 'assets/products/');
+                    console.log(`Fixing duplicate path: ${this.src} -> ${fixedSrc}`);
+                    this.src = fixedSrc;
                 }
             };
         });
