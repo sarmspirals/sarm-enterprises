@@ -62,26 +62,19 @@ async function loadLogo() {
 
 // === FIXED: GET CORRECT IMAGE PATH (NO DUPLICATION) ===
 function getImagePath(filename) {
-    if (!filename) {
-        return 'https://via.placeholder.com/300x300?text=No+Image';
-    }
+    if (!filename) return 'https://via.placeholder.com/300x300?text=No+Image';
     
-    // If already a full URL, return as-is
-    if (filename.startsWith('http://') || filename.startsWith('https://') || filename.startsWith('data:')) {
+    // Already a full URL? Return as-is
+    if (filename.startsWith('http') || filename.includes('via.placeholder.com')) {
         return filename;
     }
     
-    // If already starts with assets/products/, return as-is (remove duplicate prefix)
+    // Already has path? Return as-is
     if (filename.startsWith('assets/products/')) {
         return filename;
     }
     
-    // If starts with /, it's already a full path
-    if (filename.startsWith('/')) {
-        return filename;
-    }
-    
-    // Default: just return the filename (assuming it's in assets/products/)
+    // Just filename? Add path
     return `assets/products/${filename}`;
 }
 
