@@ -826,47 +826,56 @@
             updateImagePreviews();
         }
         
-        function updateImagePreviews() {
-            const inputs = document.querySelectorAll('.image-url');
-            const previewsContainer = document.getElementById('imagePreviews');
+       function updateImagePreviews() {
+    const inputs = document.querySelectorAll('.image-url');
+    const previewsContainer = document.getElementById('imagePreviews');
+    
+    // Clear previous previews
+    previewsContainer.innerHTML = '';
+    
+    let hasImages = false;
+    
+    inputs.forEach((input, index) => {
+        const filename = input.value.trim();
+        if (filename) {
+            hasImages = true;
             
-            // Clear previous previews
-            previewsContainer.innerHTML = '';
+            // Remove any existing error class
+            input.classList.remove('image-error');
             
-            let hasImages = false;
-            
-            inputs.forEach((input, index) => {
-                const filename = input.value.trim();
-                if (filename) {
-                    hasImages = true;
-                    
-                    // Remove any existing error class
-                    input.classList.remove('image-error');
-                    
-                    // SIMPLE IMAGE SOURCE - Fixed to prevent 404 errors
-                    const imageUrl = `assets/products/${filename}`;
-                    const preview = document.createElement('div');
-                    preview.className = 'image-preview-item';
-                    preview.dataset.index = index;
-                    
-                    preview.innerHTML = `
-                        <img src="${imageUrl}" alt="Preview" onerror="this.onerror=null; this.src='https://via.placeholder.com/120x100?text=Image+${index + 1}'">
-                        <span>${filename}</span>
-                    `;
-                    
-                    previewsContainer.appendChild(preview);
-                }
-            });
-            
-            if (!hasImages) {
-                previewsContainer.innerHTML = `
-                    <div style="width: 100%; text-align: center; padding: 30px; color: #999;">
-                        <i class="fas fa-images" style="font-size: 40px; margin-bottom: 10px;"></i>
-                        <p>Enter image filenames above to see previews</p>
-                    </div>
-                `;
+            // FIXED: No duplicate prefix
+            let imageUrl = filename;
+            if (!filename.startsWith('http://') && 
+                !filename.startsWith('https://') && 
+                !filename.startsWith('data:') &&
+                !filename.startsWith('assets/products/')) {
+                imageUrl = `assets/products/${filename}`;
             }
+            
+            const preview = document.createElement('div');
+            preview.className = 'image-preview-item';
+            preview.dataset.index = index;
+            
+            preview.innerHTML = `
+                <img src="${imageUrl}" alt="Preview" 
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/120x100?text=Image+${index + 1}'">
+                <span>${filename}</span>
+            `;
+            
+            previewsContainer.appendChild(preview);
         }
+    });
+    
+    if (!hasImages) {
+        previewsContainer.innerHTML = `
+            <div style="width: 100%; text-align: center; padding: 30px; color: #999;">
+                <i class="fas fa-images" style="font-size: 40px; margin-bottom: 10px;"></i>
+                <p>Enter image filenames above to see previews</p>
+            </div>
+        `;
+    }
+}
+        
         
         // Get image URLs from form
         function getImageUrls() {
