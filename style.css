@@ -287,6 +287,18 @@ body {
     margin-bottom: 0.5rem;
 }
 
+/* For moving quotes carousel */
+@keyframes quoteScroll {
+    0% { transform: translateX(100%); color: #3b82f6; }
+    50% { color: #8b5cf6; }
+    100% { transform: translateX(-100%); color: #3b82f6; }
+}
+
+.hero-quotes .quote {
+    animation: quoteScroll 20s linear infinite;
+    color: #3b82f6;
+}
+
 .btn-primary {
     background-color: var(--secondary-color);
     color: white;
