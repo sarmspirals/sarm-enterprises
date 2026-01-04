@@ -1061,6 +1061,7 @@ body {
     .hero-quotes {
         flex-direction: column;
         align-items: center;
-        colour:green;
+    color: #991b1b; /* Dark Red */
+
     }
 }
