@@ -468,3 +468,16 @@ window.addToCart = addToCart;
 window.changeProductSlide = changeProductSlide;
 window.updateCartCount = updateCartCount;
 window.viewProductDetails = viewProductDetails;
+
+// Temporary debug code - add this to the end of app.js
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Debug: Checking for product images...");
+    // Check for images after a short delay to allow them to load
+    setTimeout(() => {
+        const allImages = document.querySelectorAll('.product-card img');
+        console.log(`Debug: Found ${allImages.length} total image elements in product cards.`);
+        allImages.forEach((img, index) => {
+            console.log(`Image ${index}: src = "${img.src}", complete = ${img.complete}, naturalWidth = ${img.naturalWidth}`);
+        });
+    }, 1000);
+});
