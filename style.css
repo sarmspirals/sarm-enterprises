@@ -273,25 +273,27 @@ body {
     flex-wrap: wrap;
 }
 
-.quote {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 1rem;
-    border-radius: var(--border-radius);
-    border-left: 4px solid var(--secondary-color);
-    max-width: 300px;
+/* For moving quotes carousel in hero */
+.hero-quotes .quote {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #e74c3c; /* Red border */
+    color: #e74c3c; /* Red text */
+    margin: 10px;
+    text-align: center;
 }
 
-.quote i {
-    color: #dc2626;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+.hero-quotes .quote i {
+    color: #e74c3c; /* Red color for quote icon */
+    font-size: 24px;
+    margin-bottom: 10px;
 }
 
-/* For moving quotes carousel */
-@keyframes quoteScroll {
-    0% { transform: translateX(100%); color: #3b82f6; }
-    50% { color: #8b5cf6; }
-    100% { transform: translateX(-100%); color: #3b82f6; }
+.hero-quotes .quote p {
+    color: #e74c3c; /* Red color */
+    font-size: 18px;
+    font-weight: 500;
 }
 
 .hero-quotes .quote {
