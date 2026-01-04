@@ -832,7 +832,7 @@ body {
 /* Product Image Slider */
 .product-image-slider {
     position: relative;
-    height: 4000px;
+    height: 250px;
     overflow: hidden;
     background: #f8f9fa;
 }
@@ -875,7 +875,7 @@ body {
 .thumbnail:hover,
 .thumbnail.active {
     opacity: 1;
-    border-color: var(--primary-color);
+    border-color: #667eea;
     transform: scale(1.05);
 }
 
