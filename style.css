@@ -1061,5 +1061,6 @@ body {
     .hero-quotes {
         flex-direction: column;
         align-items: center;
+        colour:green;
     }
 }
