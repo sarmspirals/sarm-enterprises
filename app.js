@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot, getDoc, setDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, listAll } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAZe6bywYSgnMFZsef1xgfPFQBkw4y7tco",
@@ -17,7 +16,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 // DOM Elements
 const productsContainer = document.getElementById('productsContainer');
@@ -38,29 +36,47 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+// === FIXED LOGO LOADING ===
 async function loadLogo() {
     try {
         const logoElement = document.getElementById('logo');
         if (!logoElement) return;
         
-        // Use local logo by default
+        // Try local logo first
         logoElement.src = "assets/logo/logo.png";
         logoElement.alt = "SARM ENTERPRISES Logo";
         
-        // Optional: You can still check Firestore for a logo path if you want flexibility
-        const logoDoc = await getDoc(doc(db, "settings", "logo"));
-        if (logoDoc.exists() && logoDoc.data().path) {
-            logoElement.src = logoDoc.data().path;
-        }
+        // Fallback if local logo fails
+        logoElement.onerror = function() {
+            this.onerror = null;
+            this.src = 'https://images.unsplash.com/photo-1567446537710-0c5ff5a6ac32?ixlib=rb-4.0.3';
+        };
         
     } catch (error) {
-        console.log("Using default logo");
+        console.log("Using fallback logo");
+        if (logoElement) {
+            logoElement.src = 'https://images.unsplash.com/photo-1567446537710-0c5ff5a6ac32?ixlib=rb-4.0.3';
+        }
     }
 }
 
-// ========== NEW PRODUCT DISPLAY FUNCTIONS (WITH MULTIPLE IMAGES, CATEGORIES, ADD TO CART) ==========
+// === FIXED: GET CORRECT IMAGE PATH ===
+function getImagePath(filename) {
+    // If filename is already a full URL or placeholder, return as-is
+    if (filename.includes('http://') || filename.includes('https://') || filename.includes('data:')) {
+        return filename;
+    }
+    
+    // If filename has no extension, add .jpg
+    if (!filename.includes('.')) {
+        filename = filename + '.jpg';
+    }
+    
+    // Return local path for project images
+    return `assets/products/${filename}`;
+}
 
-// Function to display products with multiple images, categories, and Add to Cart button
+// === FIXED PRODUCT DISPLAY FUNCTION ===
 function displayProductOnWebsite(product, id) {
     const productItem = document.createElement('div');
     productItem.className = 'product-card';
@@ -71,24 +87,30 @@ function displayProductOnWebsite(product, id) {
     let imagesHTML = '';
     
     if (images.length > 0) {
+        // Get main image path
+        const mainImagePath = getImagePath(images[0]);
+        
         imagesHTML = `
             <div class="product-image-slider">
                 <div class="slider-main">
-                    <img src="assets/products/${images[0]}" 
+                    <img src="${mainImagePath}" 
                          alt="${product.name}" 
                          class="active-slide"
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300x300?text=Product+Image'">
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300x300?text=${encodeURIComponent(product.name.substring(0, 20))}'">
                 </div>
                 ${images.length > 1 ? `
                     <div class="slider-thumbnails">
-                        ${images.map((img, index) => `
-                            <img src="assets/products/${img}" 
-                                 alt="${product.name}" 
-                                 class="thumbnail ${index === 0 ? 'active' : ''}"
-                                 data-index="${index}"
-                                 onerror="this.onerror=null; this.src='https://via.placeholder.com/60x60?text=Thumb+${index + 1}'"
-                                 onclick="changeProductSlide(this, '${id}')">
-                        `).join('')}
+                        ${images.map((img, index) => {
+                            const thumbPath = getImagePath(img);
+                            return `
+                                <img src="${thumbPath}" 
+                                     alt="${product.name}" 
+                                     class="thumbnail ${index === 0 ? 'active' : ''}"
+                                     data-index="${index}"
+                                     onerror="this.onerror=null; this.src='https://via.placeholder.com/60x60?text=Thumb+${index + 1}'"
+                                     onclick="changeProductSlide(this, '${id}')">
+                            `;
+                        }).join('')}
                     </div>
                 ` : ''}
             </div>
@@ -96,7 +118,7 @@ function displayProductOnWebsite(product, id) {
     } else {
         imagesHTML = `
             <div class="product-image">
-                <img src="https://via.placeholder.com/300x300/cccccc/ffffff?text=No+Image" 
+                <img src="https://via.placeholder.com/300x300/cccccc/ffffff?text=${encodeURIComponent(product.name.substring(0, 20))}" 
                      alt="${product.name}">
             </div>
         `;
@@ -108,6 +130,9 @@ function displayProductOnWebsite(product, id) {
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ') : 'Uncategorized';
     
+    // Create WhatsApp message
+    const whatsappMessage = `Hello SARM ENTERPRISES,%0AI would like to order:%0AProduct: ${product.name}%0APages: ${product.pages}%0APrice: ₹${product.price}%0A%0APlease confirm availability and delivery time.`;
+    
     productItem.innerHTML = `
         ${imagesHTML}
         <div class="product-info">
@@ -116,7 +141,7 @@ function displayProductOnWebsite(product, id) {
                 <i class="fas fa-tag"></i> ${categoryName}
             </div>
             <div class="product-details">
-                <p><i class="fas fa-file-alt"></i> ${product.pages} Pages</p>
+                <p><i class="fas fa-file-alt"></i> ${product.pages || 'N/A'} Pages</p>
                 <p><i class="fas fa-rupee-sign"></i> ₹${product.price}</p>
                 ${product.stock > 0 ? 
                     `<p class="in-stock"><i class="fas fa-check-circle"></i> In Stock (${product.stock})</p>` : 
@@ -136,10 +161,10 @@ function displayProductOnWebsite(product, id) {
                 </div>
             ` : ''}
             <div class="product-actions">
-                <button class="btn-primary add-to-cart-btn" onclick="addToCart('${id}', '${product.name.replace(/'/g, "\\'")}', ${product.price}, 'assets/products/${images[0] || ""}')" ${product.stock <= 0 ? 'disabled' : ''}>
+                <button class="btn-primary add-to-cart-btn" onclick="addToCart('${id}', '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${getImagePath(images[0] || "")}')" ${product.stock <= 0 ? 'disabled' : ''}>
                     <i class="fas fa-cart-plus"></i> Add to Cart
                 </button>
-                <a href="https://wa.me/917006927825?text=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20${encodeURIComponent(product.name)}%20(Price:%20₹${product.price})" 
+                <a href="https://wa.me/917006927825?text=${whatsappMessage}" 
                    class="btn-whatsapp" target="_blank" style="width: 100%; text-align: center; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;">
                     <i class="fab fa-whatsapp"></i> Order on WhatsApp
                 </a>
@@ -150,74 +175,66 @@ function displayProductOnWebsite(product, id) {
     return productItem;
 }
 
-// Function to change product image slides
-function changeProductSlide(thumbnail, productId) {
-    const productCard = thumbnail.closest('.product-card');
-    const mainImage = productCard.querySelector('.active-slide');
-    const allThumbnails = productCard.querySelectorAll('.thumbnail');
-    
-    // Update main image
-    mainImage.src = thumbnail.src;
-    
-    // Update active thumbnail
-    allThumbnails.forEach(thumb => thumb.classList.remove('active'));
-    thumbnail.classList.add('active');
-}
-
-// Function to load and display products on main website
+// === LOAD AND DISPLAY PRODUCTS ===
 async function loadWebsiteProducts() {
     try {
+        console.log("Loading products from Firestore...");
         const productsRef = collection(db, "products");
         const q = query(productsRef, orderBy("createdAt", "desc"));
         const querySnapshot = await getDocs(q);
         
         const productsContainer = document.getElementById('productsContainer');
         
-        if (!productsContainer) return;
-        
-        if (productsContainer) {
-            productsContainer.innerHTML = '<div class="loading-products" style="text-align: center; padding: 50px; grid-column: 1 / -1;"><i class="fas fa-spinner fa-spin" style="font-size: 40px; color: #667eea;"></i><p>Loading products...</p></div>';
+        if (!productsContainer) {
+            console.error("Products container not found!");
+            return;
         }
         
-        const productsData = [];
+        console.log(`Found ${querySnapshot.size} products in Firestore`);
         
+        // Clear loading message
+        productsContainer.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+            productsContainer.innerHTML = `
+                <div style="text-align: center; padding: 50px; grid-column: 1 / -1;">
+                    <i class="fas fa-book" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
+                    <p style="color: #999; font-size: 18px;">No products available yet.</p>
+                    <p style="color: #666; font-size: 14px;">Please add products from the admin panel.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        let productsData = [];
         querySnapshot.forEach((doc) => {
             const product = doc.data();
             const productId = doc.id;
+            console.log(`Product: ${product.name}, Images: ${product.images ? product.images.length : 0}`);
             
             productsData.push({ id: productId, ...product });
-            
-            if (productsContainer) {
-                const productElement = displayProductOnWebsite(product, productId);
-                productsContainer.appendChild(productElement);
-            }
+            const productElement = displayProductOnWebsite(product, productId);
+            productsContainer.appendChild(productElement);
         });
         
-        // Clear loading message
-        if (productsContainer && productsData.length > 0) {
-            // Remove loading message
-            const loadingDiv = productsContainer.querySelector('.loading-products');
-            if (loadingDiv) loadingDiv.remove();
-        }
-        
-        // Create category filter if products exist
-        if (productsData.length > 0) {
-            createCategoryFilter(productsData);
-        } else {
-            if (productsContainer) {
-                productsContainer.innerHTML = '<p class="error-message">No products found. Please add products from admin panel.</p>';
-            }
-        }
+        // Create category filter
+        createCategoryFilter(productsData);
         
     } catch (error) {
-        console.error("Error loading products for website:", error);
+        console.error("Error loading products:", error);
         if (productsContainer) {
-            productsContainer.innerHTML = '<p class="error-message">Error loading products. Please try again later.</p>';
+            productsContainer.innerHTML = `
+                <div style="text-align: center; padding: 50px; grid-column: 1 / -1;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 60px; color: #e74c3c; margin-bottom: 20px;"></i>
+                    <p style="color: #e74c3c; font-size: 18px;">Error loading products.</p>
+                    <p style="color: #666; font-size: 14px;">Please check your internet connection.</p>
+                </div>
+            `;
         }
     }
 }
 
-// Function to create category filter on main website
+// === CREATE CATEGORY FILTER ===
 function createCategoryFilter(productsData) {
     const filterContainer = document.getElementById('categoryFilter');
     if (!filterContainer) return;
@@ -266,7 +283,7 @@ function createCategoryFilter(productsData) {
     });
 }
 
-// Function to filter products by category
+// === FILTER PRODUCTS BY CATEGORY ===
 function filterProductsByCategory(category) {
     const productCards = document.querySelectorAll('.product-card');
     
@@ -281,123 +298,25 @@ function filterProductsByCategory(category) {
     });
 }
 
-// Add to Cart function
-async function addToCart(productId, productName, price, imageUrl) {
-    try {
-        // Get current cart from localStorage
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        
-        // Check if product already exists in cart
-        const existingItemIndex = cart.findIndex(item => item.id === productId);
-        
-        if (existingItemIndex >= 0) {
-            // Update quantity
-            cart[existingItemIndex].quantity += 1;
-        } else {
-            // Add new item
-            cart.push({
-                id: productId,
-                name: productName,
-                price: price,
-                image: imageUrl,
-                quantity: 1
-            });
-        }
-        
-        // Save back to localStorage
-        localStorage.setItem('cart', JSON.stringify(cart));
-        
-        // Update cart count
-        updateCartCount();
-        
-        // Show success notification
-        showNotification(`${productName} added to cart!`, false);
-        
-    } catch (error) {
-        console.error('Error adding to cart:', error);
-        showNotification('Error adding item to cart. Please try again.', true);
-    }
-}
-
-// Update cart count in header
-function updateCartCount() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-    
-    const cartCountElements = document.querySelectorAll('.cart-count');
-    cartCountElements.forEach(element => {
-        element.textContent = totalItems;
-        element.style.display = totalItems > 0 ? 'inline-block' : 'none';
-    });
-}
-
-// Function to view product details
-function viewProductDetails(productId) {
-    // Redirect to product details page or show modal
-    window.location.href = `product-details.html?id=${productId}`;
-}
-
-// Real-time listener for products (NEW VERSION)
-function setupProductsListener() {
-    if (!productsContainer) return;
-    
-    try {
-        const productsRef = collection(db, "products");
-        const q = query(productsRef, orderBy("createdAt", "desc"));
-        
-        onSnapshot(q, (snapshot) => {
-            const productsData = [];
-            
-            snapshot.forEach((doc) => {
-                productsData.push({ id: doc.id, ...doc.data() });
-            });
-            
-            // Clear and reload products
-            if (productsContainer) {
-                productsContainer.innerHTML = '';
-                
-                productsData.forEach((product) => {
-                    const productElement = displayProductOnWebsite(product, product.id);
-                    productsContainer.appendChild(productElement);
-                });
-                
-                // Recreate category filter
-                createCategoryFilter(productsData);
-            }
-        });
-    } catch (error) {
-        console.error("Error setting up products listener:", error);
-    }
-}
-
-// ========== END OF NEW PRODUCT FUNCTIONS ==========
-
-// Load Quotes with error handling
+// === LOAD QUOTES ===
 async function loadQuotes() {
     try {
         const quotesContainer = document.querySelector('.hero-quotes');
         if (!quotesContainer) return;
         
-        const quotesSnapshot = await getDocs(collection(db, "quotes"));
+        const quotesRef = collection(db, "quotes");
+        const quotesSnapshot = await getDocs(quotesRef);
         
         quotesContainer.innerHTML = '';
-        quotesSnapshot.forEach((doc) => {
-            const quote = doc.data();
-            const quoteElement = document.createElement('div');
-            quoteElement.className = 'quote';
-            quoteElement.innerHTML = `
-                <i class="fas fa-quote-left"></i>
-                <p>${quote.text}</p>
-            `;
-            quotesContainer.appendChild(quoteElement);
-        });
         
-        // Add default quotes if none exist
         if (quotesSnapshot.empty) {
+            // Add default quotes if none exist
             const defaultQuotes = [
                 "Where Thoughts Find Their Perfect Home",
                 "Quality Pages for Lifelong Memories",
-                "Your ideas are precious. We provide the perfect canvas"
+                "Writing transforms thoughts into treasures",
+                "Your ideas are precious. We provide the perfect canvas to preserve them",
+                "From thoughts to tangible memories"
             ];
             
             defaultQuotes.forEach(text => {
@@ -409,13 +328,34 @@ async function loadQuotes() {
                 `;
                 quotesContainer.appendChild(quoteElement);
             });
+            
+            // Save default quotes to Firestore
+            defaultQuotes.forEach(async (text) => {
+                await addDoc(collection(db, "quotes"), {
+                    text: text,
+                    createdAt: new Date().toISOString()
+                });
+            });
+            
+        } else {
+            quotesSnapshot.forEach((doc) => {
+                const quote = doc.data();
+                const quoteElement = document.createElement('div');
+                quoteElement.className = 'quote';
+                quoteElement.innerHTML = `
+                    <i class="fas fa-quote-left"></i>
+                    <p>${quote.text}</p>
+                `;
+                quotesContainer.appendChild(quoteElement);
+            });
         }
     } catch (error) {
-        console.log("Quotes loading skipped or failed:", error.message);
+        console.log("Quotes loading error:", error);
+        // Don't block the page if quotes fail to load
     }
 }
 
-// Show Notification
+// === SHOW NOTIFICATION ===
 function showNotification(message, isError = false) {
     const notification = document.createElement('div');
     notification.className = `notification ${isError ? 'error' : ''}`;
@@ -432,13 +372,99 @@ function showNotification(message, isError = false) {
     }, 3000);
 }
 
-// Initialize
+// === REAL-TIME PRODUCTS LISTENER ===
+function setupProductsListener() {
+    if (!productsContainer) return;
+    
+    try {
+        const productsRef = collection(db, "products");
+        const q = query(productsRef, orderBy("createdAt", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
+            const productsData = [];
+            productsContainer.innerHTML = '';
+            
+            snapshot.forEach((doc) => {
+                productsData.push({ id: doc.id, ...doc.data() });
+                const productElement = displayProductOnWebsite(doc.data(), doc.id);
+                productsContainer.appendChild(productElement);
+            });
+            
+            createCategoryFilter(productsData);
+        });
+    } catch (error) {
+        console.error("Error setting up products listener:", error);
+    }
+}
+
+// === GLOBAL FUNCTION FOR IMAGE SLIDE CHANGE ===
+window.changeProductSlide = function(thumbnail, productId) {
+    const productCard = thumbnail.closest('.product-card');
+    const mainImage = productCard.querySelector('.active-slide');
+    const allThumbnails = productCard.querySelectorAll('.thumbnail');
+    
+    // Update main image
+    mainImage.src = thumbnail.src;
+    
+    // Update active thumbnail
+    allThumbnails.forEach(thumb => thumb.classList.remove('active'));
+    thumbnail.classList.add('active');
+};
+
+// === GLOBAL FUNCTION FOR ADD TO CART ===
+window.addToCart = async function(productId, productName, price, imageUrl) {
+    try {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        const existingItemIndex = cart.findIndex(item => item.id === productId);
+        
+        if (existingItemIndex >= 0) {
+            cart[existingItemIndex].quantity += 1;
+        } else {
+            cart.push({
+                id: productId,
+                name: productName,
+                price: price,
+                image: imageUrl,
+                quantity: 1
+            });
+        }
+        
+        localStorage.setItem('cart', JSON.stringify(cart));
+        
+        // Update cart count
+        updateCartCount();
+        
+        showNotification(`${productName} added to cart!`, false);
+        
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        showNotification('Error adding item to cart. Please try again.', true);
+    }
+};
+
+// === UPDATE CART COUNT ===
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+    
+    const cartCountElements = document.querySelectorAll('.cart-count');
+    cartCountElements.forEach(element => {
+        element.textContent = totalItems;
+        element.style.display = totalItems > 0 ? 'inline-block' : 'none';
+    });
+}
+
+// === INITIALIZE APP ===
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("Initializing SARM ENTERPRISES website...");
+    
     // Load logo
     loadLogo();
     
-    // Load products if on main page (NEW VERSION)
+    // Load products if on main page
     if (productsContainer) {
+        console.log("Loading products for main page...");
         loadWebsiteProducts();
         setupProductsListener();
     }
@@ -458,26 +484,33 @@ document.addEventListener('DOMContentLoaded', () => {
             navMenu.classList.toggle('active');
         });
     }
+    
+    console.log("Website initialization complete!");
 });
 
-// Export for admin.js and global access
-export { auth, db, storage, showNotification };
+// Export for admin.js
+export { auth, db, showNotification };
 
-// Make functions globally available for onclick events in HTML
-window.addToCart = addToCart;
-window.changeProductSlide = changeProductSlide;
-window.updateCartCount = updateCartCount;
-window.viewProductDetails = viewProductDetails;
-
-// Temporary debug code - add this to the end of app.js
+// === TEMPORARY DEBUG CODE ===
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("Debug: Checking for product images...");
-    // Check for images after a short delay to allow them to load
+    console.log("=== DEBUG MODE ===");
+    console.log("Website loaded successfully!");
+    
     setTimeout(() => {
+        console.log("Checking for product images...");
         const allImages = document.querySelectorAll('.product-card img');
-        console.log(`Debug: Found ${allImages.length} total image elements in product cards.`);
+        console.log(`Found ${allImages.length} image elements in product cards`);
+        
         allImages.forEach((img, index) => {
-            console.log(`Image ${index}: src = "${img.src}", complete = ${img.complete}, naturalWidth = ${img.naturalWidth}`);
+            console.log(`Image ${index}: src = "${img.src}", loaded = ${img.complete}, width = ${img.naturalWidth}`);
+            
+            // Set error handler for each image
+            img.onerror = function() {
+                console.warn(`Image failed to load: ${this.src}`);
+                if (this.src.includes('assets/products/')) {
+                    this.src = 'https://via.placeholder.com/300x300?text=Image+Not+Found';
+                }
+            };
         });
-    }, 1000);
+    }, 2000);
 });
