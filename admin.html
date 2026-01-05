@@ -549,7 +549,7 @@
                     <div class="form-group">
                         <label for="productName"><i class="fas fa-tag"></i> Product Name *</label>
                         <input type="text" id="productName" name="productName" required 
-                               placeholder="e.g., Spiral Notebook 200 Pages">
+                               placeholder="e.g., Spiral Notebook">
                     </div>
                     <div class="form-group">
                         <label for="productCategory"><i class="fas fa-layer-group"></i> Category *</label>
@@ -566,11 +566,6 @@
                 </div>
                 
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="productPages"><i class="fas fa-file-alt"></i> Number of Pages *</label>
-                        <input type="number" id="productPages" name="productPages" required 
-                               placeholder="e.g., 200" min="1">
-                    </div>
                     <div class="form-group">
                         <label for="productPrice"><i class="fas fa-rupee-sign"></i> Price (₹) *</label>
                         <input type="number" id="productPrice" name="productPrice" required 
@@ -941,7 +936,6 @@
         window.setProductFormData = function(product) {
             document.getElementById('productName').value = product.name || '';
             document.getElementById('productCategory').value = product.category || '';
-            document.getElementById('productPages').value = product.pages || '';
             document.getElementById('productPrice').value = product.price || '';
             document.getElementById('productStock').value = product.stock || '';
             document.getElementById('productDescription').value = product.description || '';
