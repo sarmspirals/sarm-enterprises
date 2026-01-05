@@ -157,11 +157,11 @@ async function handleProductSubmit(e) {
         return;
     }
     
-    // Collect form data
+    // Collect form data - REMOVED PAGES FIELD
     const productData = {
         name: document.getElementById('productName').value.trim(),
         category: document.getElementById('productCategory').value,
-        pages: parseInt(document.getElementById('productPages').value) || 0,
+        // REMOVED: pages: parseInt(document.getElementById('productPages').value) || 0,
         price: parseFloat(document.getElementById('productPrice').value),
         stock: parseInt(document.getElementById('productStock').value),
         description: document.getElementById('productDescription').value.trim(),
@@ -232,6 +232,7 @@ function createProductListItem(product, id) {
         imagesHTML = '<img src="https://via.placeholder.com/80x80/cccccc/ffffff?text=No+Image" style="width:80px;height:80px;">';
     }
     
+    // UPDATED: Removed pages from display
     productItem.innerHTML = `
         <div class="admin-product-images">
             ${imagesHTML}
@@ -240,7 +241,7 @@ function createProductListItem(product, id) {
             <h4>${product.name} 
                 <span class="product-status ${stockClass}">${stockText}</span>
             </h4>
-            <p><strong>Pages:</strong> ${product.pages} | <strong>Price:</strong> ₹${product.price}</p>
+            <p><strong>Price:</strong> ₹${product.price}</p>
             <p><strong>Category:</strong> ${categoryName}</p>
             <p><strong>Stock:</strong> ${product.stock} units</p>
             <p><strong>Images:</strong> ${images.length} image(s)</p>
@@ -283,10 +284,9 @@ async function editProduct(productId) {
             if (window.setProductFormData) {
                 window.setProductFormData(product);
             } else {
-                // Fallback
+                // Fallback - UPDATED: Removed pages field
                 document.getElementById('productName').value = product.name || '';
                 document.getElementById('productCategory').value = product.category || '';
-                document.getElementById('productPages').value = product.pages || '';
                 document.getElementById('productPrice').value = product.price || '';
                 document.getElementById('productStock').value = product.stock || '';
                 document.getElementById('productDescription').value = product.description || '';
