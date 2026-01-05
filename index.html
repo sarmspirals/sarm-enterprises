@@ -711,7 +711,7 @@
             <div class="footer-content">
                 <div class="footer-brand">
                     <h3><i class="fas fa-book"></i> SARM ENTERPRISES</h3>
-                    <p>Quality Notebooks Since 2010</p>
+                    <p>Quality Notebooks Since 2024</p>
                     <p class="footer-quote">"Writing transforms thoughts into treasures"</p>
                 </div>
                 <div class="footer-links">
@@ -933,7 +933,7 @@
     document.getElementById('checkoutBtn').addEventListener('click', () => {
         if (cart.length === 0) return;
         
-        let message = "Hello SARM ENTERPRISES,%0AI would like to order:%0A%0A";
+        let message = "Hello SARM ENTERPRISES,I would like to order";
         let total = 0;
         
         cart.forEach((item, index) => {
@@ -942,7 +942,7 @@
             message += `${index + 1}. ${item.name} - ${item.quantity} x ₹${item.price} = ₹${itemTotal}%0A`;
         });
         
-        message += `%0ATotal: ₹${total.toFixed(2)}%0A%0APlease confirm my order.`;
+        message += `%0ATotal: ₹${total.toFixed(2)}APlease confirm my order.`;
         
         window.open(`https://wa.me/917006927825?text=${encodeURIComponent(message)}`, '_blank');
     });
