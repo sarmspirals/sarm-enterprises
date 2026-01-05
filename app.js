@@ -78,7 +78,7 @@ function getImagePath(filename) {
     return `assets/products/${filename}`;
 }
 
-// === FIXED: MULTIPLE IMAGE CAROUSEL FUNCTION ===
+// === FIXED: MULTIPLE IMAGE CAROUSEL FUNCTION WITH VIEW ALL BUTTON ===
 function createProductImageCarousel(product, id) {
     const images = product.images || [];
     
@@ -95,22 +95,40 @@ function createProductImageCarousel(product, id) {
     
     // If only one image
     if (images.length === 1) {
+        const firstImagePath = getImagePath(images[0]);
+        const imagesJSON = JSON.stringify(images).replace(/"/g, '&quot;');
+        const productJSON = JSON.stringify({
+            id: id,
+            name: product.name,
+            images: images
+        }).replace(/"/g, '&quot;').replace(/\\/g, '\\\\');
+        
         return `
-            <div class="product-image-slider">
+            <div class="product-image-slider" id="slider-${id}" data-images='${imagesJSON}'>
                 <div class="slider-main">
-                    <img src="${getImagePath(images[0])}" 
+                    <img src="${firstImagePath}" 
                          alt="${product.name}"
+                         id="main-image-${id}"
                          onerror="this.onerror=null; this.src='https://via.placeholder.com/300x300?text=${encodeURIComponent(product.name.substring(0, 20))}'">
                 </div>
+                <button class="view-more-images" onclick="viewAllImages(${productJSON})">
+                    <i class="fas fa-expand"></i> View Image
+                </button>
             </div>
         `;
     }
     
-    // Multiple images - create carousel
+    // Multiple images - create carousel with view all button
     const firstImagePath = getImagePath(images[0]);
+    const imagesJSON = JSON.stringify(images).replace(/"/g, '&quot;');
+    const productJSON = JSON.stringify({
+        id: id,
+        name: product.name,
+        images: images
+    }).replace(/"/g, '&quot;').replace(/\\/g, '\\\\');
     
     return `
-        <div class="product-image-slider" id="slider-${id}">
+        <div class="product-image-slider" id="slider-${id}" data-images='${imagesJSON}'>
             <div class="slider-main">
                 <img src="${firstImagePath}" 
                      alt="${product.name}"
@@ -133,9 +151,73 @@ function createProductImageCarousel(product, id) {
             <div class="image-counter">
                 <span>1</span> / <span>${images.length}</span>
             </div>
+            <button class="view-more-images" onclick="viewAllImages(${productJSON})">
+                <i class="fas fa-expand"></i> View All (${images.length})
+            </button>
         </div>
     `;
 }
+
+// === VIEW ALL IMAGES MODAL ===
+window.viewAllImages = function(product) {
+    const modal = document.getElementById('imageModal');
+    const modalImages = document.getElementById('modalImages');
+    
+    if (!modal || !modalImages) {
+        console.error('Modal elements not found');
+        return;
+    }
+    
+    modalImages.innerHTML = '';
+    
+    const images = product.images || [];
+    
+    if (images.length === 0) {
+        modalImages.innerHTML = `
+            <div class="swiper-slide" style="display: flex; align-items: center; justify-content: center; height: 400px;">
+                <div style="text-align: center;">
+                    <i class="fas fa-image" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
+                    <p style="color: #999;">No images available for this product</p>
+                </div>
+            </div>
+        `;
+    } else {
+        images.forEach((img, index) => {
+            const imageUrl = getImagePath(img);
+            modalImages.innerHTML += `
+                <div class="swiper-slide">
+                    <div style="display: flex; align-items: center; justify-content: center; height: 400px; padding: 20px;">
+                        <img src="${imageUrl}" 
+                             alt="${product.name} - Image ${index + 1}"
+                             style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/500x400?text=Image+${index + 1}'">
+                    </div>
+                </div>
+            `;
+        });
+    }
+    
+    // Initialize or update Swiper
+    if (window.productImageSwiper) {
+        window.productImageSwiper.destroy();
+    }
+    
+    window.productImageSwiper = new Swiper('.productImageSwiper', {
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        loop: images.length > 1,
+        spaceBetween: 10,
+        centeredSlides: true,
+    });
+    
+    modal.style.display = 'flex';
+};
 
 // === GLOBAL FUNCTION TO CHANGE PRODUCT IMAGES ===
 window.changeProductImage = function(productId, index) {
@@ -196,8 +278,8 @@ function displayProductOnWebsite(product, id) {
     const firstImagePath = product.images && product.images.length > 0 ? 
         getImagePath(product.images[0]) : '';
     
-    // Create WhatsApp message
-    const whatsappMessage = `Hello SARM ENTERPRISES,%0AI would like to order:%0AProduct: ${product.name}%0APages: ${product.pages}%0APrice: ₹${product.price}%0A%0APlease confirm availability and delivery time.`;
+    // Create WhatsApp message - UPDATED: Removed pages field
+    const whatsappMessage = `Hello SARM ENTERPRISES,%0AI would like to order:%0AProduct: ${product.name}%0APrice: ₹${product.price}%0A%0APlease confirm availability and delivery time.`;
     
     productItem.innerHTML = `
         ${imagesHTML}
@@ -207,7 +289,6 @@ function displayProductOnWebsite(product, id) {
                 <i class="fas fa-tag"></i> ${categoryName}
             </div>
             <div class="product-details">
-                <p><i class="fas fa-file-alt"></i> ${product.pages || 'N/A'} Pages</p>
                 <p><i class="fas fa-rupee-sign"></i> ₹${product.price}</p>
                 ${product.stock > 0 ? 
                     `<p class="in-stock"><i class="fas fa-check-circle"></i> In Stock (${product.stock})</p>` : 
