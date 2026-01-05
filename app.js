@@ -78,62 +78,123 @@ function getImagePath(filename) {
     return `assets/products/${filename}`;
 }
 
-// === FIXED PRODUCT DISPLAY FUNCTION ===
-function displayProductOnWebsite(product, id) {
-    const productItem = document.createElement('div');
-    productItem.className = 'product-card';
-    productItem.setAttribute('data-category', product.category || 'uncategorized');
-    
-    // Create images HTML - MULTIPLE IMAGES with carousel
+// === FIXED: MULTIPLE IMAGE CAROUSEL FUNCTION ===
+function createProductImageCarousel(product, id) {
     const images = product.images || [];
-    let imagesHTML = '';
     
-    if (images.length > 0) {
-        // Get main image path (FIXED: no duplicate prefix)
-        const mainImagePath = getImagePath(images[0]);
-        
-        imagesHTML = `
+    if (images.length === 0) {
+        return `
             <div class="product-image-slider">
                 <div class="slider-main">
-                    <img src="${mainImagePath}" 
-                         alt="${product.name}" 
-                         class="active-slide"
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300x300?text=${encodeURIComponent(product.name.substring(0, 20))}'">
+                    <img src="https://via.placeholder.com/300x300/cccccc/ffffff?text=${encodeURIComponent(product.name.substring(0, 20))}" 
+                         alt="${product.name}">
                 </div>
-                ${images.length > 1 ? `
-                    <div class="slider-thumbnails">
-                        ${images.map((img, index) => {
-                            const thumbPath = getImagePath(img);
-                            return `
-                                <img src="${thumbPath}" 
-                                     alt="${product.name}" 
-                                     class="thumbnail ${index === 0 ? 'active' : ''}"
-                                     data-index="${index}"
-                                     onerror="this.onerror=null; this.src='https://via.placeholder.com/60x60?text=Thumb+${index + 1}'"
-                                     onclick="changeProductSlide(this, '${id}')">
-                            `;
-                        }).join('')}
-                    </div>
-                ` : ''}
-            </div>
-        `;
-    } else {
-        imagesHTML = `
-            <div class="product-image">
-                <img src="https://via.placeholder.com/300x300/cccccc/ffffff?text=${encodeURIComponent(product.name.substring(0, 20))}" 
-                     alt="${product.name}">
             </div>
         `;
     }
     
-    // Format category name for display
+    // If only one image
+    if (images.length === 1) {
+        return `
+            <div class="product-image-slider">
+                <div class="slider-main">
+                    <img src="${getImagePath(images[0])}" 
+                         alt="${product.name}"
+                         onerror="this.onerror=null; this.src='https://via.placeholder.com/300x300?text=${encodeURIComponent(product.name.substring(0, 20))}'">
+                </div>
+            </div>
+        `;
+    }
+    
+    // Multiple images - create carousel
+    const firstImagePath = getImagePath(images[0]);
+    
+    return `
+        <div class="product-image-slider" id="slider-${id}">
+            <div class="slider-main">
+                <img src="${firstImagePath}" 
+                     alt="${product.name}"
+                     id="main-image-${id}"
+                     onerror="this.onerror=null; this.src='https://via.placeholder.com/300x300?text=${encodeURIComponent(product.name.substring(0, 20))}'">
+            </div>
+            <div class="slider-thumbnails" id="thumbs-${id}">
+                ${images.map((img, index) => {
+                    const thumbPath = getImagePath(img);
+                    return `
+                        <img src="${thumbPath}" 
+                             alt="${product.name} - ${index + 1}"
+                             class="thumbnail ${index === 0 ? 'active' : ''}"
+                             data-index="${index}"
+                             onclick="changeProductImage('${id}', ${index})"
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/60x60?text=${index + 1}'">
+                    `;
+                }).join('')}
+            </div>
+            <div class="image-counter">
+                <span>1</span> / <span>${images.length}</span>
+            </div>
+        </div>
+    `;
+}
+
+// === GLOBAL FUNCTION TO CHANGE PRODUCT IMAGES ===
+window.changeProductImage = function(productId, index) {
+    const productSlider = document.getElementById(`slider-${productId}`);
+    if (!productSlider) return;
+    
+    const mainImage = document.getElementById(`main-image-${productId}`);
+    const thumbnails = productSlider.querySelectorAll('.thumbnail');
+    const counter = productSlider.querySelector('.image-counter span:first-child');
+    
+    // Get the product data from the product card or from a data attribute
+    const productCard = productSlider.closest('.product-card');
+    const imagesAttr = productCard.getAttribute('data-images');
+    
+    if (!imagesAttr) return;
+    
+    try {
+        const images = JSON.parse(imagesAttr);
+        if (images && images[index]) {
+            const newImagePath = getImagePath(images[index]);
+            mainImage.src = newImagePath;
+            
+            // Update active thumbnail
+            thumbnails.forEach(thumb => {
+                thumb.classList.remove('active');
+                if (parseInt(thumb.getAttribute('data-index')) === index) {
+                    thumb.classList.add('active');
+                }
+            });
+            
+            // Update counter
+            if (counter) {
+                counter.textContent = index + 1;
+            }
+        }
+    } catch (error) {
+        console.error('Error changing image:', error);
+    }
+};
+
+// === FIXED: DISPLAY PRODUCT ON WEBSITE FUNCTION ===
+function displayProductOnWebsite(product, id) {
+    const productItem = document.createElement('div');
+    productItem.className = 'product-card';
+    productItem.setAttribute('data-category', product.category || 'uncategorized');
+    productItem.setAttribute('data-images', JSON.stringify(product.images || []));
+    
+    // Create image carousel
+    const imagesHTML = createProductImageCarousel(product, id);
+    
+    // Format category name
     const categoryName = product.category ? 
         product.category.split('-').map(word => 
             word.charAt(0).toUpperCase() + word.slice(1)
         ).join(' ') : 'Uncategorized';
     
     // Get first image for cart
-    const firstImagePath = images.length > 0 ? getImagePath(images[0]) : '';
+    const firstImagePath = product.images && product.images.length > 0 ? 
+        getImagePath(product.images[0]) : '';
     
     // Create WhatsApp message
     const whatsappMessage = `Hello SARM ENTERPRISES,%0AI would like to order:%0AProduct: ${product.name}%0APages: ${product.pages}%0APrice: ₹${product.price}%0A%0APlease confirm availability and delivery time.`;
@@ -393,20 +454,6 @@ function setupProductsListener() {
         console.error("Error setting up products listener:", error);
     }
 }
-
-// === GLOBAL FUNCTION FOR IMAGE SLIDE CHANGE ===
-window.changeProductSlide = function(thumbnail, productId) {
-    const productCard = thumbnail.closest('.product-card');
-    const mainImage = productCard.querySelector('.active-slide');
-    const allThumbnails = productCard.querySelectorAll('.thumbnail');
-    
-    // Update main image
-    mainImage.src = thumbnail.src;
-    
-    // Update active thumbnail
-    allThumbnails.forEach(thumb => thumb.classList.remove('active'));
-    thumbnail.classList.add('active');
-};
 
 // === GLOBAL FUNCTION FOR ADD TO CART ===
 window.addToCart = async function(productId, productName, price, imageUrl) {
