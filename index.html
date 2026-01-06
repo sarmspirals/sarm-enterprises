@@ -866,7 +866,7 @@
                     <div class="cart-item-details">
                         <h4>${item.name}</h4>
                         <div class="cart-item-quantity">
-                            <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                            <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})">. </button>
                             <span>${item.quantity}</span>
                             <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
                         </div>
@@ -1010,28 +1010,6 @@
     document.addEventListener('DOMContentLoaded', () => {
         updateCartCount();
         renderCart();
-        
-        // Initialize quotes Swiper with red theme
-        const quotesSwiper = new Swiper('.quotesSwiper', {
-            slidesPerView: 1,
-            spaceBetween: 30,
-            loop: true,
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-                bulletClass: 'swiper-pagination-bullet',
-                bulletActiveClass: 'swiper-pagination-bullet-active'
-            },
-            on: {
-                init: function() {
-                    console.log('Quotes Swiper initialized with red theme');
-                }
-            }
-        });
         
         // Close image modal
         document.querySelector('#imageModal .close-modal').addEventListener('click', () => {
