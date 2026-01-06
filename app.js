@@ -681,6 +681,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    // Add Swiper library if not already loaded
+    if (!window.Swiper) {
+        console.log("Loading Swiper library...");
+        const swiperScript = document.createElement('script');
+        swiperScript.src = 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js';
+        swiperScript.onload = () => {
+            console.log("Swiper library loaded");
+            if (!document.getElementById('quotesContainer').children.length) {
+                loadDefaultQuotes();
+            }
+        };
+        document.head.appendChild(swiperScript);
+    }
+    
     console.log("Website initialization complete!");
 });
 
