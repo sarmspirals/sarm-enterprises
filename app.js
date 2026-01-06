@@ -448,8 +448,11 @@ function filterProductsByCategory(category) {
 // === LOAD QUOTES ===
 async function loadQuotes() {
     try {
-        const quotesContainer = document.querySelector('.hero-quotes');
-        if (!quotesContainer) return;
+        const quotesContainer = document.getElementById('quotesContainer');
+        if (!quotesContainer) {
+            console.log("Quotes container not found");
+            return;
+        }
         
         const quotesRef = collection(db, "quotes");
         const quotesSnapshot = await getDocs(quotesRef);
@@ -468,7 +471,7 @@ async function loadQuotes() {
             
             defaultQuotes.forEach(text => {
                 const quoteElement = document.createElement('div');
-                quoteElement.className = 'quote';
+                quoteElement.className = 'swiper-slide quote-slide';
                 quoteElement.innerHTML = `
                     <i class="fas fa-quote-left"></i>
                     <p>${text}</p>
@@ -476,11 +479,15 @@ async function loadQuotes() {
                 quotesContainer.appendChild(quoteElement);
             });
             
+            console.log("Loaded default quotes");
+            
         } else {
+            console.log(`Found ${quotesSnapshot.size} quotes in Firestore`);
+            
             quotesSnapshot.forEach((doc) => {
                 const quote = doc.data();
                 const quoteElement = document.createElement('div');
-                quoteElement.className = 'quote';
+                quoteElement.className = 'swiper-slide quote-slide';
                 quoteElement.innerHTML = `
                     <i class="fas fa-quote-left"></i>
                     <p>${quote.text}</p>
@@ -488,10 +495,74 @@ async function loadQuotes() {
                 quotesContainer.appendChild(quoteElement);
             });
         }
+        
+        // Initialize or update Swiper after loading quotes
+        initializeQuotesSwiper();
+        
     } catch (error) {
         console.log("Quotes loading error:", error);
         // Don't block the page if quotes fail to load
+        loadDefaultQuotes();
     }
+}
+
+// === INITIALIZE QUOTES SWIPER ===
+function initializeQuotesSwiper() {
+    const quotesSwiper = document.querySelector('.quotesSwiper');
+    if (!quotesSwiper) {
+        console.log("Quotes Swiper not found");
+        return;
+    }
+    
+    // Destroy existing Swiper instance if exists
+    if (window.quotesSwiperInstance) {
+        window.quotesSwiperInstance.destroy();
+    }
+    
+    window.quotesSwiperInstance = new Swiper('.quotesSwiper', {
+        slidesPerView: 1,
+        spaceBetween: 30,
+        loop: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+    });
+    
+    console.log("Quotes Swiper initialized");
+}
+
+// === LOAD DEFAULT QUOTES (FALLBACK) ===
+function loadDefaultQuotes() {
+    const quotesContainer = document.getElementById('quotesContainer');
+    if (!quotesContainer) return;
+    
+    const defaultQuotes = [
+        "Where Thoughts Find Their Perfect Home",
+        "Quality Pages for Lifelong Memories",
+        "Writing transforms thoughts into treasures",
+        "Your ideas are precious. We provide the perfect canvas to preserve them",
+        "From thoughts to tangible memories"
+    ];
+    
+    quotesContainer.innerHTML = '';
+    
+    defaultQuotes.forEach(text => {
+        const quoteElement = document.createElement('div');
+        quoteElement.className = 'swiper-slide quote-slide';
+        quoteElement.innerHTML = `
+            <i class="fas fa-quote-left"></i>
+            <p>${text}</p>
+        `;
+        quotesContainer.appendChild(quoteElement);
+    });
+    
+    // Initialize Swiper
+    initializeQuotesSwiper();
 }
 
 // === SHOW NOTIFICATION ===
