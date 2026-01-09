@@ -785,6 +785,19 @@
         document.getElementById('cartCount').textContent = count;
     }
     
+    // Debug function to check cart contents
+    function debugCart() {
+        console.log('=== CART DEBUG INFO ===');
+        console.log('Cart items:', cart);
+        console.log('Cart count:', cart.length);
+        console.log('LocalStorage cart:', localStorage.getItem('cart'));
+        console.log('Cart total:', cart.reduce((total, item) => total + (item.price * item.quantity), 0));
+        console.log('=======================');
+    }
+    
+    // Test: Add this to check cart state (optional)
+    window.debugCart = debugCart;
+    
     function addToCart(product) {
         console.log('Adding to cart:', product);
         
@@ -810,6 +823,9 @@
         updateCartCount();
         renderCart();
         showNotification('Product added to cart!');
+        
+        // Debug
+        debugCart();
     }
     
     function removeFromCart(productId) {
@@ -968,22 +984,40 @@
         document.getElementById('cartOverlay').classList.remove('show');
     });
     
-    // Checkout functionality
+    // Checkout functionality - FIXED VERSION
     document.getElementById('checkoutBtn').addEventListener('click', () => {
-        if (cart.length === 0) return;
+        if (cart.length === 0) {
+            alert('Your cart is empty!');
+            return;
+        }
         
-        let message = "Hello SARM ENTERPRISES,I would like to order";
+        console.log('Cart at checkout:', cart); // Debug log
+        
+        let message = "Hello SARM ENTERPRISES, I would like to order:\n\n";
         let total = 0;
         
         cart.forEach((item, index) => {
             const itemTotal = item.price * item.quantity;
             total += itemTotal;
-            message += `${index + 1}. ${item.name} - ${item.quantity} x ₹${item.price} = ₹${itemTotal}%0A`;
+            message += `${index + 1}. ${item.name} - ${item.quantity} x ₹${item.price} = ₹${itemTotal}\n`;
         });
         
-        message += `%0ATotal: ₹${total.toFixed(2)}APlease confirm my order.`;
+        message += `\nTotal: ₹${total.toFixed(2)}\n\nPlease confirm my order.`;
         
-        window.open(`https://wa.me/917006927825?text=${encodeURIComponent(message)}`, '_blank');
+        console.log('WhatsApp message:', message); // Debug log
+        
+        // URL encode the message
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://wa.me/917006927825?text=${encodedMessage}`;
+        
+        console.log('WhatsApp URL:', whatsappUrl); // Debug log
+        
+        // Open WhatsApp in new tab
+        window.open(whatsappUrl, '_blank');
+        
+        // Close cart sidebar
+        document.getElementById('cartSidebar').classList.remove('show');
+        document.getElementById('cartOverlay').classList.remove('show');
     });
     
     // Clear cart - UPDATED TO CLOSE CART SIDEBAR
@@ -1184,25 +1218,25 @@
                     ${firstImage ? 
                         `<img src="assets/products/${firstImage}" alt="${safeProductName}" 
                               onerror="this.onerror=null; this.src='https://via.placeholder.com/300x250?text=Notebook'">` :
-                        `<div class="default-image">No Image Available</div>`
-                    }
-                    
-                    ${images.length > 1 ? `
-                        <div class="product-images-nav" id="nav-${product.id}">
-                            ${images.map((_, index) => `
-                                <div class="image-dot ${index === 0 ? 'active' : ''}" 
-                                     data-index="${index}"
-                                     onclick="changeProductImage('${product.id}', ${index}, ${JSON.stringify(images).replace(/"/g, '&quot;')})"></div>
-                            `).join('')}
-                        </div>
-                        <button class="view-images-btn" onclick="viewProductImages(${JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\')})">
-                            <i class="fas fa-images"></i> View All (${images.length})
-                        </button>
-                    ` : images.length === 1 ? `
-                        <button class="view-images-btn" onclick="viewProductImages(${JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\')})">
-                            <i class="fas fa-expand"></i> View Image
-                        </button>
-                    ` : ''}
+                            `<div class="default-image">No Image Available</div>`
+                        }
+                        
+                        ${images.length > 1 ? `
+                            <div class="product-images-nav" id="nav-${product.id}">
+                                ${images.map((_, index) => `
+                                    <div class="image-dot ${index === 0 ? 'active' : ''}" 
+                                         data-index="${index}"
+                                         onclick="changeProductImage('${product.id}', ${index}, ${JSON.stringify(images).replace(/"/g, '&quot;')})"></div>
+                                `).join('')}
+                            </div>
+                            <button class="view-images-btn" onclick="viewProductImages(${JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\')})">
+                                <i class="fas fa-images"></i> View All (${images.length})
+                            </button>
+                        ` : images.length === 1 ? `
+                            <button class="view-images-btn" onclick="viewProductImages(${JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\')})">
+                                <i class="fas fa-expand"></i> View Image
+                            </button>
+                        ` : ''}
                 </div>
                 <div class="product-info">
                     <div class="product-header">
