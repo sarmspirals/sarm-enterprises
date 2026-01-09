@@ -1275,28 +1275,60 @@
         `;
     }
     
-    // Function to change product image
-    function changeProductImage(productId, index, images) {
-        const slider = document.getElementById(`slider-${productId}`);
-        const img = slider.querySelector('img');
-        const dots = document.querySelectorAll(`#nav-${productId} .image-dot`);
+   // Function to change product image - ENHANCED VERSION
+function changeProductImage(productId, index, images) {
+    const slider = document.getElementById(`slider-${productId}`);
+    if (!slider) return;
+    
+    const img = slider.querySelector('img');
+    const dots = document.querySelectorAll(`#nav-${productId} .image-dot`);
+    
+    if (images && images[index] && img) {
+        // Create new image element for smooth transition
+        const newImg = document.createElement('img');
+        newImg.src = `assets/products/${images[index]}`;
+        newImg.alt = img.alt;
+        newImg.style.width = '100%';
+        newImg.style.height = '100%';
+        newImg.style.maxHeight = '280px';
+        newImg.style.objectFit = 'contain';
+        newImg.style.padding = '20px';
+        newImg.style.opacity = '0';
+        newImg.style.position = 'absolute';
+        newImg.style.top = '0';
+        newImg.style.left = '0';
+        newImg.style.transition = 'opacity 0.5s ease';
         
-        if (images && images[index]) {
-            img.src = `assets/products/${images[index]}`;
-            img.onerror = function() {
-                this.onerror = null;
-                this.src = 'https://via.placeholder.com/300x250?text=Notebook';
-            };
-            
-            // Update active dot
-            dots.forEach(dot => {
-                dot.classList.remove('active');
-            });
-            if (dots[index]) {
-                dots[index].classList.add('active');
-            }
+        newImg.onerror = function() {
+            this.onerror = null;
+            this.src = 'https://via.placeholder.com/400x300?text=Notebook';
+            this.style.objectFit = 'contain';
+        };
+        
+        // Add new image and fade in
+        slider.appendChild(newImg);
+        
+        setTimeout(() => {
+            newImg.style.opacity = '1';
+            setTimeout(() => {
+                // Remove old image
+                if (img && img.parentNode === slider) {
+                    slider.removeChild(img);
+                }
+                // Rename new image to be the main image
+                newImg.style.position = 'static';
+            }, 500);
+        }, 10);
+        
+        // Update active dot
+        dots.forEach(dot => {
+            dot.classList.remove('active');
+        });
+        if (dots[index]) {
+            dots[index].classList.add('active');
         }
     }
+}
     
     // Filter products by category
     function filterProducts(category) {
