@@ -302,7 +302,7 @@
             background: #e74c3c !important;
         }
         
-        /* Product Card Updates - UPDATED FOR MOBILE */
+        /* Product Card Updates - UPDATED WITH BOTH BUTTONS */
         .product-card {
             position: relative;
             border: 1px solid #eaeaea;
@@ -343,13 +343,13 @@
         
         .product-images-nav {
             position: absolute;
-            bottom: 10px;
+            bottom: 15px;
             left: 0;
             right: 0;
             display: flex;
             justify-content: center;
             gap: 5px;
-            z-index: 10;
+            z-index: 15;
         }
         
         .image-dot {
@@ -365,60 +365,31 @@
             background: var(--primary-color);
         }
         
-        .btn-add-to-cart {
-            width: 100%;
-            margin-top: 10px;
-            padding: 12px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            min-height: 44px;
-        }
-        
-        .product-price-cart {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-            gap: 10px;
-        }
-        
-        .product-price-cart .price {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--primary-color);
-        }
-        
-        /* Category Filter */
-        .category-filter {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 30px 0;
-            padding: 0 10px;
-        }
-        
-        .category-btn {
-            padding: 8px 20px;
-            border: 2px solid var(--primary-color);
-            background: white;
-            color: var(--primary-color);
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            font-size: 14px;
-            min-height: 44px;
-            white-space: nowrap;
-        }
-        
-        .category-btn:hover,
-        .category-btn.active {
-            background: var(--primary-color);
+        /* View Images Button - FIXED VISIBILITY */
+        .view-images-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.85);
             color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 20;
+            min-height: 36px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .view-images-btn:hover {
+            background: rgba(0,0,0,0.95);
+            transform: scale(1.05);
         }
         
         /* Product Info */
@@ -475,23 +446,103 @@
             white-space: nowrap;
         }
         
-        /* View Images Button */
-        .view-images-btn {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 3px;
-            font-size: 12px;
-            cursor: pointer;
+        /* PRICE AND BUTTONS SECTION - UPDATED */
+        .product-price-cart {
+            margin-top: 15px;
+        }
+        
+        .product-price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        /* BUTTONS CONTAINER */
+        .product-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .btn-add-to-cart {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
             display: flex;
             align-items: center;
-            gap: 5px;
-            z-index: 10;
-            min-height: 30px;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .btn-add-to-cart:hover {
+            background: #1a252f;
+            transform: translateY(-2px);
+        }
+        
+        .btn-order-whatsapp {
+            width: 100%;
+            padding: 12px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .btn-order-whatsapp:hover {
+            background: #128C7E;
+            transform: translateY(-2px);
+        }
+        
+        /* Category Filter */
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0;
+            padding: 0 10px;
+        }
+        
+        .category-btn {
+            padding: 8px 20px;
+            border: 2px solid var(--primary-color);
+            background: white;
+            color: var(--primary-color);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 14px;
+            min-height: 44px;
+            white-space: nowrap;
+        }
+        
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--primary-color);
+            color: white;
         }
         
         /* Image Modal */
@@ -636,6 +687,15 @@
                 height: 60px;
             }
             
+            /* View Images Button for mobile */
+            .view-images-btn {
+                bottom: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                font-size: 12px;
+                min-height: 32px;
+            }
+            
             /* Notification for mobile */
             .notification {
                 bottom: 10px;
@@ -647,6 +707,18 @@
             
             .notification.show {
                 transform: translateY(0);
+            }
+            
+            /* Product buttons for mobile */
+            .product-buttons {
+                gap: 8px;
+            }
+            
+            .btn-add-to-cart,
+            .btn-order-whatsapp {
+                padding: 10px;
+                font-size: 13px;
+                min-height: 40px;
             }
         }
         
@@ -682,6 +754,14 @@
             
             .product-image-carousel {
                 height: 300px;
+            }
+            
+            .product-header h3 {
+                font-size: 16px;
+            }
+            
+            .product-price {
+                font-size: 20px;
             }
         }
     </style>
@@ -739,13 +819,6 @@
             </button>
         </div>
     </nav>
-
-    <!-- Add login button only for admin access -->
-    <div id="adminAccess" style="display: none; text-align: center; padding: 10px;">
-        <button onclick="window.location.href='admin.html'" class="btn-primary">
-            <i class="fas fa-user-shield"></i> Admin Panel
-        </button>
-    </div>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
@@ -1205,7 +1278,7 @@
         });
     });
     
-    // Function to render product with multi-image support and add to cart button
+    // Function to render product with multi-image support and TWO BUTTONS
     function renderProduct(product) {
         const images = product.images || [];
         const firstImage = images.length > 0 ? images[0] : null;
@@ -1214,6 +1287,10 @@
         const safeProductName = product.name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         const safeDescription = (product.description || 'Premium quality notebook for all your writing needs.')
             .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        
+        // Create WhatsApp message
+        const whatsappMessage = encodeURIComponent(`Hello SARM ENTERPRISES, I would like to order ${product.name} (₹${product.price}). Please provide more details.`);
+        const whatsappLink = `https://wa.me/917006927825?text=${whatsappMessage}`;
         
         // Create a safe product object for addToCart function
         const safeProduct = {
@@ -1265,70 +1342,75 @@
                     ` : ''}
                     
                     <div class="product-price-cart">
-                        <div class="price">₹${product.price}</div>
-                        <button class="btn-primary btn-add-to-cart" onclick="addToCart(${JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\')})">
-                            <i class="fas fa-cart-plus"></i> Add to Cart
-                        </button>
+                        <div class="product-price">₹${product.price}</div>
+                        <div class="product-buttons">
+                            <button class="btn-add-to-cart" onclick="addToCart(${JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\')})">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
+                            <a href="${whatsappLink}" class="btn-order-whatsapp" target="_blank">
+                                <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         `;
     }
     
-   // Function to change product image - ENHANCED VERSION
-function changeProductImage(productId, index, images) {
-    const slider = document.getElementById(`slider-${productId}`);
-    if (!slider) return;
-    
-    const img = slider.querySelector('img');
-    const dots = document.querySelectorAll(`#nav-${productId} .image-dot`);
-    
-    if (images && images[index] && img) {
-        // Create new image element for smooth transition
-        const newImg = document.createElement('img');
-        newImg.src = `assets/products/${images[index]}`;
-        newImg.alt = img.alt;
-        newImg.style.width = '100%';
-        newImg.style.height = '100%';
-        newImg.style.maxHeight = '280px';
-        newImg.style.objectFit = 'contain';
-        newImg.style.padding = '20px';
-        newImg.style.opacity = '0';
-        newImg.style.position = 'absolute';
-        newImg.style.top = '0';
-        newImg.style.left = '0';
-        newImg.style.transition = 'opacity 0.5s ease';
+    // Function to change product image - ENHANCED VERSION
+    function changeProductImage(productId, index, images) {
+        const slider = document.getElementById(`slider-${productId}`);
+        if (!slider) return;
         
-        newImg.onerror = function() {
-            this.onerror = null;
-            this.src = 'https://via.placeholder.com/400x300?text=Notebook';
-            this.style.objectFit = 'contain';
-        };
+        const img = slider.querySelector('img');
+        const dots = document.querySelectorAll(`#nav-${productId} .image-dot`);
         
-        // Add new image and fade in
-        slider.appendChild(newImg);
-        
-        setTimeout(() => {
-            newImg.style.opacity = '1';
+        if (images && images[index] && img) {
+            // Create new image element for smooth transition
+            const newImg = document.createElement('img');
+            newImg.src = `assets/products/${images[index]}`;
+            newImg.alt = img.alt;
+            newImg.style.width = '100%';
+            newImg.style.height = '100%';
+            newImg.style.maxHeight = '280px';
+            newImg.style.objectFit = 'contain';
+            newImg.style.padding = '15px';
+            newImg.style.opacity = '0';
+            newImg.style.position = 'absolute';
+            newImg.style.top = '0';
+            newImg.style.left = '0';
+            newImg.style.transition = 'opacity 0.5s ease';
+            
+            newImg.onerror = function() {
+                this.onerror = null;
+                this.src = 'https://via.placeholder.com/400x300?text=Notebook';
+                this.style.objectFit = 'contain';
+            };
+            
+            // Add new image and fade in
+            slider.appendChild(newImg);
+            
             setTimeout(() => {
-                // Remove old image
-                if (img && img.parentNode === slider) {
-                    slider.removeChild(img);
-                }
-                // Rename new image to be the main image
-                newImg.style.position = 'static';
-            }, 500);
-        }, 10);
-        
-        // Update active dot
-        dots.forEach(dot => {
-            dot.classList.remove('active');
-        });
-        if (dots[index]) {
-            dots[index].classList.add('active');
+                newImg.style.opacity = '1';
+                setTimeout(() => {
+                    // Remove old image
+                    if (img && img.parentNode === slider) {
+                        slider.removeChild(img);
+                    }
+                    // Rename new image to be the main image
+                    newImg.style.position = 'static';
+                }, 500);
+            }, 10);
+            
+            // Update active dot
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+            });
+            if (dots[index]) {
+                dots[index].classList.add('active');
+            }
         }
     }
-}
     
     // Filter products by category
     function filterProducts(category) {
@@ -1404,11 +1486,14 @@ function changeProductImage(productId, index, images) {
                 productElement.innerHTML = renderProduct(product);
                 productsContainer.appendChild(productElement);
             });
+            
+            // Optimize images after rendering
+            optimizeImages();
         }
     };
 </script>
 
-<!-- Mobile Menu JavaScript - UPDATED VERSION -->
+<!-- Enhanced Mobile Menu JavaScript -->
 <script>
     // Mobile menu toggle functionality
     document.addEventListener('DOMContentLoaded', function() {
@@ -1449,8 +1534,7 @@ function changeProductImage(productId, index, images) {
         function optimizeImages() {
             document.querySelectorAll('.product-image-slider img').forEach(img => {
                 img.style.width = '100%';
-                img.style.height = 'auto';
-                img.style.maxHeight = '280px';
+                img.style.height = '100%';
                 img.style.objectFit = 'contain';
                 
                 img.onerror = function() {
@@ -1476,61 +1560,6 @@ function changeProductImage(productId, index, images) {
             element.style.touchAction = 'manipulation';
         });
     });
-    
-    // Enhanced changeProductImage function for multiple images
-    function changeProductImage(productId, index, images) {
-        const slider = document.getElementById(`slider-${productId}`);
-        if (!slider) return;
-        
-        const img = slider.querySelector('img');
-        const dots = document.querySelectorAll(`#nav-${productId} .image-dot`);
-        
-        if (images && images[index] && img) {
-            // Create new image element for smooth transition
-            const newImg = document.createElement('img');
-            newImg.src = `assets/products/${images[index]}`;
-            newImg.alt = img.alt;
-            newImg.style.width = '100%';
-            newImg.style.height = '100%';
-            newImg.style.maxHeight = '280px';
-            newImg.style.objectFit = 'contain';
-            newImg.style.padding = '20px';
-            newImg.style.opacity = '0';
-            newImg.style.position = 'absolute';
-            newImg.style.top = '0';
-            newImg.style.left = '0';
-            newImg.style.transition = 'opacity 0.5s ease';
-            
-            newImg.onerror = function() {
-                this.onerror = null;
-                this.src = 'https://via.placeholder.com/400x300?text=Notebook';
-                this.style.objectFit = 'contain';
-            };
-            
-            // Add new image and fade in
-            slider.appendChild(newImg);
-            
-            setTimeout(() => {
-                newImg.style.opacity = '1';
-                setTimeout(() => {
-                    // Remove old image
-                    if (img && img.parentNode === slider) {
-                        slider.removeChild(img);
-                    }
-                    // Rename new image to be the main image
-                    newImg.style.position = 'static';
-                }, 500);
-            }, 10);
-            
-            // Update active dot
-            dots.forEach(dot => {
-                dot.classList.remove('active');
-            });
-            if (dots[index]) {
-                dots[index].classList.add('active');
-            }
-        }
-    }
 </script>
 </body>
 </html>
