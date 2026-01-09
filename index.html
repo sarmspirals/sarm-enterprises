@@ -606,7 +606,7 @@
     </section>
 
    <!-- Products Section -->
-<section class="products-section">
+<section id="products" class="products-section">
     <div class="container">
         <h2 class="section-title">Our Premium Products</h2>
         <p class="section-subtitle">Discover our wide range of high-quality notebooks and registers</p>
@@ -912,6 +912,45 @@
         }, 3000);
     }
     
+    // Smooth scrolling for navigation links
+    function initSmoothScroll() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                // Don't prevent default for admin links or external links
+                if (this.getAttribute('href') === '#' || 
+                    this.getAttribute('href').startsWith('http') ||
+                    this.getAttribute('href').endsWith('.html')) {
+                    return;
+                }
+                
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    // Close cart sidebar if open
+                    document.getElementById('cartSidebar').classList.remove('show');
+                    document.getElementById('cartOverlay').classList.remove('show');
+                    
+                    // Close mobile menu if open
+                    const navMenu = document.querySelector('.nav-menu');
+                    const menuToggle = document.querySelector('.menu-toggle');
+                    if (navMenu && navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
+                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                    
+                    // Smooth scroll to target
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    }
+    
     // Cart sidebar toggle
     document.getElementById('cartIcon').addEventListener('click', (e) => {
         e.preventDefault();
@@ -947,7 +986,7 @@
         window.open(`https://wa.me/917006927825?text=${encodeURIComponent(message)}`, '_blank');
     });
     
-    // Clear cart
+    // Clear cart - UPDATED TO CLOSE CART SIDEBAR
     document.getElementById('clearCartBtn').addEventListener('click', () => {
         if (confirm('Are you sure you want to clear your cart?')) {
             cart = [];
@@ -955,6 +994,10 @@
             updateCartCount();
             renderCart();
             showNotification('Cart cleared');
+            
+            // Close cart sidebar after clearing
+            document.getElementById('cartSidebar').classList.remove('show');
+            document.getElementById('cartOverlay').classList.remove('show');
         }
     });
     
@@ -1010,6 +1053,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         updateCartCount();
         renderCart();
+        initSmoothScroll();
         
         // Initialize quotes Swiper with red theme
         const quotesSwiper = new Swiper('.quotesSwiper', {
@@ -1061,6 +1105,57 @@
         // Close login modal
         document.querySelector('#loginModal .close-modal').addEventListener('click', () => {
             document.getElementById('loginModal').style.display = 'none';
+        });
+        
+        // Mobile menu toggle functionality
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        if (menuToggle && navMenu) {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                navMenu.classList.toggle('active');
+                menuToggle.innerHTML = navMenu.classList.contains('active') ? 
+                    '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!menuToggle.contains(event.target) && !navMenu.contains(event.target)) {
+                    navMenu.classList.remove('active');
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                }
+            });
+            
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (link.id !== 'cartIcon') {
+                        navMenu.classList.remove('active');
+                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                });
+            });
+        }
+        
+        // Fix for Android touch issues
+        document.querySelectorAll('button, a').forEach(element => {
+            element.style.touchAction = 'manipulation';
+        });
+        
+        // Initialize category filter click handler
+        const categoryFilter = document.getElementById('categoryFilter');
+        if (categoryFilter) {
+            categoryFilter.addEventListener('click', (e) => {
+                if (e.target.classList.contains('category-btn')) {
+                    filterProducts(e.target.dataset.category);
+                }
+            });
+        }
+        
+        // Prevent cart icon from causing navigation issues
+        document.getElementById('cartIcon').addEventListener('click', (e) => {
+            e.preventDefault();
         });
     });
     
@@ -1179,18 +1274,6 @@
             }
         });
     }
-    
-    // Initialize category filter
-    document.addEventListener('DOMContentLoaded', () => {
-        const categoryFilter = document.getElementById('categoryFilter');
-        if (categoryFilter) {
-            categoryFilter.addEventListener('click', (e) => {
-                if (e.target.classList.contains('category-btn')) {
-                    filterProducts(e.target.dataset.category);
-                }
-            });
-        }
-    });
     
     // Global function to load categories (called from app.js)
     window.loadCategories = function(categories) {
