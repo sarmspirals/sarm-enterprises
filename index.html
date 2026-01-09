@@ -1266,18 +1266,7 @@
             }
         });
         
-        // Admin login link
-        document.getElementById('adminLoginLink').addEventListener('click', (e) => {
-            e.preventDefault();
-            document.getElementById('loginModal').style.display = 'flex';
-        });
-        
-        // Close login modal
-        document.querySelector('#loginModal .close-modal').addEventListener('click', () => {
-            document.getElementById('loginModal').style.display = 'none';
-        });
-    });
-    
+       
     // Function to render product with multi-image support and TWO BUTTONS
     function renderProduct(product) {
         const images = product.images || [];
