@@ -1147,129 +1147,6 @@
             }, 3000);
         }
         
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            updateCartCount();
-            renderCart();
-            
-            // Cart sidebar toggle
-            document.getElementById('cartIcon').addEventListener('click', (e) => {
-                e.preventDefault();
-                document.getElementById('cartSidebar').classList.add('show');
-                document.getElementById('cartOverlay').classList.add('show');
-            });
-            
-            document.querySelector('.close-cart').addEventListener('click', () => {
-                document.getElementById('cartSidebar').classList.remove('show');
-                document.getElementById('cartOverlay').classList.remove('show');
-            });
-            
-            document.getElementById('cartOverlay').addEventListener('click', () => {
-                document.getElementById('cartSidebar').classList.remove('show');
-                document.getElementById('cartOverlay').classList.remove('show');
-            });
-            
-            // Checkout functionality
-            document.getElementById('checkoutBtn').addEventListener('click', () => {
-                if (cart.length === 0) return;
-                
-                let message = "Hello SARM ENTERPRISES,I would like to order";
-                let total = 0;
-                
-                cart.forEach((item, index) => {
-                    const itemTotal = item.price * item.quantity;
-                    total += itemTotal;
-                    message += `${index + 1}. ${item.name} - ${item.quantity} x ₹${item.price} = ₹${itemTotal}%0A`;
-                });
-                
-                message += `%0ATotal: ₹${total.toFixed(2)}%0APlease confirm my order.`;
-                
-                window.open(`https://wa.me/917006927825?text=${encodeURIComponent(message)}`, '_blank');
-            });
-            
-            // Clear cart
-            document.getElementById('clearCartBtn').addEventListener('click', () => {
-                if (confirm('Are you sure you want to clear your cart?')) {
-                    cart = [];
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    updateCartCount();
-                    renderCart();
-                    showNotification('Cart cleared');
-                }
-            });
-            
-            // Close image modal
-            document.querySelector('#imageModal .close-modal').addEventListener('click', () => {
-                document.getElementById('imageModal').style.display = 'none';
-            });
-            
-            // Close modal when clicking outside
-            window.addEventListener('click', (e) => {
-                if (e.target.id === 'imageModal') {
-                    document.getElementById('imageModal').style.display = 'none';
-                }
-            });
-            
-            // Close login modal when clicking outside
-            window.addEventListener('click', (e) => {
-                if (e.target.id === 'loginModal') {
-                    document.getElementById('loginModal').style.display = 'none';
-                }
-            });
-            
-            // Admin login link - FIXED
-            const adminLink = document.getElementById('adminLink');
-            if (adminLink) {
-                adminLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    document.getElementById('loginModal').style.display = 'flex';
-                });
-            }
-            
-            // Close login modal - FIXED
-            const closeLoginModal = document.querySelector('#loginModal .close-modal');
-            if (closeLoginModal) {
-                closeLoginModal.addEventListener('click', () => {
-                    document.getElementById('loginModal').style.display = 'none';
-                });
-            }
-            
-            // Mobile menu toggle functionality
-            const menuToggle = document.querySelector('.menu-toggle');
-            const navMenu = document.querySelector('.nav-menu');
-            
-            // Add safety check - FIXED
-            if (menuToggle && navMenu) {
-                menuToggle.addEventListener('click', function() {
-                    navMenu.classList.toggle('active');
-                    menuToggle.innerHTML = navMenu.classList.contains('active') ? 
-                        '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-                });
-                
-                // Close menu when clicking outside
-                document.addEventListener('click', function(event) {
-                    if (!menuToggle.contains(event.target) && !navMenu.contains(event.target)) {
-                        navMenu.classList.remove('active');
-                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                    }
-                });
-                
-                // Close menu when clicking a link
-                document.querySelectorAll('.nav-menu a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        navMenu.classList.remove('active');
-                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                    });
-                });
-            }
-            
-            // Fix for mobile viewport
-            let viewport = document.querySelector("meta[name=viewport]");
-            if (viewport && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
-            }
-        });
-        
         // View product images in modal
         function viewProductImages(product) {
             const modal = document.getElementById('imageModal');
@@ -1318,86 +1195,7 @@
             modal.style.display = 'flex';
         }
         
-        // Function to render product with multi-image support and TWO BUTTONS
-        function renderProduct(product) {
-            const images = product.images || [];
-            const firstImage = images.length > 0 ? images[0] : null;
-            
-            // Escape quotes in product name for HTML
-            const safeProductName = product.name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-            const safeDescription = (product.description || 'Premium quality notebook for all your writing needs.')
-                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-            
-            // Create WhatsApp message
-            const whatsappMessage = encodeURIComponent(`Hello SARM ENTERPRISES, I would like to order ${product.name} (₹${product.price}). Please provide more details.`);
-            const whatsappLink = `https://wa.me/917006927825?text=${whatsappMessage}`;
-            
-            // Create a safe product object for addToCart function
-            const safeProduct = {
-                id: product.id,
-                name: safeProductName,
-                price: product.price,
-                images: images,
-                category: product.category || 'uncategorized'
-            };
-            
-            return `
-                <div class="product-card" data-category="${product.category || 'uncategorized'}">
-                    <div class="product-image-slider" id="slider-${product.id}">
-                        ${firstImage ? 
-                            `<img src="assets/products/${firstImage}" alt="${safeProductName}" 
-                                  onerror="this.onerror=null; this.src='https://via.placeholder.com/300x250?text=Notebook'">` :
-                            `<div class="default-image">No Image Available</div>`
-                        }
-                        
-                        ${images.length > 1 ? `
-                            <div class="product-images-nav" id="nav-${product.id}">
-                                ${images.map((_, index) => `
-                                    <div class="image-dot ${index === 0 ? 'active' : ''}" 
-                                         data-index="${index}"
-                                         onclick="changeProductImage('${product.id}', ${index}, ${JSON.stringify(images).replace(/"/g, '&quot;')})"></div>
-                                `).join('')}
-                            </div>
-                            <button class="view-images-btn" onclick="viewProductImages(${JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\')})">
-                                <i class="fas fa-images"></i> View All (${images.length})
-                            </button>
-                        ` : images.length === 1 ? `
-                            <button class="view-images-btn" onclick="viewProductImages(${JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\')})">
-                                <i class="fas fa-expand"></i> View Image
-                            </button>
-                        ` : ''}
-                    </div>
-                    <div class="product-info">
-                        <div class="product-header">
-                            <h3>${safeProductName}</h3>
-                        </div>
-                        <p class="product-desc">${safeDescription}</p>
-                        
-                        ${product.features ? `
-                            <div class="product-features">
-                                ${product.features.split(',').map(feature => `
-                                    <span class="feature-tag">${feature.trim()}</span>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                        
-                        <div class="product-price-cart">
-                            <div class="product-price">₹${product.price}</div>
-                            <div class="product-buttons">
-                                <button class="btn-add-to-cart" onclick="addToCart(${JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\')})">
-                                    <i class="fas fa-cart-plus"></i> Add to Cart
-                                </button>
-                                <a href="${whatsappLink}" class="btn-order-whatsapp" target="_blank">
-                                    <i class="fab fa-whatsapp"></i> Order via WhatsApp
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Function to change product image - ENHANCED VERSION
+        // Function to change product image
         function changeProductImage(productId, index, images) {
             const slider = document.getElementById(`slider-${productId}`);
             if (!slider) return;
@@ -1475,17 +1273,94 @@
             });
         }
         
-        // Initialize category filter
-        document.addEventListener('DOMContentLoaded', () => {
-            const categoryFilter = document.getElementById('categoryFilter');
-            if (categoryFilter) {
-                categoryFilter.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('category-btn')) {
-                        filterProducts(e.target.dataset.category);
-                    }
-                });
+        // Function to render product with multi-image support and TWO BUTTONS
+        function renderProduct(product) {
+            const images = product.images || [];
+            const firstImage = images.length > 0 ? images[0] : null;
+            
+            // Escape quotes in product name for HTML
+            const safeProductName = product.name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            const safeDescription = (product.description || 'Premium quality notebook for all your writing needs.')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            
+            // Create WhatsApp message
+            const whatsappMessage = encodeURIComponent(`Hello SARM ENTERPRISES, I would like to order ${product.name} (₹${product.price}). Please provide more details.`);
+            const whatsappLink = `https://wa.me/917006927825?text=${whatsappMessage}`;
+            
+            // Create image dots HTML
+            let imageDotsHTML = '';
+            if (images.length > 1) {
+                imageDotsHTML = `
+                    <div class="product-images-nav" id="nav-${product.id}">
+                        ${images.map((_, index) => `
+                            <div class="image-dot ${index === 0 ? 'active' : ''}" 
+                                 data-index="${index}"
+                                 onclick="changeProductImage('${product.id}', ${index}, ${JSON.stringify(images).replace(/"/g, '&quot;')})"></div>
+                        `).join('')}
+                    </div>
+                `;
             }
-        });
+            
+            // Create view button HTML
+            let viewButtonHTML = '';
+            if (images.length > 1) {
+                viewButtonHTML = `
+                    <button class="view-images-btn" onclick="viewProductImages(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                        <i class="fas fa-images"></i> View All (${images.length})
+                    </button>
+                `;
+            } else if (images.length === 1) {
+                viewButtonHTML = `
+                    <button class="view-images-btn" onclick="viewProductImages(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                        <i class="fas fa-expand"></i> View Image
+                    </button>
+                `;
+            }
+            
+            // Create features HTML
+            let featuresHTML = '';
+            if (product.features) {
+                featuresHTML = `
+                    <div class="product-features">
+                        ${product.features.split(',').map(feature => `
+                            <span class="feature-tag">${feature.trim()}</span>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            return `
+                <div class="product-card" data-category="${product.category || 'uncategorized'}">
+                    <div class="product-image-slider" id="slider-${product.id}">
+                        ${firstImage ? 
+                            `<img src="assets/products/${firstImage}" alt="${safeProductName}" 
+                                  onerror="this.onerror=null; this.src='https://via.placeholder.com/300x250?text=Notebook'">` :
+                            `<div class="default-image">No Image Available</div>`
+                        }
+                        ${imageDotsHTML}
+                        ${viewButtonHTML}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-header">
+                            <h3>${safeProductName}</h3>
+                        </div>
+                        <p class="product-desc">${safeDescription}</p>
+                        ${featuresHTML}
+                        <div class="product-price-cart">
+                            <div class="product-price">₹${product.price}</div>
+                            <div class="product-buttons">
+                                <button class="btn-add-to-cart" onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                                <a href="${whatsappLink}" class="btn-order-whatsapp" target="_blank">
+                                    <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
         
         // Global function to load categories (called from app.js)
         window.loadCategories = function(categories) {
@@ -1528,6 +1403,140 @@
                 });
             }
         };
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartCount();
+            renderCart();
+            
+            // Cart sidebar toggle
+            document.getElementById('cartIcon').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('cartSidebar').classList.add('show');
+                document.getElementById('cartOverlay').classList.add('show');
+            });
+            
+            document.querySelector('.close-cart').addEventListener('click', () => {
+                document.getElementById('cartSidebar').classList.remove('show');
+                document.getElementById('cartOverlay').classList.remove('show');
+            });
+            
+            document.getElementById('cartOverlay').addEventListener('click', () => {
+                document.getElementById('cartSidebar').classList.remove('show');
+                document.getElementById('cartOverlay').classList.remove('show');
+            });
+            
+            // Checkout functionality
+            document.getElementById('checkoutBtn').addEventListener('click', () => {
+                if (cart.length === 0) return;
+                
+                let message = "Hello SARM ENTERPRISES, I would like to order%0A%0A";
+                let total = 0;
+                
+                cart.forEach((item, index) => {
+                    const itemTotal = item.price * item.quantity;
+                    total += itemTotal;
+                    message += `${index + 1}. ${item.name} - ${item.quantity} x ₹${item.price} = ₹${itemTotal}%0A`;
+                });
+                
+                message += `%0ATotal: ₹${total.toFixed(2)}%0A%0APlease confirm my order.`;
+                
+                window.open(`https://wa.me/917006927825?text=${message}`, '_blank');
+            });
+            
+            // Clear cart
+            document.getElementById('clearCartBtn').addEventListener('click', () => {
+                if (confirm('Are you sure you want to clear your cart?')) {
+                    cart = [];
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartCount();
+                    renderCart();
+                    showNotification('Cart cleared');
+                }
+            });
+            
+            // Close image modal
+            document.querySelector('#imageModal .close-modal').addEventListener('click', () => {
+                document.getElementById('imageModal').style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target.id === 'imageModal') {
+                    document.getElementById('imageModal').style.display = 'none';
+                }
+            });
+            
+            // Close login modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target.id === 'loginModal') {
+                    document.getElementById('loginModal').style.display = 'none';
+                }
+            });
+            
+            // Admin login link
+            const adminLink = document.getElementById('adminLink');
+            if (adminLink) {
+                adminLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('loginModal').style.display = 'flex';
+                });
+            }
+            
+            // Close login modal
+            const closeLoginModal = document.querySelector('#loginModal .close-modal');
+            if (closeLoginModal) {
+                closeLoginModal.addEventListener('click', () => {
+                    document.getElementById('loginModal').style.display = 'none';
+                });
+            }
+            
+            // Mobile menu toggle functionality
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (menuToggle && navMenu) {
+                menuToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('active');
+                    menuToggle.innerHTML = navMenu.classList.contains('active') ? 
+                        '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+                });
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!menuToggle.contains(event.target) && !navMenu.contains(event.target)) {
+                        navMenu.classList.remove('active');
+                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                });
+                
+                // Close menu when clicking a link
+                document.querySelectorAll('.nav-menu a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        navMenu.classList.remove('active');
+                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    });
+                });
+            }
+            
+            // Fix for mobile viewport
+            let viewport = document.querySelector("meta[name=viewport]");
+            if (viewport && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
+            }
+            
+            // Fix for Android touch issues
+            document.querySelectorAll('button, a').forEach(element => {
+                element.style.touchAction = 'manipulation';
+            });
+            
+            // Initialize category filter click handler
+            document.getElementById('categoryFilter').addEventListener('click', (e) => {
+                if (e.target.classList.contains('category-btn')) {
+                    filterProducts(e.target.dataset.category);
+                }
+            });
+        });
     </script>
 </body>
 </html>
