@@ -1376,62 +1376,129 @@
     };
 </script>
 
-<!-- Mobile Menu JavaScript - ADDED HERE -->
+<!-- Mobile Menu JavaScript - UPDATED VERSION -->
 <script>
     // Mobile menu toggle functionality
     document.addEventListener('DOMContentLoaded', function() {
         const menuToggle = document.querySelector('.menu-toggle');
         const navMenu = document.querySelector('.nav-menu');
         
-        if (menuToggle) {
+        if (menuToggle && navMenu) {
             menuToggle.addEventListener('click', function() {
                 navMenu.classList.toggle('active');
+                menuToggle.innerHTML = navMenu.classList.contains('active') ? 
+                    '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
             });
             
             // Close menu when clicking outside
             document.addEventListener('click', function(event) {
                 if (!menuToggle.contains(event.target) && !navMenu.contains(event.target)) {
                     navMenu.classList.remove('active');
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
                 }
+            });
+            
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navMenu.classList.remove('active');
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                });
             });
         }
         
-        // Close menu when clicking a link
-        document.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-            });
-        });
-        
-        // Prevent zoom on mobile input focus
+        // Fix for mobile viewport
         let viewport = document.querySelector("meta[name=viewport]");
-        if (viewport) {
+        if (viewport && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
             viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
+        }
+        
+        // Image optimization for all devices
+        function optimizeImages() {
+            document.querySelectorAll('.product-image-slider img').forEach(img => {
+                img.style.width = '100%';
+                img.style.height = 'auto';
+                img.style.maxHeight = '280px';
+                img.style.objectFit = 'contain';
+                
+                img.onerror = function() {
+                    this.onerror = null;
+                    this.src = 'https://via.placeholder.com/400x300?text=Notebook';
+                    this.style.objectFit = 'contain';
+                };
+            });
+        }
+        
+        // Initialize on load
+        optimizeImages();
+        
+        // Re-optimize when products are loaded
+        const observer = new MutationObserver(optimizeImages);
+        const productsContainer = document.getElementById('productsContainer');
+        if (productsContainer) {
+            observer.observe(productsContainer, { childList: true, subtree: true });
         }
         
         // Fix for Android touch issues
         document.querySelectorAll('button, a').forEach(element => {
             element.style.touchAction = 'manipulation';
         });
+    });
+    
+    // Enhanced changeProductImage function for multiple images
+    function changeProductImage(productId, index, images) {
+        const slider = document.getElementById(`slider-${productId}`);
+        if (!slider) return;
         
-        // Optimize images for mobile
-        function optimizeImageForDevice(imgElement) {
-            imgElement.style.maxWidth = '100%';
-            imgElement.style.height = 'auto';
-            imgElement.style.objectFit = 'contain';
+        const img = slider.querySelector('img');
+        const dots = document.querySelectorAll(`#nav-${productId} .image-dot`);
+        
+        if (images && images[index] && img) {
+            // Create new image element for smooth transition
+            const newImg = document.createElement('img');
+            newImg.src = `assets/products/${images[index]}`;
+            newImg.alt = img.alt;
+            newImg.style.width = '100%';
+            newImg.style.height = '100%';
+            newImg.style.maxHeight = '280px';
+            newImg.style.objectFit = 'contain';
+            newImg.style.padding = '20px';
+            newImg.style.opacity = '0';
+            newImg.style.position = 'absolute';
+            newImg.style.top = '0';
+            newImg.style.left = '0';
+            newImg.style.transition = 'opacity 0.5s ease';
             
-            imgElement.onerror = function() {
+            newImg.onerror = function() {
                 this.onerror = null;
-                this.src = 'https://via.placeholder.com/400x300?text=Image+Not+Available';
+                this.src = 'https://via.placeholder.com/400x300?text=Notebook';
                 this.style.objectFit = 'contain';
             };
+            
+            // Add new image and fade in
+            slider.appendChild(newImg);
+            
+            setTimeout(() => {
+                newImg.style.opacity = '1';
+                setTimeout(() => {
+                    // Remove old image
+                    if (img && img.parentNode === slider) {
+                        slider.removeChild(img);
+                    }
+                    // Rename new image to be the main image
+                    newImg.style.position = 'static';
+                }, 500);
+            }, 10);
+            
+            // Update active dot
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+            });
+            if (dots[index]) {
+                dots[index].classList.add('active');
+            }
         }
-        
-        // Apply optimization to all images
-        document.querySelectorAll('img').forEach(img => {
-            optimizeImageForDevice(img);
-        });
-    });
+    }
 </script>
 </body>
 </html>
