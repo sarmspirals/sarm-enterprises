@@ -301,23 +301,29 @@
             transition: opacity 0.3s ease;
         }
         
-        /* PRODUCT IMAGE ARROWS - ADDED FROM CHATGPT SOLUTION */
+        /* PRODUCT IMAGE ARROWS - UPDATED */
         .img-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             color: #fff;
             border: none;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
-            z-index: 5;
+            z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .product-image-slider:hover .img-arrow {
+            opacity: 1;
         }
         
         .img-arrow.left {
@@ -329,7 +335,7 @@
         }
         
         .img-arrow:hover {
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
         }
         
         .product-images-nav {
@@ -340,7 +346,7 @@
             display: flex;
             justify-content: center;
             gap: 5px;
-            z-index: 2;
+            z-index: 5;
         }
         
         .image-dot {
@@ -469,41 +475,37 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            z-index: 2;
+            z-index: 5;
         }
         
-        /* Mobile Menu Overlay */
-        .mobile-menu-overlay {
+        /* MOBILE MENU STYLES - COMPLETELY REWRITTEN */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #333;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1002;
+        }
+        
+        .mobile-overlay {
             position: fixed;
-            inset: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0,0,0,0.5);
             opacity: 0;
             visibility: hidden;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             z-index: 999;
         }
         
-        .mobile-menu-overlay.show {
+        .mobile-overlay.show {
             opacity: 1;
             visibility: visible;
-        }
-        
-        /* HAMBURGER MENU - IMPROVED FROM CHATGPT SOLUTION */
-        .menu-toggle {
-            display: none;
-            font-size: 26px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #333;
-            padding: 10px;
-        }
-        
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 15px;
         }
         
         /* Responsive */
@@ -544,27 +546,26 @@
                 font-size: 24px;
             }
             
-            /* MOBILE MENU - ENHANCED WITH 2-COLUMN GRID */
+            /* MOBILE MENU - WORKING VERSION */
             .menu-toggle {
                 display: block !important;
-                z-index: 1001;
             }
             
             .nav-menu {
                 position: fixed;
-                top: 60px;
+                top: 0;
                 right: -100%;
-                width: 90%;
-                height: calc(100vh - 60px);
-                background: #fff;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-                padding: 20px;
-                transition: 0.3s;
-                overflow-y: auto;
-                box-shadow: -5px 0 15px rgba(0,0,0,0.15);
+                width: 85%;
+                height: 100%;
+                background: white;
+                padding: 80px 20px 20px;
+                transition: right 0.3s ease;
                 z-index: 1000;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+                overflow-y: auto;
             }
             
             .nav-menu.active {
@@ -572,28 +573,45 @@
             }
             
             .nav-menu a {
-                border: 1px solid #eee;
                 padding: 15px;
-                border-radius: 6px;
-                text-align: center;
-                font-size: 16px;
+                border-bottom: 1px solid #eee;
+                width: 100%;
                 display: flex;
-                flex-direction: column;
                 align-items: center;
-                justify-content: center;
-                min-height: 60px;
+                gap: 10px;
+                font-size: 16px;
+                text-decoration: none;
+                color: #333;
+                margin: 0;
             }
             
             .nav-menu a i {
-                margin-bottom: 5px;
-                font-size: 20px;
+                width: 24px;
+                text-align: center;
             }
             
-            /* Adjust arrows for mobile */
+            .nav-menu a:last-child {
+                border-bottom: none;
+            }
+            
+            /* Always show arrows on mobile */
             .img-arrow {
-                width: 32px;
-                height: 32px;
-                font-size: 16px;
+                opacity: 1 !important;
+                background: rgba(0,0,0,0.6);
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-menu {
+                width: 90%;
+            }
+            
+            .nav-menu a {
+                font-size: 15px;
+                padding: 12px 15px;
             }
         }
         
@@ -665,6 +683,7 @@
     </div>
     <div class="cart-overlay" id="cartOverlay"></div>
 
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -674,7 +693,7 @@
                     <p class="tagline">Quality Pages for Quality Thoughts</p>
                 </div>
             </div>
-            <div class="nav-menu" id="navMenu">
+            <div class="nav-menu">
                 <a href="#home"><i class="fas fa-home"></i> Home</a>
                 <a href="#products"><i class="fas fa-book"></i> Products</a>
                 <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
@@ -695,15 +714,8 @@
     </nav>
     
     <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay" id="mobileOverlay"></div>
+    <div class="mobile-overlay" id="mobileOverlay"></div>
     
-    <!-- Add login button only for admin access -->
-    <div id="adminAccess" style="display: none; text-align: center; padding: 10px;">
-        <button onclick="window.location.href='admin.html'" class="btn-primary">
-            <i class="fas fa-user-shield"></i> Admin Panel
-        </button>
-    </div>
-
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
@@ -905,23 +917,9 @@
         document.getElementById('cartCount').textContent = count;
     }
     
-    // Debug function to check cart contents
-    function debugCart() {
-        console.log('=== CART DEBUG INFO ===');
-        console.log('Cart items:', cart);
-        console.log('Cart count:', cart.length);
-        console.log('LocalStorage cart:', localStorage.getItem('cart'));
-        console.log('Cart total:', cart.reduce((total, item) => total + (item.price * item.quantity), 0));
-        console.log('=======================');
-    }
-    
-    // Test: Add this to check cart state (optional)
-    window.debugCart = debugCart;
-    
     function addToCart(product) {
         console.log('Adding to cart:', product);
         
-        // Create a clean product object with only necessary properties
         const cartProduct = {
             id: product.id,
             name: product.name,
@@ -943,9 +941,6 @@
         updateCartCount();
         renderCart();
         showNotification('Product added to cart!');
-        
-        // Debug
-        debugCart();
     }
     
     function removeFromCart(productId) {
@@ -1023,7 +1018,6 @@
     }
     
     function showNotification(message) {
-        // Remove existing notifications
         const existingNotifications = document.querySelectorAll('.notification');
         existingNotifications.forEach(notif => notif.remove());
         
@@ -1048,43 +1042,32 @@
         }, 3000);
     }
     
-    // Smooth scrolling for navigation links
-    function initSmoothScroll() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                // Don't prevent default for admin links or external links
-                if (this.getAttribute('href') === '#' || 
-                    this.getAttribute('href').startsWith('http') ||
-                    this.getAttribute('href').endsWith('.html')) {
-                    return;
-                }
-                
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                
-                if (targetElement) {
-                    // Close cart sidebar if open
-                    document.getElementById('cartSidebar').classList.remove('show');
-                    document.getElementById('cartOverlay').classList.remove('show');
-                    
-                    // Close mobile menu if open
-                    const navMenu = document.getElementById('navMenu');
-                    const menuToggle = document.getElementById('menuToggle');
-                    const mobileOverlay = document.getElementById('mobileOverlay');
-                    if (navMenu && navMenu.classList.contains('active')) {
-                        navMenu.classList.remove('active');
-                        mobileOverlay.classList.remove('show');
-                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                        menuToggle.style.position = 'static';
-                    }
-                    
-                    // Smooth scroll to target
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+    // HAMBURGER MENU - SIMPLE WORKING VERSION
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    
+    if (menuToggle && navMenu && mobileOverlay) {
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navMenu.classList.toggle('active');
+            mobileOverlay.classList.toggle('show');
+            document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        mobileOverlay.addEventListener('click', function() {
+            navMenu.classList.remove('active');
+            mobileOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+        });
+        
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                if (this.id !== 'cartIcon') {
+                    navMenu.classList.remove('active');
+                    mobileOverlay.classList.remove('show');
+                    document.body.style.overflow = '';
                 }
             });
         });
@@ -1107,14 +1090,12 @@
         document.getElementById('cartOverlay').classList.remove('show');
     });
     
-    // Checkout functionality - FIXED VERSION
+    // Checkout functionality
     document.getElementById('checkoutBtn').addEventListener('click', () => {
         if (cart.length === 0) {
             alert('Your cart is empty!');
             return;
         }
-        
-        console.log('Cart at checkout:', cart); // Debug log
         
         let message = "Hello SARM ENTERPRISES, I would like to order:\n\n";
         let total = 0;
@@ -1127,23 +1108,16 @@
         
         message += `\nTotal: ₹${total.toFixed(2)}\n\nPlease confirm my order.`;
         
-        console.log('WhatsApp message:', message); // Debug log
-        
-        // URL encode the message
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/917006927825?text=${encodedMessage}`;
         
-        console.log('WhatsApp URL:', whatsappUrl); // Debug log
-        
-        // Open WhatsApp in new tab
         window.open(whatsappUrl, '_blank');
         
-        // Close cart sidebar
         document.getElementById('cartSidebar').classList.remove('show');
         document.getElementById('cartOverlay').classList.remove('show');
     });
     
-    // Clear cart - UPDATED TO CLOSE CART SIDEBAR
+    // Clear cart
     document.getElementById('clearCartBtn').addEventListener('click', () => {
         if (confirm('Are you sure you want to clear your cart?')) {
             cart = [];
@@ -1152,7 +1126,6 @@
             renderCart();
             showNotification('Cart cleared');
             
-            // Close cart sidebar after clearing
             document.getElementById('cartSidebar').classList.remove('show');
             document.getElementById('cartOverlay').classList.remove('show');
         }
@@ -1188,7 +1161,6 @@
             `;
         }
         
-        // Initialize or update Swiper
         if (window.productImageSwiper) {
             window.productImageSwiper.destroy();
         }
@@ -1206,63 +1178,12 @@
         modal.style.display = 'flex';
     }
     
-    // HAMBURGER MENU – ANDROID SAFE (FROM CHATGPT SOLUTION)
-    const toggle = document.getElementById("menuToggle");
-    const menu = document.getElementById("navMenu");
-    const overlay = document.getElementById("mobileOverlay");
-    
-    if (toggle && menu && overlay) {
-        toggle.onclick = () => {
-            menu.classList.toggle("active");
-            overlay.classList.toggle("show");
-            toggle.innerHTML = menu.classList.contains("active")
-                ? '<i class="fas fa-times"></i>'
-                : '<i class="fas fa-bars"></i>';
-        };
-        
-        overlay.onclick = () => {
-            menu.classList.remove("active");
-            overlay.classList.remove("show");
-            toggle.innerHTML = '<i class="fas fa-bars"></i>';
-        };
-        
-        // Close menu when clicking a link
-        document.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                if (link.id !== 'cartIcon') {
-                    menu.classList.remove("active");
-                    overlay.classList.remove("show");
-                    toggle.innerHTML = '<i class="fas fa-bars"></i>';
-                }
-            });
-        });
-    }
-    
-    // Fix for Android viewport
-    function fixAndroidViewport() {
-        if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            const viewport = document.querySelector("meta[name=viewport]");
-            if (viewport) {
-                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-            }
-        }
-    }
-    
-    // Fix for Android touch issues
-    function fixAndroidTouch() {
-        document.querySelectorAll('button, a, .btn-add-to-cart, .category-btn, .view-images-btn').forEach(element => {
-            element.style.touchAction = 'manipulation';
-            element.style.webkitTapHighlightColor = 'transparent';
-        });
-    }
-    
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
         updateCartCount();
         renderCart();
-        initSmoothScroll();
         
-        // Initialize quotes Swiper with red theme
+        // Initialize quotes Swiper
         const quotesSwiper = new Swiper('.quotesSwiper', {
             slidesPerView: 1,
             spaceBetween: 30,
@@ -1274,40 +1195,27 @@
             pagination: {
                 el: '.swiper-pagination',
                 clickable: true,
-                bulletClass: 'swiper-pagination-bullet',
-                bulletActiveClass: 'swiper-pagination-bullet-active'
             },
-            on: {
-                init: function() {
-                    console.log('Quotes Swiper initialized with red theme');
-                }
-            }
         });
-        
-        // Android fixes
-        fixAndroidViewport();
-        fixAndroidTouch();
         
         // Close image modal
         document.querySelector('#imageModal .close-modal').addEventListener('click', () => {
             document.getElementById('imageModal').style.display = 'none';
         });
         
-        // Close modal when clicking outside
         window.addEventListener('click', (e) => {
             if (e.target.id === 'imageModal') {
                 document.getElementById('imageModal').style.display = 'none';
             }
         });
         
-        // Close login modal when clicking outside
         window.addEventListener('click', (e) => {
             if (e.target.id === 'loginModal') {
                 document.getElementById('loginModal').style.display = 'none';
             }
         });
         
-        // Admin login link - FIXED
+        // Admin login link
         const adminLink = document.getElementById('adminLink');
         if (adminLink) {
             adminLink.addEventListener('click', (e) => {
@@ -1316,7 +1224,7 @@
             });
         }
         
-        // Close login modal - FIXED
+        // Close login modal
         const closeLoginModal = document.querySelector('#loginModal .close-modal');
         if (closeLoginModal) {
             closeLoginModal.addEventListener('click', () => {
@@ -1338,19 +1246,47 @@
                 }
             });
         }
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if (this.getAttribute('href') === '#' || 
+                    this.getAttribute('href').startsWith('http') ||
+                    this.getAttribute('href').endsWith('.html')) {
+                    return;
+                }
+                
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    // Close mobile menu if open
+                    if (navMenu && navMenu.classList.contains('active')) {
+                        navMenu.classList.remove('active');
+                        mobileOverlay.classList.remove('show');
+                        document.body.style.overflow = '';
+                    }
+                    
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
     });
     
-    // Function to render product with multi-image support, arrows, and add to cart button
+    // Function to render product with arrows
     function renderProduct(product) {
         const images = product.images || [];
         const firstImage = images.length > 0 ? images[0] : null;
         
-        // Escape quotes in product name for HTML
         const safeProductName = product.name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         const safeDescription = (product.description || 'Premium quality notebook for all your writing needs.')
             .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         
-        // Create a safe product object for addToCart function
         const safeProduct = {
             id: product.id,
             name: safeProductName,
@@ -1358,6 +1294,8 @@
             images: images,
             category: product.category || 'uncategorized'
         };
+        
+        const productJSON = JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\');
         
         // Generate image dots if multiple images
         const imageDots = images.length > 1 ? `
@@ -1375,9 +1313,6 @@
             <button class="img-arrow left" onclick="prevImage('${product.id}')">❮</button>
             <button class="img-arrow right" onclick="nextImage('${product.id}')">❯</button>
         ` : '';
-        
-        // Create product JSON for passing to functions
-        const productJSON = JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\');
         
         return `
             <div class="product-card" data-category="${product.category || 'uncategorized'}">
@@ -1452,7 +1387,7 @@
         }
     }
     
-    // IMAGE SLIDER ARROW FUNCTIONS (FROM CHATGPT SOLUTION)
+    // Image arrow functions
     function nextImage(productId) {
         const slider = document.getElementById(`slider-${productId}`);
         if (!slider) return;
@@ -1484,7 +1419,6 @@
         const products = document.querySelectorAll('.product-card');
         const filterButtons = document.querySelectorAll('.category-btn');
         
-        // Update active button
         filterButtons.forEach(btn => {
             btn.classList.remove('active');
             if (btn.dataset.category === category) {
@@ -1492,7 +1426,6 @@
             }
         });
         
-        // Filter products
         products.forEach(product => {
             if (category === 'all' || product.dataset.category === category) {
                 product.style.display = 'block';
