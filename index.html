@@ -1032,22 +1032,24 @@
         document.getElementById('cartOverlay').classList.remove('show');
     });
     
-    // FIXED: Checkout functionality - Always read from localStorage directly
+    // FIXED: Checkout functionality - Always read from localStorage directly and update global cart
     document.getElementById('checkoutBtn').addEventListener('click', () => {
-        // Always get fresh cart data from localStorage
-        const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+        // First, update the global cart variable from localStorage to ensure we have latest data
+        const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart = storedCart; // Update global cart variable
         
-        console.log('Cart at checkout (from localStorage):', currentCart);
+        console.log('Cart at checkout (from localStorage):', storedCart);
+        console.log('Global cart variable:', cart);
         
-        if (currentCart.length === 0) {
-            alert('Your cart is empty!');
+        if (storedCart.length === 0) {
+            alert('Your cart is empty! Please add products to cart first.');
             return;
         }
         
         let message = "Hello SARM ENTERPRISES, I would like to order:\n\n";
         let total = 0;
         
-        currentCart.forEach((item, index) => {
+        storedCart.forEach((item, index) => {
             const itemTotal = item.price * item.quantity;
             total += itemTotal;
             message += `${index + 1}. ${item.name} - ${item.quantity} x ₹${item.price} = ₹${itemTotal}\n`;
