@@ -243,7 +243,7 @@
         }
         
         .swiper-slide.quote-slide i {
-            color: #e74c3c !important; /* Red color */
+            color: #e74c3c !important;
             font-size: 32px;
             margin-bottom: 15px;
             display: block;
@@ -252,7 +252,7 @@
         .swiper-slide.quote-slide p {
             font-size: 24px;
             font-style: italic;
-            color: #e74c3c !important; /* Red color */
+            color: #e74c3c !important;
             margin: 0;
             font-weight: 600;
             line-height: 1.4;
@@ -260,7 +260,7 @@
         
         /* Swiper Pagination Dots */
         .swiper-pagination-bullet {
-            background: #e74c3c !important; /* Red dots */
+            background: #e74c3c !important;
             opacity: 0.5;
             width: 10px;
             height: 10px;
@@ -268,7 +268,7 @@
         
         .swiper-pagination-bullet-active {
             opacity: 1;
-            background: #e74c3c !important; /* Active red dot */
+            background: #e74c3c !important;
         }
         
         /* Product Card Updates */
@@ -460,6 +460,25 @@
             visibility: visible;
         }
         
+        /* Mobile Menu Styles - ADDED */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1001;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .cart-sidebar {
@@ -498,23 +517,26 @@
                 font-size: 24px;
             }
             
-            /* Mobile menu styles */
+            /* Mobile menu styles - UPDATED */
             .menu-toggle {
                 display: block !important;
             }
             
             .nav-menu {
                 position: fixed;
-                top: 0;
+                top: 70px;
                 right: -100%;
-                width: 250px;
-                height: 100%;
+                width: 80%;
+                height: calc(100vh - 70px);
                 background: white;
                 flex-direction: column;
-                padding: 80px 20px 20px;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 20px;
                 transition: right 0.3s ease;
                 z-index: 1000;
                 box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+                gap: 0;
             }
             
             .nav-menu.active {
@@ -522,10 +544,22 @@
             }
             
             .nav-menu a {
+                margin: 10px 0;
+                font-size: 18px;
+                width: 100%;
+                text-align: center;
                 padding: 15px;
                 border-bottom: 1px solid #eee;
-                width: 100%;
-                display: block;
+            }
+            
+            .nav-menu a:last-child {
+                border-bottom: none;
+            }
+            
+            /* Cart icon adjustment for mobile */
+            .cart-icon {
+                order: -1;
+                margin-right: 10px;
             }
         }
         
@@ -771,7 +805,6 @@
                     <a href="#home">Home</a>
                     <a href="#products">Products</a>
                     <a href="#contact">Contact</a>
-                    <a href="#" id="adminLoginLink">Admin Login</a>
                 </div>
                 <div class="footer-social">
                     <h4>Connect With Us</h4>
@@ -779,6 +812,7 @@
                         <a href="#"><i class="fab fa-facebook"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1005,7 +1039,6 @@
                         document.getElementById('mobileMenuOverlay').classList.remove('show');
                         document.body.style.overflow = '';
                     }
-                    
                     window.scrollTo({
                         top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
@@ -1197,14 +1230,22 @@
             }
         });
         
-        document.getElementById('adminLoginLink').addEventListener('click', (e) => {
-            e.preventDefault();
-            document.getElementById('loginModal').style.display = 'flex';
-        });
+        // Admin login link - FIXED (removed incorrect adminLoginLink reference)
+        const adminLink = document.getElementById('adminLink');
+        if (adminLink) {
+            adminLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('loginModal').style.display = 'flex';
+            });
+        }
         
-        document.querySelector('#loginModal .close-modal').addEventListener('click', () => {
-            document.getElementById('loginModal').style.display = 'none';
-        });
+        // Close login modal - FIXED
+        const closeLoginModal = document.querySelector('#loginModal .close-modal');
+        if (closeLoginModal) {
+            closeLoginModal.addEventListener('click', () => {
+                document.getElementById('loginModal').style.display = 'none';
+            });
+        }
         
         document.getElementById('cartIcon').addEventListener('click', (e) => {
             e.preventDefault();
