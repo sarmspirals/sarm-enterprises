@@ -441,6 +441,25 @@
             z-index: 2;
         }
         
+        /* Mobile Menu Overlay */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .mobile-menu-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .cart-sidebar {
@@ -576,7 +595,10 @@
             </button>
         </div>
     </nav>
-
+    
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    
     <!-- Add login button only for admin access -->
     <div id="adminAccess" style="display: none; text-align: center; padding: 10px;">
         <button onclick="window.location.href='admin.html'" class="btn-primary">
@@ -955,6 +977,8 @@
                     if (navMenu && navMenu.classList.contains('active')) {
                         navMenu.classList.remove('active');
                         menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                        menuToggle.style.position = 'static';
+                        document.getElementById('mobileMenuOverlay').classList.remove('show');
                     }
                     
                     // Smooth scroll to target
@@ -1083,6 +1107,98 @@
         modal.style.display = 'flex';
     }
     
+    // Mobile menu toggle functionality - FIXED VERSION
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    
+    if (menuToggle && navMenu && mobileMenuOverlay) {
+        menuToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            const isActive = navMenu.classList.contains('active');
+            
+            if (isActive) {
+                // Close menu
+                navMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('show');
+                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                menuToggle.style.position = 'static';
+            } else {
+                // Open menu
+                navMenu.classList.add('active');
+                mobileMenuOverlay.classList.add('show');
+                menuToggle.innerHTML = '<i class="fas fa-times"></i>';
+                
+                // Fix for Android: position menu toggle absolutely when menu is open
+                menuToggle.style.position = 'fixed';
+                menuToggle.style.right = '15px';
+                menuToggle.style.top = '15px';
+                menuToggle.style.zIndex = '1005';
+            }
+        });
+        
+        // Close menu when clicking overlay
+        mobileMenuOverlay.addEventListener('click', function(e) {
+            navMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('show');
+            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            menuToggle.style.position = 'static';
+        });
+        
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (link.id !== 'cartIcon') {
+                    navMenu.classList.remove('active');
+                    mobileMenuOverlay.classList.remove('show');
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    menuToggle.style.position = 'static';
+                }
+            });
+        });
+        
+        // Close menu when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (navMenu.classList.contains('active') && 
+                !navMenu.contains(event.target) && 
+                !menuToggle.contains(event.target) &&
+                event.target !== mobileMenuOverlay) {
+                navMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('show');
+                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                menuToggle.style.position = 'static';
+            }
+        });
+        
+        // Fix for Android back button
+        window.addEventListener('popstate', function() {
+            navMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('show');
+            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            menuToggle.style.position = 'static';
+        });
+    }
+    
+    // Fix for Android viewport
+    function fixAndroidViewport() {
+        if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            const viewport = document.querySelector("meta[name=viewport]");
+            if (viewport) {
+                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+            }
+        }
+    }
+    
+    // Fix for Android touch issues
+    function fixAndroidTouch() {
+        document.querySelectorAll('button, a, .btn-add-to-cart, .category-btn, .view-images-btn').forEach(element => {
+            element.style.touchAction = 'manipulation';
+            element.style.webkitTapHighlightColor = 'transparent';
+        });
+    }
+    
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
         updateCartCount();
@@ -1110,6 +1226,10 @@
                 }
             }
         });
+        
+        // Android fixes
+        fixAndroidViewport();
+        fixAndroidTouch();
         
         // Close image modal
         document.querySelector('#imageModal .close-modal').addEventListener('click', () => {
@@ -1140,52 +1260,6 @@
         document.querySelector('#loginModal .close-modal').addEventListener('click', () => {
             document.getElementById('loginModal').style.display = 'none';
         });
-        
-        // Mobile menu toggle functionality
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navMenu = document.querySelector('.nav-menu');
-        
-        if (menuToggle && navMenu) {
-            menuToggle.addEventListener('click', function(e) {
-                e.stopPropagation();
-                navMenu.classList.toggle('active');
-                menuToggle.innerHTML = navMenu.classList.contains('active') ? 
-                    '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-            });
-            
-            // Close menu when clicking outside
-            document.addEventListener('click', function(event) {
-                if (!menuToggle.contains(event.target) && !navMenu.contains(event.target)) {
-                    navMenu.classList.remove('active');
-                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                }
-            });
-            
-            // Close menu when clicking a link
-            document.querySelectorAll('.nav-menu a').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    if (link.id !== 'cartIcon') {
-                        navMenu.classList.remove('active');
-                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                    }
-                });
-            });
-        }
-        
-        // Fix for Android touch issues
-        document.querySelectorAll('button, a').forEach(element => {
-            element.style.touchAction = 'manipulation';
-        });
-        
-        // Initialize category filter click handler
-        const categoryFilter = document.getElementById('categoryFilter');
-        if (categoryFilter) {
-            categoryFilter.addEventListener('click', (e) => {
-                if (e.target.classList.contains('category-btn')) {
-                    filterProducts(e.target.dataset.category);
-                }
-            });
-        }
         
         // Prevent cart icon from causing navigation issues
         document.getElementById('cartIcon').addEventListener('click', (e) => {
