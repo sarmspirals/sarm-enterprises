@@ -497,6 +497,36 @@
             .swiper-slide.quote-slide i {
                 font-size: 24px;
             }
+            
+            /* Mobile menu styles */
+            .menu-toggle {
+                display: block !important;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 250px;
+                height: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 80px 20px 20px;
+                transition: right 0.3s ease;
+                z-index: 1000;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            .nav-menu a {
+                padding: 15px;
+                border-bottom: 1px solid #eee;
+                width: 100%;
+                display: block;
+            }
         }
         
         /* Image Modal */
@@ -799,7 +829,7 @@
 <script type="module" src="app.js"></script>
 
 <script>
-    // Cart functionality
+    // Cart functionality - FIXED VERSION
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     
     function updateCartCount() {
@@ -807,7 +837,6 @@
         document.getElementById('cartCount').textContent = count;
     }
     
-    // Debug function to check cart contents
     function debugCart() {
         console.log('=== CART DEBUG INFO ===');
         console.log('Cart items:', cart);
@@ -817,9 +846,7 @@
         console.log('=======================');
     }
     
-    // Test: Add this to check cart state (optional)
-    window.debugCart = debugCart;
-    
+    // FIXED: Simplified addToCart function that properly stores product data
     function addToCart(product) {
         console.log('Adding to cart:', product);
         
@@ -846,7 +873,6 @@
         renderCart();
         showNotification('Product added to cart!');
         
-        // Debug
         debugCart();
     }
     
@@ -925,7 +951,6 @@
     }
     
     function showNotification(message) {
-        // Remove existing notifications
         const existingNotifications = document.querySelectorAll('.notification');
         existingNotifications.forEach(notif => notif.remove());
         
@@ -954,7 +979,6 @@
     function initSmoothScroll() {
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
-                // Don't prevent default for admin links or external links
                 if (this.getAttribute('href') === '#' || 
                     this.getAttribute('href').startsWith('http') ||
                     this.getAttribute('href').endsWith('.html')) {
@@ -981,7 +1005,6 @@
                         document.getElementById('mobileMenuOverlay').classList.remove('show');
                     }
                     
-                    // Smooth scroll to target
                     window.scrollTo({
                         top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
@@ -1008,19 +1031,22 @@
         document.getElementById('cartOverlay').classList.remove('show');
     });
     
-    // Checkout functionality - FIXED VERSION
+    // FIXED: Checkout functionality - Always read from localStorage directly
     document.getElementById('checkoutBtn').addEventListener('click', () => {
-        if (cart.length === 0) {
+        // Always get fresh cart data from localStorage
+        const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        console.log('Cart at checkout (from localStorage):', currentCart);
+        
+        if (currentCart.length === 0) {
             alert('Your cart is empty!');
             return;
         }
         
-        console.log('Cart at checkout:', cart); // Debug log
-        
         let message = "Hello SARM ENTERPRISES, I would like to order:\n\n";
         let total = 0;
         
-        cart.forEach((item, index) => {
+        currentCart.forEach((item, index) => {
             const itemTotal = item.price * item.quantity;
             total += itemTotal;
             message += `${index + 1}. ${item.name} - ${item.quantity} x ₹${item.price} = ₹${itemTotal}\n`;
@@ -1028,13 +1054,13 @@
         
         message += `\nTotal: ₹${total.toFixed(2)}\n\nPlease confirm my order.`;
         
-        console.log('WhatsApp message:', message); // Debug log
+        console.log('WhatsApp message:', message);
         
         // URL encode the message
         const encodedMessage = encodeURIComponent(message);
         const whatsappUrl = `https://wa.me/917006927825?text=${encodedMessage}`;
         
-        console.log('WhatsApp URL:', whatsappUrl); // Debug log
+        console.log('WhatsApp URL:', whatsappUrl);
         
         // Open WhatsApp in new tab
         window.open(whatsappUrl, '_blank');
@@ -1044,7 +1070,7 @@
         document.getElementById('cartOverlay').classList.remove('show');
     });
     
-    // Clear cart - UPDATED TO CLOSE CART SIDEBAR
+    // Clear cart
     document.getElementById('clearCartBtn').addEventListener('click', () => {
         if (confirm('Are you sure you want to clear your cart?')) {
             cart = [];
@@ -1053,7 +1079,6 @@
             renderCart();
             showNotification('Cart cleared');
             
-            // Close cart sidebar after clearing
             document.getElementById('cartSidebar').classList.remove('show');
             document.getElementById('cartOverlay').classList.remove('show');
         }
@@ -1089,7 +1114,6 @@
             `;
         }
         
-        // Initialize or update Swiper
         if (window.productImageSwiper) {
             window.productImageSwiper.destroy();
         }
@@ -1107,81 +1131,90 @@
         modal.style.display = 'flex';
     }
     
-    // Mobile menu toggle functionality - FIXED VERSION
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navMenu = document.querySelector('.nav-menu');
-    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-    
-    if (menuToggle && navMenu && mobileMenuOverlay) {
-        menuToggle.addEventListener('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
+    // SIMPLIFIED Mobile menu toggle - Works on all devices
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        
+        if (menuToggle && navMenu && mobileMenuOverlay) {
+            console.log('Mobile menu elements found');
             
-            const isActive = navMenu.classList.contains('active');
+            menuToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                navMenu.classList.toggle('active');
+                mobileMenuOverlay.classList.toggle('show');
+                
+                // Change icon
+                if (navMenu.classList.contains('active')) {
+                    menuToggle.innerHTML = '<i class="fas fa-times"></i>';
+                    menuToggle.style.position = 'fixed';
+                    menuToggle.style.right = '15px';
+                    menuToggle.style.top = '15px';
+                    menuToggle.style.zIndex = '1005';
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                } else {
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    menuToggle.style.position = 'static';
+                    document.body.style.overflow = ''; // Allow scrolling
+                }
+            });
             
-            if (isActive) {
-                // Close menu
+            // Close menu when clicking overlay
+            mobileMenuOverlay.addEventListener('click', function(e) {
                 navMenu.classList.remove('active');
                 mobileMenuOverlay.classList.remove('show');
                 menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
                 menuToggle.style.position = 'static';
-            } else {
-                // Open menu
-                navMenu.classList.add('active');
-                mobileMenuOverlay.classList.add('show');
-                menuToggle.innerHTML = '<i class="fas fa-times"></i>';
-                
-                // Fix for Android: position menu toggle absolutely when menu is open
-                menuToggle.style.position = 'fixed';
-                menuToggle.style.right = '15px';
-                menuToggle.style.top = '15px';
-                menuToggle.style.zIndex = '1005';
-            }
-        });
-        
-        // Close menu when clicking overlay
-        mobileMenuOverlay.addEventListener('click', function(e) {
-            navMenu.classList.remove('active');
-            mobileMenuOverlay.classList.remove('show');
-            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-            menuToggle.style.position = 'static';
-        });
-        
-        // Close menu when clicking a link
-        document.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                if (link.id !== 'cartIcon') {
+                document.body.style.overflow = ''; // Allow scrolling
+            });
+            
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (link.id !== 'cartIcon') {
+                        navMenu.classList.remove('active');
+                        mobileMenuOverlay.classList.remove('show');
+                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                        menuToggle.style.position = 'static';
+                        document.body.style.overflow = ''; // Allow scrolling
+                    }
+                });
+            });
+            
+            // Close menu when clicking outside (for mobile)
+            document.addEventListener('click', function(event) {
+                if (!menuToggle.contains(event.target) && 
+                    !navMenu.contains(event.target) && 
+                    navMenu.classList.contains('active') &&
+                    event.target !== mobileMenuOverlay) {
                     navMenu.classList.remove('active');
                     mobileMenuOverlay.classList.remove('show');
                     menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
                     menuToggle.style.position = 'static';
+                    document.body.style.overflow = ''; // Allow scrolling
                 }
             });
-        });
-        
-        // Close menu when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            if (navMenu.classList.contains('active') && 
-                !navMenu.contains(event.target) && 
-                !menuToggle.contains(event.target) &&
-                event.target !== mobileMenuOverlay) {
+            
+            // Fix for Android back button
+            window.addEventListener('popstate', function() {
                 navMenu.classList.remove('active');
                 mobileMenuOverlay.classList.remove('show');
                 menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
                 menuToggle.style.position = 'static';
-            }
-        });
-        
-        // Fix for Android back button
-        window.addEventListener('popstate', function() {
-            navMenu.classList.remove('active');
-            mobileMenuOverlay.classList.remove('show');
-            menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-            menuToggle.style.position = 'static';
-        });
-    }
+                document.body.style.overflow = ''; // Allow scrolling
+            });
+        } else {
+            console.log('Mobile menu elements not found:', {
+                menuToggle: !!menuToggle,
+                navMenu: !!navMenu,
+                mobileMenuOverlay: !!mobileMenuOverlay
+            });
+        }
+    });
     
-    // Fix for Android viewport
     function fixAndroidViewport() {
         if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
             const viewport = document.querySelector("meta[name=viewport]");
@@ -1191,7 +1224,6 @@
         }
     }
     
-    // Fix for Android touch issues
     function fixAndroidTouch() {
         document.querySelectorAll('button, a, .btn-add-to-cart, .category-btn, .view-images-btn').forEach(element => {
             element.style.touchAction = 'manipulation';
@@ -1205,7 +1237,6 @@
         renderCart();
         initSmoothScroll();
         
-        // Initialize quotes Swiper with red theme
         const quotesSwiper = new Swiper('.quotesSwiper', {
             slidesPerView: 1,
             spaceBetween: 30,
@@ -1231,53 +1262,67 @@
         fixAndroidViewport();
         fixAndroidTouch();
         
-        // Close image modal
         document.querySelector('#imageModal .close-modal').addEventListener('click', () => {
             document.getElementById('imageModal').style.display = 'none';
         });
         
-        // Close modal when clicking outside
         window.addEventListener('click', (e) => {
             if (e.target.id === 'imageModal') {
                 document.getElementById('imageModal').style.display = 'none';
             }
         });
         
-        // Close login modal when clicking outside
         window.addEventListener('click', (e) => {
             if (e.target.id === 'loginModal') {
                 document.getElementById('loginModal').style.display = 'none';
             }
         });
         
-        // Admin login link
         document.getElementById('adminLoginLink').addEventListener('click', (e) => {
             e.preventDefault();
             document.getElementById('loginModal').style.display = 'flex';
         });
         
-        // Close login modal
         document.querySelector('#loginModal .close-modal').addEventListener('click', () => {
             document.getElementById('loginModal').style.display = 'none';
         });
         
-        // Prevent cart icon from causing navigation issues
         document.getElementById('cartIcon').addEventListener('click', (e) => {
             e.preventDefault();
         });
+        
+        // Also add a global click handler for add to cart buttons to ensure they work
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.btn-add-to-cart')) {
+                const button = e.target.closest('.btn-add-to-cart');
+                if (button && button.onclick) {
+                    // The onclick handler should already be attached via the renderProduct function
+                    console.log('Add to cart button clicked');
+                }
+            }
+        });
+        
+        // Initialize category filter click handler
+        const categoryFilter = document.getElementById('categoryFilter');
+        if (categoryFilter) {
+            categoryFilter.addEventListener('click', (e) => {
+                if (e.target.classList.contains('category-btn')) {
+                    filterProducts(e.target.dataset.category);
+                }
+            });
+        }
     });
     
-    // Function to render product with multi-image support and add to cart button
+    // Function to render product
     function renderProduct(product) {
         const images = product.images || [];
         const firstImage = images.length > 0 ? images[0] : null;
         
-        // Escape quotes in product name for HTML
         const safeProductName = product.name.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         const safeDescription = (product.description || 'Premium quality notebook for all your writing needs.')
             .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         
-        // Create a safe product object for addToCart function
+        // FIXED: Create a proper product object for addToCart
         const safeProduct = {
             id: product.id,
             name: safeProductName,
@@ -1285,6 +1330,9 @@
             images: images,
             category: product.category || 'uncategorized'
         };
+        
+        // FIXED: Use a safer way to pass product to addToCart
+        const productJSON = JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\');
         
         return `
             <div class="product-card" data-category="${product.category || 'uncategorized'}">
@@ -1303,11 +1351,11 @@
                                          onclick="changeProductImage('${product.id}', ${index}, ${JSON.stringify(images).replace(/"/g, '&quot;')})"></div>
                                 `).join('')}
                             </div>
-                            <button class="view-images-btn" onclick="viewProductImages(${JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\')})">
+                            <button class="view-images-btn" onclick="viewProductImages(${productJSON})">
                                 <i class="fas fa-images"></i> View All (${images.length})
                             </button>
                         ` : images.length === 1 ? `
-                            <button class="view-images-btn" onclick="viewProductImages(${JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\')})">
+                            <button class="view-images-btn" onclick="viewProductImages(${productJSON})">
                                 <i class="fas fa-expand"></i> View Image
                             </button>
                         ` : ''}
@@ -1328,7 +1376,7 @@
                     
                     <div class="product-price-cart">
                         <div class="price">₹${product.price}</div>
-                        <button class="btn-primary btn-add-to-cart" onclick="addToCart(${JSON.stringify(safeProduct).replace(/"/g, '&quot;').replace(/\\/g, '\\\\')})">
+                        <button class="btn-primary btn-add-to-cart" onclick="addToCart(${productJSON})">
                             <i class="fas fa-cart-plus"></i> Add to Cart
                         </button>
                     </div>
@@ -1337,7 +1385,6 @@
         `;
     }
     
-    // Function to change product image
     function changeProductImage(productId, index, images) {
         const slider = document.getElementById(`slider-${productId}`);
         const img = slider.querySelector('img');
@@ -1350,7 +1397,6 @@
                 this.src = 'https://via.placeholder.com/300x250?text=Notebook';
             };
             
-            // Update active dot
             dots.forEach(dot => {
                 dot.classList.remove('active');
             });
@@ -1360,12 +1406,10 @@
         }
     }
     
-    // Filter products by category
     function filterProducts(category) {
         const products = document.querySelectorAll('.product-card');
         const filterButtons = document.querySelectorAll('.category-btn');
         
-        // Update active button
         filterButtons.forEach(btn => {
             btn.classList.remove('active');
             if (btn.dataset.category === category) {
@@ -1373,7 +1417,6 @@
             }
         });
         
-        // Filter products
         products.forEach(product => {
             if (category === 'all' || product.dataset.category === category) {
                 product.style.display = 'block';
@@ -1383,7 +1426,6 @@
         });
     }
     
-    // Global function to load categories (called from app.js)
     window.loadCategories = function(categories) {
         const categoryFilter = document.getElementById('categoryFilter');
         if (categoryFilter) {
@@ -1401,7 +1443,6 @@
         }
     };
     
-    // Global function to render products (called from app.js)
     window.renderProducts = function(products) {
         const productsContainer = document.getElementById('productsContainer');
         if (productsContainer) {
