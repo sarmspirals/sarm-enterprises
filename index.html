@@ -1003,6 +1003,7 @@
                         menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
                         menuToggle.style.position = 'static';
                         document.getElementById('mobileMenuOverlay').classList.remove('show');
+                        document.body.style.overflow = '';
                     }
                     
                     window.scrollTo({
@@ -1131,106 +1132,6 @@
         modal.style.display = 'flex';
     }
     
-    // SIMPLIFIED Mobile menu toggle - Works on all devices
-    document.addEventListener('DOMContentLoaded', function() {
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navMenu = document.querySelector('.nav-menu');
-        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        
-        if (menuToggle && navMenu && mobileMenuOverlay) {
-            console.log('Mobile menu elements found');
-            
-            menuToggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                navMenu.classList.toggle('active');
-                mobileMenuOverlay.classList.toggle('show');
-                
-                // Change icon
-                if (navMenu.classList.contains('active')) {
-                    menuToggle.innerHTML = '<i class="fas fa-times"></i>';
-                    menuToggle.style.position = 'fixed';
-                    menuToggle.style.right = '15px';
-                    menuToggle.style.top = '15px';
-                    menuToggle.style.zIndex = '1005';
-                    document.body.style.overflow = 'hidden'; // Prevent scrolling
-                } else {
-                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                    menuToggle.style.position = 'static';
-                    document.body.style.overflow = ''; // Allow scrolling
-                }
-            });
-            
-            // Close menu when clicking overlay
-            mobileMenuOverlay.addEventListener('click', function(e) {
-                navMenu.classList.remove('active');
-                mobileMenuOverlay.classList.remove('show');
-                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                menuToggle.style.position = 'static';
-                document.body.style.overflow = ''; // Allow scrolling
-            });
-            
-            // Close menu when clicking a link
-            document.querySelectorAll('.nav-menu a').forEach(link => {
-                link.addEventListener('click', () => {
-                    if (link.id !== 'cartIcon') {
-                        navMenu.classList.remove('active');
-                        mobileMenuOverlay.classList.remove('show');
-                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                        menuToggle.style.position = 'static';
-                        document.body.style.overflow = ''; // Allow scrolling
-                    }
-                });
-            });
-            
-            // Close menu when clicking outside (for mobile)
-            document.addEventListener('click', function(event) {
-                if (!menuToggle.contains(event.target) && 
-                    !navMenu.contains(event.target) && 
-                    navMenu.classList.contains('active') &&
-                    event.target !== mobileMenuOverlay) {
-                    navMenu.classList.remove('active');
-                    mobileMenuOverlay.classList.remove('show');
-                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                    menuToggle.style.position = 'static';
-                    document.body.style.overflow = ''; // Allow scrolling
-                }
-            });
-            
-            // Fix for Android back button
-            window.addEventListener('popstate', function() {
-                navMenu.classList.remove('active');
-                mobileMenuOverlay.classList.remove('show');
-                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                menuToggle.style.position = 'static';
-                document.body.style.overflow = ''; // Allow scrolling
-            });
-        } else {
-            console.log('Mobile menu elements not found:', {
-                menuToggle: !!menuToggle,
-                navMenu: !!navMenu,
-                mobileMenuOverlay: !!mobileMenuOverlay
-            });
-        }
-    });
-    
-    function fixAndroidViewport() {
-        if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            const viewport = document.querySelector("meta[name=viewport]");
-            if (viewport) {
-                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-            }
-        }
-    }
-    
-    function fixAndroidTouch() {
-        document.querySelectorAll('button, a, .btn-add-to-cart, .category-btn, .view-images-btn').forEach(element => {
-            element.style.touchAction = 'manipulation';
-            element.style.webkitTapHighlightColor = 'transparent';
-        });
-    }
-    
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
         updateCartCount();
@@ -1259,6 +1160,22 @@
         });
         
         // Android fixes
+        function fixAndroidViewport() {
+            if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                const viewport = document.querySelector("meta[name=viewport]");
+                if (viewport) {
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                }
+            }
+        }
+        
+        function fixAndroidTouch() {
+            document.querySelectorAll('button, a, .btn-add-to-cart, .category-btn, .view-images-btn').forEach(element => {
+                element.style.touchAction = 'manipulation';
+                element.style.webkitTapHighlightColor = 'transparent';
+            });
+        }
+        
         fixAndroidViewport();
         fixAndroidTouch();
         
@@ -1291,17 +1208,6 @@
             e.preventDefault();
         });
         
-        // Also add a global click handler for add to cart buttons to ensure they work
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.btn-add-to-cart')) {
-                const button = e.target.closest('.btn-add-to-cart');
-                if (button && button.onclick) {
-                    // The onclick handler should already be attached via the renderProduct function
-                    console.log('Add to cart button clicked');
-                }
-            }
-        });
-        
         // Initialize category filter click handler
         const categoryFilter = document.getElementById('categoryFilter');
         if (categoryFilter) {
@@ -1309,6 +1215,86 @@
                 if (e.target.classList.contains('category-btn')) {
                     filterProducts(e.target.dataset.category);
                 }
+            });
+        }
+        
+        // Mobile menu toggle functionality - FIXED VERSION
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        
+        if (menuToggle && navMenu && mobileMenuOverlay) {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                
+                const isActive = navMenu.classList.contains('active');
+                
+                if (isActive) {
+                    // Close menu
+                    navMenu.classList.remove('active');
+                    mobileMenuOverlay.classList.remove('show');
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    menuToggle.style.position = 'static';
+                    document.body.style.overflow = '';
+                } else {
+                    // Open menu
+                    navMenu.classList.add('active');
+                    mobileMenuOverlay.classList.add('show');
+                    menuToggle.innerHTML = '<i class="fas fa-times"></i>';
+                    
+                    // Fix for Android: position menu toggle absolutely when menu is open
+                    menuToggle.style.position = 'fixed';
+                    menuToggle.style.right = '15px';
+                    menuToggle.style.top = '15px';
+                    menuToggle.style.zIndex = '1005';
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+            
+            // Close menu when clicking overlay
+            mobileMenuOverlay.addEventListener('click', function(e) {
+                navMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('show');
+                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                menuToggle.style.position = 'static';
+                document.body.style.overflow = '';
+            });
+            
+            // Close menu when clicking a link
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (link.id !== 'cartIcon') {
+                        navMenu.classList.remove('active');
+                        mobileMenuOverlay.classList.remove('show');
+                        menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                        menuToggle.style.position = 'static';
+                        document.body.style.overflow = '';
+                    }
+                });
+            });
+            
+            // Close menu when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (navMenu.classList.contains('active') && 
+                    !navMenu.contains(event.target) && 
+                    !menuToggle.contains(event.target) &&
+                    event.target !== mobileMenuOverlay) {
+                    navMenu.classList.remove('active');
+                    mobileMenuOverlay.classList.remove('show');
+                    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    menuToggle.style.position = 'static';
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // Fix for Android back button
+            window.addEventListener('popstate', function() {
+                navMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('show');
+                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                menuToggle.style.position = 'static';
+                document.body.style.overflow = '';
             });
         }
     });
