@@ -304,40 +304,6 @@
             color: #c62828;
         }
         
-        /* Quotes List */
-        .quotes-list {
-            margin-top: 20px;
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #eee;
-            border-radius: 5px;
-            padding: 10px;
-        }
-        
-        .quote-item {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-left: 4px solid var(--primary-color);
-        }
-        
-        .quote-item span {
-            flex: 1;
-            padding-right: 15px;
-            font-style: italic;
-            color: #555;
-        }
-        
-        .quote-actions {
-            display: flex;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-        
         /* Chart Container */
         .chart-container {
             height: 300px;
@@ -428,41 +394,158 @@
             border-top: 1px solid #eee;
         }
         
-        @media (max-width: 768px) {
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-            
-            .admin-stats {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .admin-stats span {
-                text-align: center;
-            }
-            
-            .products-filter {
-                flex-direction: column;
-            }
-            
-            .products-filter select,
-            .products-filter input {
-                min-width: 100%;
-            }
-            
-            .admin-products-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-actions {
-                flex-direction: column;
-            }
-            
-            .quote-actions {
-                flex-direction: column;
-            }
+        /* Enhanced Quotes Management Styles */
+        .quote-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .quote-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .quote-text {
+            font-size: 16px;
+            font-style: italic;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .quote-author {
+            color: #666;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .quote-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            color: #888;
+            font-size: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .quote-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .order-input {
+            width: 70px;
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        /* Toggle Switch for Quote Status */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 10px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: #28a745;
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* Message Styles */
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .loading i {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #667eea;
         }
         
         /* File upload info */
@@ -508,6 +591,48 @@
         .invalid {
             color: #f44336;
         }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .admin-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .admin-stats span {
+                text-align: center;
+            }
+            
+            .products-filter {
+                flex-direction: column;
+            }
+            
+            .products-filter select,
+            .products-filter input {
+                min-width: 100%;
+            }
+            
+            .admin-products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .quote-actions {
+                flex-direction: column;
+            }
+            
+            .quote-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
     </style>
 </head>
 <body>
@@ -531,7 +656,7 @@
                 <span id="totalOrders">0 Orders</span>
                 <span id="lowStock">0 Low Stock</span>
                 <span id="totalCategories">0 Categories</span>
-                <span id="totalQuotes">5 Quotes</span>
+                <span id="totalQuotes">0 Quotes</span>
             </div>
         </div>
 
@@ -673,24 +798,69 @@
             </div>
         </div>
 
-        <!-- Quotes Management -->
+        <!-- Enhanced Quotes Management -->
         <div class="form-card">
-            <h3><i class="fas fa-quote-left"></i> Moving Quotes Management</h3>
-            <p style="color: #666; margin-bottom: 20px;">Manage quotes displayed in the moving carousel on homepage (Minimum 5 quotes required)</p>
+            <h3><i class="fas fa-quote-left"></i> Quotes Management</h3>
+            <p style="color: #666; margin-bottom: 20px;">Manage inspirational quotes displayed on the website.</p>
             
-            <div class="form-group">
-                <label for="newQuote">Add New Quote</label>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="newQuote" placeholder="Enter a motivational quote..." style="flex: 1;">
-                    <button type="button" class="btn-primary" id="addQuoteBtn">
-                        <i class="fas fa-plus"></i> Add Quote
-                    </button>
-                </div>
+            <!-- Message Display -->
+            <div class="message" id="quotesMessage"></div>
+            
+            <!-- Add/Edit Quote Form -->
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                <h4 id="quoteFormTitle">Add New Quote</h4>
+                <form id="quoteForm">
+                    <input type="hidden" id="quoteId">
+                    
+                    <div class="form-group">
+                        <label for="quoteText"><i class="fas fa-quote-right"></i> Quote Text *</label>
+                        <textarea id="quoteText" class="form-control" 
+                                  placeholder="Enter inspirational quote..." 
+                                  rows="3" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quoteAuthor"><i class="fas fa-user"></i> Author *</label>
+                        <input type="text" id="quoteAuthor" class="form-control" 
+                               placeholder="Author name..." required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quoteOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
+                            <input type="number" id="quoteOrder" class="order-input" 
+                                   value="1" min="1" required>
+                            <small style="color: #666; display: block; margin-top: 5px;">Lower numbers appear first</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-toggle-on"></i> Status</label>
+                            <div style="display: flex; align-items: center; margin-top: 10px;">
+                                <span id="statusText">Active</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="quoteStatus" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary" id="submitQuoteBtn">
+                            <i class="fas fa-plus"></i> Add Quote
+                        </button>
+                        <button type="button" class="btn-secondary" id="cancelQuoteBtn" style="display: none;">
+                            <i class="fas fa-times"></i> Cancel Edit
+                        </button>
+                    </div>
+                </form>
             </div>
             
-            <h4>Current Quotes (5 Minimum)</h4>
-            <div id="quotesList" class="quotes-list">
-                <!-- Quotes will be loaded here -->
+            <!-- Quotes List -->
+            <h4>Existing Quotes</h4>
+            <div id="quotesList" class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading quotes...</p>
             </div>
         </div>
 
@@ -769,6 +939,10 @@
         // Multi-image management
         let imageInputs = 1;
         
+        // Quotes Management Variables
+        let quotesFirebaseApp;
+        let quotesDb;
+        
         // Add event listener to form to handle submission
         document.addEventListener('DOMContentLoaded', function() {
             // Load categories when page loads
@@ -778,6 +952,9 @@
             
             // Initialize image previews
             updateImagePreviews();
+            
+            // Initialize quotes management
+            initializeQuotesManagement();
         });
         
         function addImageInput() {
@@ -968,6 +1145,242 @@
                 window.resetProductForm();
             }
         });
+        
+        // ============ QUOTES MANAGEMENT FUNCTIONS ============
+        
+        async function initializeQuotesManagement() {
+            try {
+                // Import Firebase modules for quotes
+                const { initializeApp } = await import("https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js");
+                const { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy } = 
+                    await import("https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js");
+                
+                // Firebase Configuration (same as main site)
+                const firebaseConfig = {
+                    apiKey: "AIzaSyAZe6bywYSgnMFZsef1xgfPFQBkw4y7tco",
+                    authDomain: "sarm-enterprises.firebaseapp.com",
+                    projectId: "sarm-enterprises",
+                    storageBucket: "sarm-enterprises.firebasestorage.app",
+                    messagingSenderId: "790231205096",
+                    appId: "1:790231205096:web:656c5fc47c6a675e1ef55d",
+                    measurementId: "G-5M1ZM089KH"
+                };
+                
+                // Initialize Firebase for quotes
+                quotesFirebaseApp = initializeApp(firebaseConfig, "quotesApp");
+                quotesDb = getFirestore(quotesFirebaseApp);
+                
+                // Load quotes
+                await loadQuotes();
+                
+                // Setup event listeners
+                setupQuotesEventListeners();
+                
+            } catch (error) {
+                console.error("Error initializing quotes management:", error);
+                showQuotesMessage('Error initializing quotes system. Please refresh the page.', 'error');
+            }
+        }
+        
+        function setupQuotesEventListeners() {
+            // Quote status toggle
+            document.getElementById('quoteStatus').addEventListener('change', function() {
+                document.getElementById('statusText').textContent = this.checked ? 'Active' : 'Inactive';
+            });
+            
+            // Quote form submission
+            document.getElementById('quoteForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await saveQuote();
+            });
+            
+            // Cancel quote edit
+            document.getElementById('cancelQuoteBtn').addEventListener('click', resetQuoteForm);
+        }
+        
+        async function loadQuotes() {
+            try {
+                const q = query(collection(quotesDb, "quotes"), orderBy("order", "asc"));
+                const querySnapshot = await getDocs(q);
+                
+                const quotesList = document.getElementById('quotesList');
+                let quotesCount = 0;
+                
+                if (querySnapshot.empty) {
+                    quotesList.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #666;">
+                            <i class="fas fa-quote-left" style="font-size: 40px; margin-bottom: 20px;"></i>
+                            <p>No quotes found. Add your first quote!</p>
+                        </div>
+                    `;
+                } else {
+                    quotesList.innerHTML = '';
+                    querySnapshot.forEach((doc) => {
+                        quotesCount++;
+                        const quote = doc.data();
+                        const quoteId = doc.id;
+                        
+                        const quoteElement = document.createElement('div');
+                        quoteElement.className = 'quote-item';
+                        quoteElement.innerHTML = `
+                            <div class="quote-text">"${quote.text}"</div>
+                            <div class="quote-author">- ${quote.author}</div>
+                            <div class="quote-meta">
+                                <div>
+                                    Order: <strong>${quote.order || 1}</strong>
+                                    <span class="status-badge ${quote.isActive ? 'status-active' : 'status-inactive'}">
+                                        ${quote.isActive ? 'Active' : 'Inactive'}
+                                    </span>
+                                </div>
+                                <div>ID: ${quoteId.substring(0, 8)}...</div>
+                            </div>
+                            <div class="quote-actions">
+                                <button class="btn-small edit-quote-btn" data-id="${quoteId}">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn-small btn-danger delete-quote-btn" data-id="${quoteId}">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        `;
+                        
+                        quotesList.appendChild(quoteElement);
+                    });
+                    
+                    // Update stats
+                    document.getElementById('totalQuotes').textContent = `${quotesCount} Quotes`;
+                }
+                
+                // Add event listeners to edit and delete buttons
+                document.querySelectorAll('.edit-quote-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const quoteId = e.target.closest('.edit-quote-btn').getAttribute('data-id');
+                        await editQuote(quoteId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-quote-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const quoteId = e.target.closest('.delete-quote-btn').getAttribute('data-id');
+                        if (confirm('Are you sure you want to delete this quote?')) {
+                            await deleteQuote(quoteId);
+                        }
+                    });
+                });
+                
+            } catch (error) {
+                console.error("Error loading quotes:", error);
+                document.getElementById('quotesList').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #dc3545;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 40px; margin-bottom: 20px;"></i>
+                        <p>Error loading quotes. Please check your connection.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function editQuote(quoteId) {
+            try {
+                const { getDoc } = await import("https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js");
+                const docRef = doc(quotesDb, "quotes", quoteId);
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    const quote = docSnap.data();
+                    
+                    // Fill form with quote data
+                    document.getElementById('quoteId').value = quoteId;
+                    document.getElementById('quoteText').value = quote.text;
+                    document.getElementById('quoteAuthor').value = quote.author;
+                    document.getElementById('quoteOrder').value = quote.order || 1;
+                    document.getElementById('quoteStatus').checked = quote.isActive !== false;
+                    document.getElementById('statusText').textContent = quote.isActive !== false ? 'Active' : 'Inactive';
+                    
+                    // Update form for edit mode
+                    document.getElementById('quoteFormTitle').textContent = 'Edit Quote';
+                    document.getElementById('submitQuoteBtn').innerHTML = '<i class="fas fa-save"></i> Update Quote';
+                    document.getElementById('submitQuoteBtn').className = 'btn-primary';
+                    document.getElementById('cancelQuoteBtn').style.display = 'inline-block';
+                    
+                    // Scroll to form
+                    document.getElementById('quoteText').focus();
+                }
+                
+            } catch (error) {
+                console.error("Error loading quote:", error);
+                showQuotesMessage('Error loading quote details', 'error');
+            }
+        }
+        
+        async function deleteQuote(quoteId) {
+            try {
+                await deleteDoc(doc(quotesDb, "quotes", quoteId));
+                showQuotesMessage('Quote deleted successfully');
+                await loadQuotes();
+            } catch (error) {
+                console.error("Error deleting quote:", error);
+                showQuotesMessage('Error deleting quote', 'error');
+            }
+        }
+        
+        async function saveQuote() {
+            const quoteData = {
+                text: document.getElementById('quoteText').value.trim(),
+                author: document.getElementById('quoteAuthor').value.trim(),
+                order: parseInt(document.getElementById('quoteOrder').value) || 1,
+                isActive: document.getElementById('quoteStatus').checked,
+                updatedAt: new Date().toISOString()
+            };
+            
+            if (!quoteData.text || !quoteData.author) {
+                showQuotesMessage('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            try {
+                const quoteId = document.getElementById('quoteId').value;
+                
+                if (quoteId) {
+                    // Update existing quote
+                    await updateDoc(doc(quotesDb, "quotes", quoteId), quoteData);
+                    showQuotesMessage('Quote updated successfully');
+                } else {
+                    // Add new quote
+                    quoteData.createdAt = new Date().toISOString();
+                    await addDoc(collection(quotesDb, "quotes"), quoteData);
+                    showQuotesMessage('Quote added successfully');
+                }
+                
+                resetQuoteForm();
+                await loadQuotes();
+                
+            } catch (error) {
+                console.error("Error saving quote:", error);
+                showQuotesMessage('Error saving quote', 'error');
+            }
+        }
+        
+        function resetQuoteForm() {
+            document.getElementById('quoteForm').reset();
+            document.getElementById('quoteId').value = '';
+            document.getElementById('quoteStatus').checked = true;
+            document.getElementById('statusText').textContent = 'Active';
+            document.getElementById('quoteFormTitle').textContent = 'Add New Quote';
+            document.getElementById('submitQuoteBtn').innerHTML = '<i class="fas fa-plus"></i> Add Quote';
+            document.getElementById('submitQuoteBtn').className = 'btn-primary';
+            document.getElementById('cancelQuoteBtn').style.display = 'none';
+        }
+        
+        function showQuotesMessage(text, type = 'success') {
+            const messageDiv = document.getElementById('quotesMessage');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
     </script>
 </body>
 </html>
