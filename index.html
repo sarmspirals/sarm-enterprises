@@ -5,14 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SARM ENTERPRISES - Premium Notebooks & Stationery</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* ========== CORE STYLES ========== */
         :root {
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
@@ -24,6 +20,12 @@
             --dark-gray: #334155;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
@@ -48,7 +50,7 @@
             padding: 0 20px;
         }
 
-        /* Header & Navigation */
+        /* ========== HEADER & NAVIGATION ========== */
         header {
             background-color: white;
             box-shadow: var(--shadow);
@@ -189,7 +191,7 @@
             cursor: pointer;
         }
 
-        /* Hero Section */
+        /* ========== HERO SECTION ========== */
         .hero {
             background: linear-gradient(rgba(37, 99, 235, 0.9), rgba(29, 78, 216, 0.9)), url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
             background-size: cover;
@@ -253,7 +255,7 @@
             color: var(--accent);
         }
 
-        /* Buttons */
+        /* ========== BUTTONS ========== */
         .btn {
             display: inline-block;
             background-color: var(--accent);
@@ -283,7 +285,7 @@
             background-color: #128C7E;
         }
 
-        /* Products Section */
+        /* ========== PRODUCTS SECTION ========== */
         .section-title {
             text-align: center;
             margin: 50px 0 30px;
@@ -438,7 +440,7 @@
             margin-bottom: 15px;
         }
 
-        /* Cart Sidebar */
+        /* ========== CART SIDEBAR ========== */
         .cart-sidebar {
             position: fixed;
             top: 0;
@@ -625,7 +627,7 @@
             background-color: #128C7E;
         }
 
-        /* FAQ Section */
+        /* ========== FAQ SECTION ========== */
         .faq-container {
             background: white;
             border-radius: 12px;
@@ -670,99 +672,35 @@
             transform: rotate(45deg);
         }
 
-        /* Feedback Section */
-        .feedback-section {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            padding: 50px 20px;
-            border-radius: 12px;
-            margin-bottom: 60px;
+        /* ========== FEATURES SECTION ========== */
+        .features {
+            padding: 3rem 0;
+            background-color: #f8f9fa;
         }
 
-        .feedback-form {
-            max-width: 600px;
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
             margin: 0 auto;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
             background: white;
-            padding: 30px;
             border-radius: 12px;
             box-shadow: var(--shadow);
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        .feature-card i {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            font-family: 'Roboto', sans-serif;
-            transition: var(--transition);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        textarea.form-control {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .rating {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 10px;
-        }
-
-        .star {
-            color: #cbd5e1;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .star.active {
-            color: var(--accent);
-        }
-
-        /* About Us Section */
-        .about-section {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 40px;
-            align-items: center;
-            margin-bottom: 60px;
-        }
-
-        .about-content {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .about-image {
-            flex: 1;
-            min-width: 300px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-
-        .about-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* Contact Section */
+        /* ========== CONTACT SECTION ========== */
         .contact-section {
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
             padding: 60px 20px;
@@ -792,7 +730,7 @@
             margin-top: 20px;
         }
 
-        /* Footer */
+        /* ========== FOOTER ========== */
         footer {
             background-color: var(--secondary);
             color: white;
@@ -874,7 +812,7 @@
             font-size: 0.9rem;
         }
 
-        /* Back to Top Button */
+        /* ========== BACK TO TOP BUTTON ========== */
         .back-to-top {
             position: fixed;
             bottom: 30px;
@@ -901,7 +839,7 @@
             visibility: visible;
         }
 
-        /* Notification */
+        /* ========== NOTIFICATION ========== */
         .notification {
             position: fixed;
             bottom: 20px;
@@ -923,7 +861,7 @@
             transform: translateX(0);
         }
 
-        /* Mobile Responsiveness */
+        /* ========== MOBILE RESPONSIVENESS ========== */
         @media (max-width: 768px) {
             .nav-toggle {
                 display: block;
@@ -1028,8 +966,7 @@
                 <a href="#home"><i class="fas fa-home"></i> Home</a>
                 <a href="#products"><i class="fas fa-book"></i> Products</a>
                 <a href="#faq"><i class="fas fa-question-circle"></i> FAQ</a>
-                <a href="#feedback"><i class="fas fa-comment"></i> Feedback</a>
-                <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+                <a href="#features"><i class="fas fa-star"></i> Features</a>
                 <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
                 <a href="#" id="cartIcon" class="cart-icon">
                     <i class="fas fa-shopping-cart"></i>
@@ -1103,101 +1040,38 @@
         <div class="filter-container">
             <div class="filter-options">
                 <button class="filter-btn active" data-filter="all">All Products</button>
-                <button class="filter-btn" data-filter="notebooks">Notebooks</button>
-                <button class="filter-btn" data-filter="registers">Registers</button>
-                <button class="filter-btn" data-filter="diaries">Diaries</button>
-                <button class="filter-btn" data-filter="stationery">Stationery</button>
+                <!-- Categories will be loaded dynamically -->
             </div>
         </div>
         
         <!-- Products Grid -->
-        <div class="products-grid">
-            <!-- Product 1 -->
-            <div class="product-card" data-category="notebooks">
-                <div class="product-image-container">
-                    <div class="product-image-slider" id="product1-slider">
-                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Premium Notebook" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Notebook Pages" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1531346688376-ab6275c4725e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Notebook Writing" class="product-image">
-                    </div>
-                    <button class="image-nav prev" onclick="changeImage(-1, 'product1')">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="image-nav next" onclick="changeImage(1, 'product1')">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Premium A4 Notebook</h3>
-                    <div class="product-price">₹199</div>
-                    <p class="product-description">200 pages, hard cover, premium quality paper suitable for all pens.</p>
-                    <button class="btn" onclick="addToCart('Premium A4 Notebook', 199, 'product1')">Add to Cart</button>
-                </div>
+        <div class="products-grid" id="productsContainer">
+            <div class="loading-products" style="text-align: center; padding: 50px; grid-column: 1 / -1;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 40px; color: var(--primary);"></i>
+                <p>Loading products...</p>
             </div>
-            
-            <!-- Product 2 -->
-            <div class="product-card" data-category="registers">
-                <div class="product-image-container">
-                    <div class="product-image-slider" id="product2-slider">
-                        <img src="https://images.unsplash.com/photo-1587668178277-295251f900ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Office Register" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Register Pages" class="product-image">
-                    </div>
-                    <button class="image-nav prev" onclick="changeImage(-1, 'product2')">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="image-nav next" onclick="changeImage(1, 'product2')">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose Us</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-shipping-fast"></i>
+                    <h3>Free Delivery</h3>
+                    <p>Free delivery within 5km radius</p>
                 </div>
-                <div class="product-info">
-                    <h3 class="product-title">Office Register</h3>
-                    <div class="product-price">₹249</div>
-                    <p class="product-description">500 pages, column format, perfect for office records and accounts.</p>
-                    <button class="btn" onclick="addToCart('Office Register', 249, 'product2')">Add to Cart</button>
+                <div class="feature-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Quality Guarantee</h3>
+                    <p>Premium quality paper and binding</p>
                 </div>
-            </div>
-            
-            <!-- Product 3 -->
-            <div class="product-card" data-category="diaries">
-                <div class="product-image-container">
-                    <div class="product-image-slider" id="product3-slider">
-                        <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Leather Diary" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Diary Pages" class="product-image">
-                    </div>
-                    <button class="image-nav prev" onclick="changeImage(-1, 'product3')">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="image-nav next" onclick="changeImage(1, 'product3')">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Leather Bound Diary</h3>
-                    <div class="product-price">₹399</div>
-                    <p class="product-description">Luxury diary with leather cover, perfect for journaling and notes.</p>
-                    <button class="btn" onclick="addToCart('Leather Bound Diary', 399, 'product3')">Add to Cart</button>
-                </div>
-            </div>
-            
-            <!-- Product 4 -->
-            <div class="product-card" data-category="stationery">
-                <div class="product-image-container">
-                    <div class="product-image-slider" id="product4-slider">
-                        <img src="https://images.unsplash.com/photo-1583484963886-cfe2bff2945f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Pen Set" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1585338109929-db1656f6f6c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Stationery Items" class="product-image">
-                    </div>
-                    <button class="image-nav prev" onclick="changeImage(-1, 'product4')">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="image-nav next" onclick="changeImage(1, 'product4')">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-title">Premium Pen Set</h3>
-                    <div class="product-price">₹149</div>
-                    <p class="product-description">Set of 5 premium pens with smooth writing experience.</p>
-                    <button class="btn" onclick="addToCart('Premium Pen Set', 149, 'product4')">Add to Cart</button>
+                <div class="feature-card">
+                    <i class="fas fa-headset"></i>
+                    <h3>24/7 Support</h3>
+                    <p>Always available to assist you</p>
                 </div>
             </div>
         </div>
@@ -1206,104 +1080,8 @@
     <!-- FAQ Section -->
     <section class="container" id="faq">
         <h2 class="section-title">Frequently Asked Questions</h2>
-        <div class="faq-container">
-            <div class="faq-item active">
-                <div class="faq-question">
-                    What is your delivery policy?
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-answer open">
-                    We offer free delivery within 5km radius. For areas beyond 5km, delivery charges may apply based on distance. Standard delivery takes 24-48 hours.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">
-                    How can I place an order?
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-answer">
-                    You can order through WhatsApp (7006927825), call us directly, or use the cart system on our website and checkout via WhatsApp.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">
-                    Do you offer bulk discounts?
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-answer">
-                    Yes, we offer special discounts for bulk orders (50+ items). Please contact us directly for custom quotes.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">
-                    What are your business hours?
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-answer">
-                    We are available Monday to Saturday: 9:00 AM - 8:00 PM, Sunday: 10:00 AM - 6:00 PM.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">
-                    Can I customize notebooks?
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-answer">
-                    Yes, we offer customization services for notebooks including custom covers, page count, and paper quality. Minimum order quantity applies.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Feedback Section -->
-    <section class="feedback-section" id="feedback">
-        <div class="container">
-            <h2 class="section-title">Customer Feedback</h2>
-            <div class="feedback-form">
-                <form id="feedbackForm">
-                    <div class="form-group">
-                        <label for="name">Full Name</label>
-                        <input type="text" id="name" class="form-control" placeholder="Enter your name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Rate Your Experience</label>
-                        <div class="rating">
-                            <span class="star" data-rating="1">★</span>
-                            <span class="star" data-rating="2">★</span>
-                            <span class="star" data-rating="3">★</span>
-                            <span class="star" data-rating="4">★</span>
-                            <span class="star" data-rating="5">★</span>
-                        </div>
-                        <input type="hidden" id="rating" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Your Feedback</label>
-                        <textarea id="message" class="form-control" placeholder="Tell us about your experience with our products or services" required></textarea>
-                    </div>
-                    <button type="submit" class="btn" style="width: 100%;">Submit Feedback</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Us Section -->
-    <section class="container" id="about">
-        <h2 class="section-title">About SARM ENTERPRISES</h2>
-        <div class="about-section">
-            <div class="about-content">
-                <h3>Your Trusted Stationery Partner</h3>
-                <p>SARM ENTERPRISES was established with a vision to provide high-quality notebooks and stationery products to students, professionals, and businesses. We believe that quality writing materials inspire quality thoughts.</p>
-                <p>Our products are carefully selected and designed to meet the diverse needs of our customers. From premium notebooks to office registers, each product is crafted with attention to detail and durability.</p>
-                <p>Based in Kashmir, we understand the importance of reliable stationery in education and business. We're committed to providing excellent customer service and building lasting relationships with our clients.</p>
-                <a href="#contact" class="btn" style="margin-top: 20px;">Contact Us</a>
-            </div>
-            <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="SARM ENTERPRISES Store">
-            </div>
+        <div class="faq-container" id="faqContainer">
+            <!-- FAQs will be loaded dynamically -->
         </div>
     </section>
 
@@ -1320,7 +1098,7 @@
                     <p>Pincode: 193411</p>
                     
                     <h3><i class="fas fa-phone"></i> Phone Numbers</h3>
-                    <p>7006927825 / 7006927825</p>
+                    <p>7006927825</p>
                     
                     <h3><i class="fas fa-envelope"></i> Email</h3>
                     <p>sarmenterprises786@gmail.com</p>
@@ -1358,7 +1136,7 @@
     </section>
 
     <!-- Footer -->
-    <footer id="contact">
+    <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
@@ -1378,8 +1156,7 @@
                         <a href="#home">Home</a>
                         <a href="#products">Products</a>
                         <a href="#faq">FAQs</a>
-                        <a href="#feedback">Feedback</a>
-                        <a href="#about">About Us</a>
+                        <a href="#features">Features</a>
                         <a href="#contact">Contact</a>
                     </div>
                 </div>
@@ -1410,212 +1187,28 @@
         <span>Product added to cart!</span>
     </div>
 
-    <script>
-        // Mobile Navigation Toggle
-        const navToggle = document.getElementById('navToggle');
-        const navMenu = document.getElementById('navMenu');
-        
-        navToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            navToggle.innerHTML = navMenu.classList.contains('active') 
-                ? '<i class="fas fa-times"></i>' 
-                : '<i class="fas fa-bars"></i>';
-        });
-        
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-                navToggle.innerHTML = '<i class="fas fa-bars"></i>';
-            });
-        });
-        
-        // Moving Quotes in Hero Section
-        const quotes = document.querySelectorAll('.quote');
-        let currentQuote = 0;
-        
-        function showNextQuote() {
-            quotes[currentQuote].classList.remove('active');
-            currentQuote = (currentQuote + 1) % quotes.length;
-            quotes[currentQuote].classList.add('active');
-        }
-        
-        // Change quote every 5 seconds
-        setInterval(showNextQuote, 5000);
-        
-        // Product Image Sliders
-        const productSliders = {
-            'product1': { currentIndex: 0, totalImages: 3 },
-            'product2': { currentIndex: 0, totalImages: 2 },
-            'product3': { currentIndex: 0, totalImages: 2 },
-            'product4': { currentIndex: 0, totalImages: 2 }
-        };
-        
-        function changeImage(direction, productId) {
-            const slider = productSliders[productId];
-            const sliderElement = document.getElementById(`${productId}-slider`);
-            
-            slider.currentIndex += direction;
-            
-            if (slider.currentIndex < 0) {
-                slider.currentIndex = slider.totalImages - 1;
-            } else if (slider.currentIndex >= slider.totalImages) {
-                slider.currentIndex = 0;
-            }
-            
-            const translateX = -slider.currentIndex * 100;
-            sliderElement.style.transform = `translateX(${translateX}%)`;
-        }
-        
-        // Product Filter
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const productCards = document.querySelectorAll('.product-card');
-        
-        filterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                // Remove active class from all buttons
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                // Add active class to clicked button
-                button.classList.add('active');
-                
-                const filter = button.getAttribute('data-filter');
-                
-                productCards.forEach(card => {
-                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            });
-        });
-        
-        // FAQ Toggle
-        const faqItems = document.querySelectorAll('.faq-item');
-        
-        faqItems.forEach(item => {
-            const question = item.querySelector('.faq-question');
-            const answer = item.querySelector('.faq-answer');
-            const toggle = item.querySelector('.faq-toggle');
-            
-            question.addEventListener('click', () => {
-                // Close all other FAQ items
-                faqItems.forEach(otherItem => {
-                    if (otherItem !== item) {
-                        otherItem.classList.remove('active');
-                        otherItem.querySelector('.faq-answer').classList.remove('open');
-                    }
-                });
-                
-                // Toggle current item
-                item.classList.toggle('active');
-                answer.classList.toggle('open');
-            });
-        });
-        
-        // Star Rating for Feedback
-        const stars = document.querySelectorAll('.star');
-        const ratingInput = document.getElementById('rating');
-        
-        stars.forEach(star => {
-            star.addEventListener('click', () => {
-                const rating = star.getAttribute('data-rating');
-                ratingInput.value = rating;
-                
-                stars.forEach((s, index) => {
-                    if (index < rating) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
-                });
-            });
-            
-            // Add hover effect
-            star.addEventListener('mouseover', () => {
-                const rating = star.getAttribute('data-rating');
-                
-                stars.forEach((s, index) => {
-                    if (index < rating) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
-                });
-            });
-            
-            star.addEventListener('mouseout', () => {
-                const currentRating = ratingInput.value;
-                
-                stars.forEach((s, index) => {
-                    if (index < currentRating) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
-                });
-            });
-        });
-        
-        // Feedback Form Submission
-        const feedbackForm = document.getElementById('feedbackForm');
-        
-        feedbackForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById('name').value;
-            const rating = document.getElementById('rating').value;
-            
-            if (rating === '0') {
-                alert('Please select a rating before submitting feedback.');
-                return;
-            }
-            
-            alert(`Thank you, ${name}! Your feedback has been submitted.`);
-            feedbackForm.reset();
-            
-            // Reset stars
-            stars.forEach(star => star.classList.remove('active'));
-            ratingInput.value = '0';
-        });
-        
-        // Back to Top Button
-        const backToTopButton = document.getElementById('backToTop');
-        
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) {
-                backToTopButton.classList.add('show');
-            } else {
-                backToTopButton.classList.remove('show');
-            }
-        });
-        
-        backToTopButton.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-        
-        // Smooth Scrolling for Navigation Links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
+    <!-- Firebase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-        // Cart System
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZe6bywYSgnMFZsef1xgfPFQBkw4y7tco",
+            authDomain: "sarm-enterprises.firebaseapp.com",
+            projectId: "sarm-enterprises",
+            storageBucket: "sarm-enterprises.firebasestorage.app",
+            messagingSenderId: "790231205096",
+            appId: "1:790231205096:web:656c5fc47c6a675e1ef55d",
+            measurementId: "G-5M1ZM089KH"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // ========== CART SYSTEM ==========
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         const cartIcon = document.getElementById('cartIcon');
         const cartCount = document.getElementById('cartCount');
@@ -1630,11 +1223,9 @@
 
         // Initialize cart
         function updateCart() {
-            // Update cart count
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             cartCount.textContent = totalItems;
             
-            // Update cart sidebar
             if (cart.length === 0) {
                 cartItems.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
                 cartTotal.textContent = '₹0';
@@ -1652,7 +1243,9 @@
                 itemsHTML += `
                     <div class="cart-item">
                         <div class="cart-item-image">
-                            <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="${item.name}">
+                            <img src="${item.image || 'https://via.placeholder.com/70x70?text=Notebook'}" 
+                                 alt="${item.name}"
+                                 onerror="this.src='https://via.placeholder.com/70x70?text=Notebook'">
                         </div>
                         <div class="cart-item-details">
                             <h4>${item.name}</h4>
@@ -1675,13 +1268,11 @@
             cartItems.innerHTML = itemsHTML;
             cartTotal.textContent = `₹${total}`;
             checkoutBtn.disabled = false;
-            
-            // Save to localStorage
             localStorage.setItem('cart', JSON.stringify(cart));
         }
 
         // Add to cart function
-        function addToCart(name, price, productId) {
+        window.addToCart = function(productId, productName, price, imageUrl) {
             const existingItemIndex = cart.findIndex(item => item.id === productId);
             
             if (existingItemIndex > -1) {
@@ -1689,18 +1280,19 @@
             } else {
                 cart.push({
                     id: productId,
-                    name: name,
+                    name: productName,
                     price: price,
+                    image: imageUrl,
                     quantity: 1
                 });
             }
             
             updateCart();
-            showNotification('Product added to cart!');
-        }
+            showNotification(`${productName} added to cart!`);
+        };
 
         // Update quantity
-        function updateQuantity(index, change) {
+        window.updateQuantity = function(index, change) {
             cart[index].quantity += change;
             
             if (cart[index].quantity <= 0) {
@@ -1708,14 +1300,14 @@
             }
             
             updateCart();
-        }
+        };
 
         // Remove from cart
-        function removeFromCart(index) {
+        window.removeFromCart = function(index) {
             cart.splice(index, 1);
             updateCart();
             showNotification('Product removed from cart');
-        }
+        };
 
         // Show notification
         function showNotification(message) {
@@ -1778,8 +1370,316 @@
             cartOverlay.classList.remove('show');
         });
 
-        // Initialize cart on page load
-        document.addEventListener('DOMContentLoaded', updateCart);
+        // ========== PRODUCT LOADING ==========
+        function getImagePath(filename) {
+            if (!filename) return 'https://via.placeholder.com/300x300?text=No+Image';
+            
+            if (filename.startsWith('http') || filename.includes('via.placeholder.com')) {
+                return filename;
+            }
+            
+            if (filename.startsWith('assets/products/')) {
+                return filename;
+            }
+            
+            return `assets/products/${filename}`;
+        }
+
+        function createProductCard(product, id) {
+            const images = product.images || [];
+            const firstImage = images.length > 0 ? getImagePath(images[0]) : 'https://via.placeholder.com/300x300?text=Notebook';
+            
+            // Format category for display
+            const categoryName = product.category ? 
+                product.category.split('-').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' ') : 'Uncategorized';
+            
+            return `
+                <div class="product-card" data-category="${product.category || 'uncategorized'}">
+                    <div class="product-image-container">
+                        <div class="product-image-slider" id="${id}-slider">
+                            ${images.map((img, index) => `
+                                <img src="${getImagePath(img)}" 
+                                     alt="${product.name}" 
+                                     class="product-image"
+                                     onerror="this.onerror=null; this.src='https://via.placeholder.com/300x300?text=Image+${index + 1}'">
+                            `).join('')}
+                        </div>
+                        ${images.length > 1 ? `
+                            <button class="image-nav prev" onclick="changeImage(-1, '${id}', ${JSON.stringify(images).replace(/"/g, '&quot;')})">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="image-nav next" onclick="changeImage(1, '${id}', ${JSON.stringify(images).replace(/"/g, '&quot;')})">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <div class="product-price">₹${product.price}</div>
+                        <p class="product-description">${product.description || 'Premium quality notebook for all your writing needs.'}</p>
+                        <button class="btn" onclick="addToCart('${id}', '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${firstImage}')">
+                            Add to Cart
+                        </button>
+                        <a href="https://wa.me/917006927825?text=${encodeURIComponent(`Hello SARM ENTERPRISES, I would like to order ${product.name} - ₹${product.price}`)}" 
+                           class="btn btn-whatsapp" target="_blank" style="margin-top: 10px; display: block; text-align: center;">
+                            <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Image slider functionality
+        window.changeImage = function(direction, productId, images) {
+            const slider = document.getElementById(`${productId}-slider`);
+            if (!slider) return;
+            
+            const currentIndex = parseInt(slider.getAttribute('data-index') || '0');
+            const totalImages = images.length;
+            let newIndex = currentIndex + direction;
+            
+            if (newIndex < 0) newIndex = totalImages - 1;
+            if (newIndex >= totalImages) newIndex = 0;
+            
+            slider.style.transform = `translateX(-${newIndex * 100}%)`;
+            slider.setAttribute('data-index', newIndex);
+        };
+
+        async function loadProducts() {
+            try {
+                const productsRef = collection(db, "products");
+                const q = query(productsRef, orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                const productsContainer = document.getElementById('productsContainer');
+                const filterOptions = document.querySelector('.filter-options');
+                
+                if (querySnapshot.empty) {
+                    productsContainer.innerHTML = `
+                        <div style="text-align: center; padding: 50px; grid-column: 1 / -1;">
+                            <i class="fas fa-book" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
+                            <p style="color: #999; font-size: 18px;">No products available yet.</p>
+                            <p style="color: #666; font-size: 14px;">Please add products from the admin panel.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let categories = new Set(['all']);
+                let productsHTML = '';
+                
+                querySnapshot.forEach((doc) => {
+                    const product = doc.data();
+                    const productId = doc.id;
+                    
+                    if (product.category) {
+                        categories.add(product.category);
+                    }
+                    
+                    productsHTML += createProductCard(product, productId);
+                });
+                
+                productsContainer.innerHTML = productsHTML;
+                
+                // Create category filter buttons
+                filterOptions.innerHTML = '<button class="filter-btn active" data-filter="all">All Products</button>';
+                categories.forEach(category => {
+                    if (category !== 'all') {
+                        const formattedCategory = category.split('-').map(word => 
+                            word.charAt(0).toUpperCase() + word.slice(1)
+                        ).join(' ');
+                        
+                        filterOptions.innerHTML += `
+                            <button class="filter-btn" data-filter="${category}">${formattedCategory}</button>
+                        `;
+                    }
+                });
+                
+                // Add event listeners to filter buttons
+                document.querySelectorAll('.filter-btn').forEach(button => {
+                    button.addEventListener('click', () => {
+                        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        
+                        const filter = button.getAttribute('data-filter');
+                        const productCards = document.querySelectorAll('.product-card');
+                        
+                        productCards.forEach(card => {
+                            const category = card.getAttribute('data-category');
+                            if (filter === 'all' || category === filter) {
+                                card.style.display = 'block';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                    });
+                });
+                
+            } catch (error) {
+                console.error("Error loading products:", error);
+                const productsContainer = document.getElementById('productsContainer');
+                productsContainer.innerHTML = `
+                    <div style="text-align: center; padding: 50px; grid-column: 1 / -1;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 60px; color: #e74c3c; margin-bottom: 20px;"></i>
+                        <p style="color: #e74c3c; font-size: 18px;">Error loading products.</p>
+                        <p style="color: #666; font-size: 14px;">Please check your internet connection.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ========== FAQ LOADING ==========
+        async function loadFAQs() {
+            try {
+                const q = query(collection(db, "faqs"), orderBy("order", "asc"));
+                const querySnapshot = await getDocs(q);
+                const faqContainer = document.getElementById('faqContainer');
+                
+                if (querySnapshot.empty) {
+                    faqContainer.innerHTML = `
+                        <div class="faq-item active">
+                            <div class="faq-question">
+                                What is your delivery policy?
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer open">
+                                We offer free delivery within 5km radius. For areas beyond 5km, delivery charges may apply based on distance.
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">
+                                How can I place an order?
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer">
+                                You can order through WhatsApp (7006927825), call us directly, or use the cart system on our website.
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    let faqHTML = '';
+                    querySnapshot.forEach((doc, index) => {
+                        const faq = doc.data();
+                        faqHTML += `
+                            <div class="faq-item ${index === 0 ? 'active' : ''}">
+                                <div class="faq-question">
+                                    ${faq.question}
+                                    <span class="faq-toggle">+</span>
+                                </div>
+                                <div class="faq-answer ${index === 0 ? 'open' : ''}">
+                                    ${faq.answer}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    faqContainer.innerHTML = faqHTML;
+                }
+                
+                // Add FAQ toggle functionality
+                document.querySelectorAll('.faq-question').forEach(question => {
+                    question.addEventListener('click', () => {
+                        const item = question.parentElement;
+                        const answer = item.querySelector('.faq-answer');
+                        const toggle = item.querySelector('.faq-toggle');
+                        
+                        item.classList.toggle('active');
+                        if (item.classList.contains('active')) {
+                            answer.classList.add('open');
+                            toggle.textContent = '−';
+                        } else {
+                            answer.classList.remove('open');
+                            toggle.textContent = '+';
+                        }
+                    });
+                });
+                
+            } catch (error) {
+                console.error("Error loading FAQs:", error);
+            }
+        }
+
+        // ========== INITIALIZATION ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update cart
+            updateCart();
+            
+            // Load products
+            loadProducts();
+            
+            // Load FAQs
+            loadFAQs();
+            
+            // Mobile Navigation Toggle
+            const navToggle = document.getElementById('navToggle');
+            const navMenu = document.getElementById('navMenu');
+            
+            navToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+                navToggle.innerHTML = navMenu.classList.contains('active') 
+                    ? '<i class="fas fa-times"></i>' 
+                    : '<i class="fas fa-bars"></i>';
+            });
+            
+            // Close mobile menu when clicking on a link
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (link.id !== 'cartIcon') {
+                        navMenu.classList.remove('active');
+                        navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                });
+            });
+            
+            // Moving Quotes
+            const quotes = document.querySelectorAll('.quote');
+            let currentQuote = 0;
+            
+            function showNextQuote() {
+                quotes[currentQuote].classList.remove('active');
+                currentQuote = (currentQuote + 1) % quotes.length;
+                quotes[currentQuote].classList.add('active');
+            }
+            
+            setInterval(showNextQuote, 5000);
+            
+            // Back to Top Button
+            const backToTopButton = document.getElementById('backToTop');
+            
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('show');
+                } else {
+                    backToTopButton.classList.remove('show');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Smooth Scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
