@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SARM Enterprises - Quality Products</title>
+    <title>SARM ENTERPRISES - Premium Notebooks & Stationery</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
@@ -17,7 +17,8 @@
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
             --secondary: #0f172a;
-            --accent: #f59e0b;
+            --accent: #10b981;
+            --whatsapp: #25D366;
             --light: #f8fafc;
             --gray: #64748b;
             --dark-gray: #334155;
@@ -71,10 +72,9 @@
 
         .logo {
             height: 45px;
-            width: auto;
+            width: 45px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             border-radius: 8px;
-            padding: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -89,17 +89,16 @@
             color: var(--secondary);
         }
 
-        .nav-toggle {
-            display: none;
-            font-size: 1.5rem;
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
+        .business-tagline {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 2px;
         }
 
+        /* Navigation Menu */
         .nav-menu {
             display: flex;
+            align-items: center;
             gap: 25px;
         }
 
@@ -110,6 +109,9 @@
             font-size: 1rem;
             transition: var(--transition);
             position: relative;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .nav-menu a:hover {
@@ -131,16 +133,71 @@
             width: 100%;
         }
 
-        /* Hero Section with Moving Quotes */
+        /* Cart Icon */
+        .cart-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        /* WhatsApp Order Button */
+        .whatsapp-order-btn {
+            background-color: var(--whatsapp);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 6px rgba(37, 211, 102, 0.25);
+        }
+
+        .whatsapp-order-btn:hover {
+            background-color: #128C7E;
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Navigation Toggle */
+        .nav-toggle {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(37, 99, 235, 0.9), rgba(29, 78, 216, 0.9)), url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+            background: linear-gradient(rgba(37, 99, 235, 0.9), rgba(29, 78, 216, 0.9)), url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
             background-size: cover;
             background-position: center;
             color: white;
             padding: 80px 20px;
             text-align: center;
             position: relative;
-            overflow: hidden;
         }
 
         .hero-content {
@@ -160,6 +217,7 @@
             opacity: 0.9;
         }
 
+        /* Quotes Slider */
         .quote-slider {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
@@ -195,6 +253,7 @@
             color: var(--accent);
         }
 
+        /* Buttons */
         .btn {
             display: inline-block;
             background-color: var(--accent);
@@ -207,12 +266,21 @@
             border: none;
             cursor: pointer;
             transition: var(--transition);
-            box-shadow: 0 4px 6px rgba(245, 158, 11, 0.25);
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.25);
         }
 
         .btn:hover {
-            background-color: #e69b0a;
+            background-color: #0da271;
             transform: translateY(-3px);
+        }
+
+        .btn-whatsapp {
+            background-color: var(--whatsapp);
+            color: white;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #128C7E;
         }
 
         /* Products Section */
@@ -370,6 +438,193 @@
             margin-bottom: 15px;
         }
 
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            z-index: 1001;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-sidebar.show {
+            right: 0;
+        }
+        
+        .cart-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .cart-item-image {
+            width: 70px;
+            height: 70px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .cart-item-details h4 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .cart-item-details p {
+            margin: 0;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .cart-item-quantity {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
+        .cart-item-quantity button {
+            width: 25px;
+            height: 25px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .cart-item-quantity span {
+            margin: 0 10px;
+            font-weight: 500;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .cart-item-price {
+            text-align: right;
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 60px;
+            margin-left: 10px;
+        }
+        
+        .remove-item {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            margin-top: 5px;
+            font-size: 12px;
+            padding: 0;
+        }
+        
+        .cart-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .cart-overlay.show {
+            display: block;
+        }
+        
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            color: #999;
+            padding: 40px 0;
+            font-style: italic;
+        }
+        
+        .btn-checkout {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 12px;
+        }
+        
+        .btn-clear-cart {
+            width: 100%;
+            padding: 12px;
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+
+        .btn-checkout.whatsapp {
+            background-color: var(--whatsapp);
+        }
+
+        .btn-checkout.whatsapp:hover {
+            background-color: #128C7E;
+        }
+
         /* FAQ Section */
         .faq-container {
             background: white;
@@ -507,6 +762,36 @@
             display: block;
         }
 
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 60px 20px;
+            border-radius: 12px;
+            margin-bottom: 60px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .contact-info h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            color: var(--primary);
+        }
+
+        .contact-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
         /* Footer */
         footer {
             background-color: var(--secondary);
@@ -608,12 +893,34 @@
             visibility: hidden;
             transition: var(--transition);
             box-shadow: var(--shadow);
-            z-index: 100;
+            z-index: 999;
         }
 
         .back-to-top.show {
             opacity: 1;
             visibility: visible;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
         }
 
         /* Mobile Responsiveness */
@@ -667,6 +974,11 @@
             .about-section, .footer-content {
                 flex-direction: column;
             }
+
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
         }
 
         @media (max-width: 480px) {
@@ -697,32 +1009,69 @@
     </style>
 </head>
 <body>
-    <!-- Header with Logo -->
+    <!-- Header with Cart and WhatsApp -->
     <header>
         <div class="header-container container">
             <div class="logo-container">
                 <div class="logo">S</div>
-                <div class="business-name">SARM Enterprises</div>
+                <div>
+                    <div class="business-name">SARM ENTERPRISES</div>
+                    <div class="business-tagline">Premium Notebooks & Stationery</div>
+                </div>
             </div>
+            
             <button class="nav-toggle" id="navToggle">
                 <i class="fas fa-bars"></i>
             </button>
+            
             <nav class="nav-menu" id="navMenu">
-                <a href="#home">Home</a>
-                <a href="#products">Products</a>
-                <a href="#faq">FAQs</a>
-                <a href="#feedback">Feedback</a>
-                <a href="#about">About Us</a>
-                <a href="#contact">Contact</a>
+                <a href="#home"><i class="fas fa-home"></i> Home</a>
+                <a href="#products"><i class="fas fa-book"></i> Products</a>
+                <a href="#faq"><i class="fas fa-question-circle"></i> FAQ</a>
+                <a href="#feedback"><i class="fas fa-comment"></i> Feedback</a>
+                <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+                <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
+                <a href="#" id="cartIcon" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </a>
+                <a href="https://wa.me/917006927825?text=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
+                   class="whatsapp-order-btn" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                </a>
             </nav>
         </div>
     </header>
 
-    <!-- Hero Section with Moving Quotes -->
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Your Cart</h3>
+            <button class="close-cart">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p class="empty-cart">Your cart is empty</p>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">₹0</span>
+            </div>
+            <button class="btn btn-checkout whatsapp" id="checkoutBtn" disabled>
+                <i class="fab fa-whatsapp"></i> Checkout on WhatsApp
+            </button>
+            <button class="btn-clear-cart" id="clearCartBtn">
+                <i class="fas fa-trash"></i> Clear Cart
+            </button>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-content">
-            <h1>Quality Products for Your Success</h1>
-            <p>At SARM Enterprises, we deliver premium products and solutions to help your business thrive in today's competitive market.</p>
+            <h1>Premium Notebooks for Quality Thoughts</h1>
+            <p>Discover our wide range of high-quality notebooks, registers, and stationery products. Perfect for students, professionals, and creative minds.</p>
             <a href="#products" class="btn">Explore Products</a>
             
             <div class="quote-slider">
@@ -731,16 +1080,16 @@
                     <span class="quote-author">- John Ruskin</span>
                 </div>
                 <div class="quote" id="quote2">
-                    "The bitterness of poor quality remains long after the sweetness of low price is forgotten."
-                    <span class="quote-author">- Benjamin Franklin</span>
+                    "Writing is the painting of the voice."
+                    <span class="quote-author">- Voltaire</span>
                 </div>
                 <div class="quote" id="quote3">
-                    "Your most unhappy customers are your greatest source of learning."
-                    <span class="quote-author">- Bill Gates</span>
+                    "A notebook is a writer's best friend and a student's constant companion."
+                    <span class="quote-author">- Unknown</span>
                 </div>
                 <div class="quote" id="quote4">
-                    "Success is not the key to happiness. Happiness is the key to success."
-                    <span class="quote-author">- Albert Schweitzer</span>
+                    "Your ideas deserve the perfect canvas to come alive."
+                    <span class="quote-author">- SARM Enterprises</span>
                 </div>
             </div>
         </div>
@@ -754,22 +1103,22 @@
         <div class="filter-container">
             <div class="filter-options">
                 <button class="filter-btn active" data-filter="all">All Products</button>
-                <button class="filter-btn" data-filter="electronics">Electronics</button>
-                <button class="filter-btn" data-filter="home">Home & Kitchen</button>
-                <button class="filter-btn" data-filter="office">Office Supplies</button>
-                <button class="filter-btn" data-filter="tools">Tools & Hardware</button>
+                <button class="filter-btn" data-filter="notebooks">Notebooks</button>
+                <button class="filter-btn" data-filter="registers">Registers</button>
+                <button class="filter-btn" data-filter="diaries">Diaries</button>
+                <button class="filter-btn" data-filter="stationery">Stationery</button>
             </div>
         </div>
         
         <!-- Products Grid -->
         <div class="products-grid">
             <!-- Product 1 -->
-            <div class="product-card" data-category="electronics">
+            <div class="product-card" data-category="notebooks">
                 <div class="product-image-container">
                     <div class="product-image-slider" id="product1-slider">
-                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Wireless Headphones" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Wireless Headphones Side View" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Wireless Headphones in Case" class="product-image">
+                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Premium Notebook" class="product-image">
+                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Notebook Pages" class="product-image">
+                        <img src="https://images.unsplash.com/photo-1531346688376-ab6275c4725e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Notebook Writing" class="product-image">
                     </div>
                     <button class="image-nav prev" onclick="changeImage(-1, 'product1')">
                         <i class="fas fa-chevron-left"></i>
@@ -779,20 +1128,19 @@
                     </button>
                 </div>
                 <div class="product-info">
-                    <h3 class="product-title">Premium Wireless Headphones</h3>
-                    <div class="product-price">$129.99</div>
-                    <p class="product-description">Noise-cancelling wireless headphones with 30-hour battery life and premium sound quality.</p>
-                    <button class="btn" style="width: 100%; padding: 10px;">Add to Cart</button>
+                    <h3 class="product-title">Premium A4 Notebook</h3>
+                    <div class="product-price">₹199</div>
+                    <p class="product-description">200 pages, hard cover, premium quality paper suitable for all pens.</p>
+                    <button class="btn" onclick="addToCart('Premium A4 Notebook', 199, 'product1')">Add to Cart</button>
                 </div>
             </div>
             
             <!-- Product 2 -->
-            <div class="product-card" data-category="home">
+            <div class="product-card" data-category="registers">
                 <div class="product-image-container">
                     <div class="product-image-slider" id="product2-slider">
-                        <img src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Smart Coffee Maker" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Coffee Maker Close-up" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Coffee Maker in Use" class="product-image">
+                        <img src="https://images.unsplash.com/photo-1587668178277-295251f900ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Office Register" class="product-image">
+                        <img src="https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Register Pages" class="product-image">
                     </div>
                     <button class="image-nav prev" onclick="changeImage(-1, 'product2')">
                         <i class="fas fa-chevron-left"></i>
@@ -802,20 +1150,19 @@
                     </button>
                 </div>
                 <div class="product-info">
-                    <h3 class="product-title">Smart Coffee Maker</h3>
-                    <div class="product-price">$89.99</div>
-                    <p class="product-description">Programmable coffee maker with smartphone app control and automatic brew scheduling.</p>
-                    <button class="btn" style="width: 100%; padding: 10px;">Add to Cart</button>
+                    <h3 class="product-title">Office Register</h3>
+                    <div class="product-price">₹249</div>
+                    <p class="product-description">500 pages, column format, perfect for office records and accounts.</p>
+                    <button class="btn" onclick="addToCart('Office Register', 249, 'product2')">Add to Cart</button>
                 </div>
             </div>
             
             <!-- Product 3 -->
-            <div class="product-card" data-category="office">
+            <div class="product-card" data-category="diaries">
                 <div class="product-image-container">
                     <div class="product-image-slider" id="product3-slider">
-                        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Ergonomic Office Chair" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Chair Side View" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Chair Adjustments" class="product-image">
+                        <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Leather Diary" class="product-image">
+                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Diary Pages" class="product-image">
                     </div>
                     <button class="image-nav prev" onclick="changeImage(-1, 'product3')">
                         <i class="fas fa-chevron-left"></i>
@@ -825,20 +1172,19 @@
                     </button>
                 </div>
                 <div class="product-info">
-                    <h3 class="product-title">Ergonomic Office Chair</h3>
-                    <div class="product-price">$249.99</div>
-                    <p class="product-description">Adjustable ergonomic chair with lumbar support and breathable mesh back for all-day comfort.</p>
-                    <button class="btn" style="width: 100%; padding: 10px;">Add to Cart</button>
+                    <h3 class="product-title">Leather Bound Diary</h3>
+                    <div class="product-price">₹399</div>
+                    <p class="product-description">Luxury diary with leather cover, perfect for journaling and notes.</p>
+                    <button class="btn" onclick="addToCart('Leather Bound Diary', 399, 'product3')">Add to Cart</button>
                 </div>
             </div>
             
             <!-- Product 4 -->
-            <div class="product-card" data-category="tools">
+            <div class="product-card" data-category="stationery">
                 <div class="product-image-container">
                     <div class="product-image-slider" id="product4-slider">
-                        <img src="https://images.unsplash.com/photo-1572981779307-38b8cabb2407?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cordless Drill Set" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Drill Bits" class="product-image">
-                        <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Drill in Use" class="product-image">
+                        <img src="https://images.unsplash.com/photo-1583484963886-cfe2bff2945f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Pen Set" class="product-image">
+                        <img src="https://images.unsplash.com/photo-1585338109929-db1656f6f6c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Stationery Items" class="product-image">
                     </div>
                     <button class="image-nav prev" onclick="changeImage(-1, 'product4')">
                         <i class="fas fa-chevron-left"></i>
@@ -848,10 +1194,10 @@
                     </button>
                 </div>
                 <div class="product-info">
-                    <h3 class="product-title">Cordless Drill Set</h3>
-                    <div class="product-price">$149.99</div>
-                    <p class="product-description">20V cordless drill driver with 2 batteries, charger, and 30-piece accessory set.</p>
-                    <button class="btn" style="width: 100%; padding: 10px;">Add to Cart</button>
+                    <h3 class="product-title">Premium Pen Set</h3>
+                    <div class="product-price">₹149</div>
+                    <p class="product-description">Set of 5 premium pens with smooth writing experience.</p>
+                    <button class="btn" onclick="addToCart('Premium Pen Set', 149, 'product4')">Add to Cart</button>
                 </div>
             </div>
         </div>
@@ -863,38 +1209,20 @@
         <div class="faq-container">
             <div class="faq-item active">
                 <div class="faq-question">
-                    What is your return policy?
+                    What is your delivery policy?
                     <span class="faq-toggle">+</span>
                 </div>
                 <div class="faq-answer open">
-                    We offer a 30-day return policy for all unused products in original packaging. Return shipping is free for defective items. For change of mind returns, a restocking fee may apply.
+                    We offer free delivery within 5km radius. For areas beyond 5km, delivery charges may apply based on distance. Standard delivery takes 24-48 hours.
                 </div>
             </div>
             <div class="faq-item">
                 <div class="faq-question">
-                    How long does shipping take?
+                    How can I place an order?
                     <span class="faq-toggle">+</span>
                 </div>
                 <div class="faq-answer">
-                    Standard shipping takes 5-7 business days. Express shipping is available for delivery within 2-3 business days. International shipping times vary by destination.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">
-                    Do you offer warranty on products?
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-answer">
-                    Yes, most products come with a 1-year manufacturer warranty. Extended warranty options are available for purchase on select items.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">
-                    Can I track my order?
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-answer">
-                    Yes, once your order is shipped, you will receive a tracking number via email. You can also track your order by logging into your account on our website.
+                    You can order through WhatsApp (7006927825), call us directly, or use the cart system on our website and checkout via WhatsApp.
                 </div>
             </div>
             <div class="faq-item">
@@ -903,7 +1231,25 @@
                     <span class="faq-toggle">+</span>
                 </div>
                 <div class="faq-answer">
-                    Yes, we offer volume discounts for business customers. Please contact our sales team at sales@sarmenterprises.com for custom quotes.
+                    Yes, we offer special discounts for bulk orders (50+ items). Please contact us directly for custom quotes.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    What are your business hours?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    We are available Monday to Saturday: 9:00 AM - 8:00 PM, Sunday: 10:00 AM - 6:00 PM.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can I customize notebooks?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes, we offer customization services for notebooks including custom covers, page count, and paper quality. Minimum order quantity applies.
                 </div>
             </div>
         </div>
@@ -946,17 +1292,67 @@
 
     <!-- About Us Section -->
     <section class="container" id="about">
-        <h2 class="section-title">About SARM Enterprises</h2>
+        <h2 class="section-title">About SARM ENTERPRISES</h2>
         <div class="about-section">
             <div class="about-content">
-                <h3>Your Trusted Partner Since 2010</h3>
-                <p>SARM Enterprises was founded with a vision to provide high-quality products that help businesses and individuals achieve their goals. For over a decade, we've built a reputation for reliability, innovation, and exceptional customer service.</p>
-                <p>Our team of experts carefully selects each product in our catalog, ensuring they meet our strict standards for quality and performance. We partner with leading manufacturers to bring you the best solutions at competitive prices.</p>
-                <p>At SARM Enterprises, we believe in building lasting relationships with our customers. Whether you're a small business looking for office supplies or a homeowner seeking innovative products, we're here to support your journey.</p>
+                <h3>Your Trusted Stationery Partner</h3>
+                <p>SARM ENTERPRISES was established with a vision to provide high-quality notebooks and stationery products to students, professionals, and businesses. We believe that quality writing materials inspire quality thoughts.</p>
+                <p>Our products are carefully selected and designed to meet the diverse needs of our customers. From premium notebooks to office registers, each product is crafted with attention to detail and durability.</p>
+                <p>Based in Kashmir, we understand the importance of reliable stationery in education and business. We're committed to providing excellent customer service and building lasting relationships with our clients.</p>
                 <a href="#contact" class="btn" style="margin-top: 20px;">Contact Us</a>
             </div>
             <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="SARM Enterprises Team">
+                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="SARM ENTERPRISES Store">
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <p class="section-subtitle">Get in touch for orders and inquiries</p>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3><i class="fas fa-map-marker-alt"></i> Our Address</h3>
+                    <p>KAWOOSA KHALISA, NARBAL, BADGAM</p>
+                    <p>Pincode: 193411</p>
+                    
+                    <h3><i class="fas fa-phone"></i> Phone Numbers</h3>
+                    <p>7006927825 / 7006927825</p>
+                    
+                    <h3><i class="fas fa-envelope"></i> Email</h3>
+                    <p>sarmenterprises786@gmail.com</p>
+                    
+                    <h3><i class="fas fa-clock"></i> Business Hours</h3>
+                    <p>Monday - Saturday: 9:00 AM - 8:00 PM</p>
+                    <p>Sunday: 10:00 AM - 6:00 PM</p>
+                </div>
+                
+                <div class="contact-info">
+                    <h3>Order Now</h3>
+                    <div class="contact-buttons">
+                        <a href="https://wa.me/917006927825?text=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
+                           class="btn btn-whatsapp" target="_blank" style="text-align: center;">
+                            <i class="fab fa-whatsapp"></i> Order via WhatsApp
+                        </a>
+                        
+                        <a href="tel:+917006927825" class="btn" style="text-align: center;">
+                            <i class="fas fa-phone"></i> Call Us Now
+                        </a>
+                        
+                        <a href="mailto:sarmenterprises786@gmail.com?subject=Order%20Inquiry&body=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
+                           class="btn" style="text-align: center;">
+                            <i class="fas fa-envelope"></i> Email Us
+                        </a>
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: var(--shadow);">
+                        <i class="fas fa-quote-right" style="color: var(--primary); font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                        <p style="font-style: italic; color: var(--gray);">"Your ideas are precious. We provide the perfect canvas to preserve them."</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -966,13 +1362,14 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h3>SARM Enterprises</h3>
-                    <p>Providing quality products and solutions for over a decade. Your success is our business.</p>
+                    <h3><i class="fas fa-book"></i> SARM ENTERPRISES</h3>
+                    <p>Premium Notebooks & Stationery</p>
+                    <p style="margin-top: 10px; color: #cbd5e1;">Quality Pages for Quality Thoughts</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
                         <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
                 <div class="footer-column">
@@ -981,6 +1378,7 @@
                         <a href="#home">Home</a>
                         <a href="#products">Products</a>
                         <a href="#faq">FAQs</a>
+                        <a href="#feedback">Feedback</a>
                         <a href="#about">About Us</a>
                         <a href="#contact">Contact</a>
                     </div>
@@ -988,15 +1386,15 @@
                 <div class="footer-column">
                     <h3>Contact Info</h3>
                     <div class="contact-info">
-                        <p><i class="fas fa-map-marker-alt"></i> 123 Business Ave, Suite 100, City, State 12345</p>
-                        <p><i class="fas fa-phone"></i> (123) 456-7890</p>
-                        <p><i class="fas fa-envelope"></i> info@sarmenterprises.com</p>
-                        <p><i class="fas fa-clock"></i> Mon-Fri: 9AM-6PM, Sat: 10AM-4PM</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Kawoosa Khalisa, Narbal, Badgam</p>
+                        <p><i class="fas fa-phone"></i> 7006927825</p>
+                        <p><i class="fas fa-envelope"></i> sarmenterprises786@gmail.com</p>
+                        <p><i class="fas fa-clock"></i> Mon-Sat: 9AM-8PM, Sun: 10AM-6PM</p>
                     </div>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 SARM Enterprises. All rights reserved.</p>
+                <p>&copy; 2024 SARM ENTERPRISES. All rights reserved. | Crafted with <i class="fas fa-heart" style="color: #ff6b6b;"></i> in Kashmir</p>
             </div>
         </div>
     </footer>
@@ -1004,6 +1402,12 @@
     <!-- Back to Top Button -->
     <div class="back-to-top" id="backToTop">
         <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span>Product added to cart!</span>
     </div>
 
     <script>
@@ -1042,9 +1446,9 @@
         // Product Image Sliders
         const productSliders = {
             'product1': { currentIndex: 0, totalImages: 3 },
-            'product2': { currentIndex: 0, totalImages: 3 },
-            'product3': { currentIndex: 0, totalImages: 3 },
-            'product4': { currentIndex: 0, totalImages: 3 }
+            'product2': { currentIndex: 0, totalImages: 2 },
+            'product3': { currentIndex: 0, totalImages: 2 },
+            'product4': { currentIndex: 0, totalImages: 2 }
         };
         
         function changeImage(direction, productId) {
@@ -1210,6 +1614,172 @@
                 }
             });
         });
+
+        // Cart System
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartIcon = document.getElementById('cartIcon');
+        const cartCount = document.getElementById('cartCount');
+        const cartSidebar = document.getElementById('cartSidebar');
+        const cartOverlay = document.getElementById('cartOverlay');
+        const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const clearCartBtn = document.getElementById('clearCartBtn');
+        const closeCart = document.querySelector('.close-cart');
+        const notification = document.getElementById('notification');
+
+        // Initialize cart
+        function updateCart() {
+            // Update cart count
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCount.textContent = totalItems;
+            
+            // Update cart sidebar
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
+                cartTotal.textContent = '₹0';
+                checkoutBtn.disabled = true;
+                return;
+            }
+            
+            let itemsHTML = '';
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                itemsHTML += `
+                    <div class="cart-item">
+                        <div class="cart-item-image">
+                            <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="${item.name}">
+                        </div>
+                        <div class="cart-item-details">
+                            <h4>${item.name}</h4>
+                            <div class="cart-item-quantity">
+                                <button onclick="updateQuantity(${index}, -1)">-</button>
+                                <span>${item.quantity}</span>
+                                <button onclick="updateQuantity(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="cart-item-price">
+                            ₹${itemTotal}
+                            <button class="remove-item" onclick="removeFromCart(${index})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartItems.innerHTML = itemsHTML;
+            cartTotal.textContent = `₹${total}`;
+            checkoutBtn.disabled = false;
+            
+            // Save to localStorage
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        // Add to cart function
+        function addToCart(name, price, productId) {
+            const existingItemIndex = cart.findIndex(item => item.id === productId);
+            
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: name,
+                    price: price,
+                    quantity: 1
+                });
+            }
+            
+            updateCart();
+            showNotification('Product added to cart!');
+        }
+
+        // Update quantity
+        function updateQuantity(index, change) {
+            cart[index].quantity += change;
+            
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            
+            updateCart();
+        }
+
+        // Remove from cart
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+            showNotification('Product removed from cart');
+        }
+
+        // Show notification
+        function showNotification(message) {
+            notification.querySelector('span').textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Checkout via WhatsApp
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) return;
+            
+            let message = "Hello SARM ENTERPRISES, I would like to order:\n\n";
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                message += `${index + 1}. ${item.name} - ${item.quantity} x ₹${item.price} = ₹${itemTotal}\n`;
+            });
+            
+            message += `\nTotal: ₹${total}\n\nPlease confirm my order.`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/917006927825?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+            
+            // Close cart sidebar
+            cartSidebar.classList.remove('show');
+            cartOverlay.classList.remove('show');
+        });
+
+        // Clear cart
+        clearCartBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear your cart?')) {
+                cart = [];
+                updateCart();
+                showNotification('Cart cleared');
+            }
+        });
+
+        // Cart sidebar toggle
+        cartIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            cartSidebar.classList.add('show');
+            cartOverlay.classList.add('show');
+        });
+
+        closeCart.addEventListener('click', () => {
+            cartSidebar.classList.remove('show');
+            cartOverlay.classList.remove('show');
+        });
+
+        cartOverlay.addEventListener('click', () => {
+            cartSidebar.classList.remove('show');
+            cartOverlay.classList.remove('show');
+        });
+
+        // Initialize cart on page load
+        document.addEventListener('DOMContentLoaded', updateCart);
     </script>
 </body>
-    </html>
+</html>
