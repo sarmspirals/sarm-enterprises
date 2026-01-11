@@ -84,7 +84,18 @@
             gap: 12px;
         }
 
+        /* Logo Image Styles */
         .logo {
+            height: 45px;
+            width: auto;
+            max-width: 150px;
+            object-fit: contain;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Fallback logo if image doesn't load */
+        .logo-fallback {
             height: 45px;
             width: 45px;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
@@ -295,9 +306,10 @@
             }
         }
 
-        @media (max-width: 480px) {
-            .nav-menu {
-                width: 100%;
+        @media (max-width: 768px) {
+            .logo {
+                height: 40px;
+                max-width: 120px;
             }
             
             .business-name {
@@ -306,6 +318,25 @@
             
             .business-tagline {
                 font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                height: 35px;
+                max-width: 100px;
+            }
+            
+            .nav-menu {
+                width: 100%;
+            }
+            
+            .business-name {
+                font-size: 1.1rem;
+            }
+            
+            .business-tagline {
+                font-size: 0.7rem;
             }
         }
 
@@ -1240,7 +1271,10 @@
     <header>
         <div class="header-container container">
             <div class="logo-container">
-                <div class="logo">S</div>
+                <!-- Logo Image with fallback -->
+                <img src="assets/logo/logo.png" alt="SARM ENTERPRISES Logo" class="logo" 
+                     onerror="this.onerror=null; this.style.display='none'; document.getElementById('logoFallback').style.display='flex';">
+                <div id="logoFallback" class="logo-fallback" style="display: none;">S</div>
                 <div>
                     <div class="business-name">SARM ENTERPRISES</div>
                     <div class="business-tagline">Premium Notebooks & Stationery</div>
