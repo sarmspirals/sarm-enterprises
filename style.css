@@ -1218,13 +1218,13 @@ body {
         font-size: 0.95rem;
     }
     
-    /* Products Grid - STILL 2 COLUMNS ON MOBILE */
+    /* Products Grid - STILL 3 COLUMNS ON MOBILE */
     .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 1rem;
     }
     
-    /* If screen is very small, show 1 column */
+    /* If screen is very small, show 3 column */
     @media screen and (max-width: 360px) {
         .products-grid {
             grid-template-columns: 1fr;
