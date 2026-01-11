@@ -84,7 +84,6 @@
             gap: 12px;
         }
 
-        /* Logo Image Styles */
         .logo {
             height: 45px;
             width: auto;
@@ -94,7 +93,6 @@
             flex-shrink: 0;
         }
 
-        /* Fallback logo if image doesn't load */
         .logo-fallback {
             height: 45px;
             width: 45px;
@@ -121,7 +119,6 @@
             margin-top: 2px;
         }
 
-        /* Navigation Menu */
         .nav-menu {
             display: flex;
             align-items: center;
@@ -162,7 +159,6 @@
             width: 100%;
         }
 
-        /* Cart Icon */
         .cart-icon {
             position: relative;
             display: flex;
@@ -192,7 +188,6 @@
             pointer-events: none;
         }
 
-        /* WhatsApp Order Button */
         .whatsapp-order-btn {
             background-color: var(--whatsapp);
             color: white;
@@ -214,7 +209,6 @@
             transform: translateY(-2px);
         }
 
-        /* Mobile Navigation Toggle */
         .nav-toggle {
             display: none;
             background: none;
@@ -235,7 +229,6 @@
             pointer-events: none;
         }
 
-        /* Mobile Menu Overlay */
         .mobile-menu-overlay {
             position: fixed;
             top: 0;
@@ -369,7 +362,7 @@
             opacity: 0.9;
         }
 
-        /* Quotes Slider */
+        /* Enhanced Quotes Slider */
         .quote-slider {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
@@ -381,6 +374,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+        }
+
+        .quotes-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
         }
 
         .quote {
@@ -391,10 +391,18 @@
             position: absolute;
             transition: opacity 1s ease;
             padding: 0 20px;
+            width: 100%;
+            transform: translateX(100%);
         }
 
         .quote.active {
             opacity: 1;
+            transform: translateX(0);
+        }
+
+        .quote.slide-out {
+            opacity: 0;
+            transform: translateX(-100%);
         }
 
         .quote-author {
@@ -403,6 +411,27 @@
             font-size: 1rem;
             font-weight: 500;
             color: var(--accent);
+        }
+
+        .quote-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .quote-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .quote-dot.active {
+            background: white;
+            transform: scale(1.2);
         }
 
         /* ========== BUTTONS ========== */
@@ -460,7 +489,6 @@
             border-radius: 2px;
         }
 
-        /* Product Filter */
         .filter-container {
             background: white;
             padding: 20px;
@@ -495,7 +523,6 @@
             border-color: var(--primary);
         }
 
-        /* Products Grid */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -872,21 +899,23 @@
             transform: rotate(45deg);
         }
 
-        /* ========== FEEDBACK SECTION ========== */
+        /* ========== ENHANCED FEEDBACK SECTION ========== */
         .feedback-section {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            padding: 50px 20px;
-            border-radius: 12px;
+            background: white;
+            padding: 60px 20px;
             margin-bottom: 60px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
         }
 
         .feedback-form {
             max-width: 600px;
-            margin: 0 auto;
-            background: white;
+            margin: 0 auto 50px;
+            background: #f8fafc;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: var(--shadow);
+            border: 1px solid #e2e8f0;
         }
 
         .form-group {
@@ -936,19 +965,81 @@
             color: var(--accent);
         }
 
-        /* Testimonials Styles */
-        .testimonials-container {
-            max-width: 800px;
-            margin: 40px auto 0;
+        /* Testimonials Slider Container */
+        .testimonials-slider-container {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+            min-height: 300px;
+        }
+
+        .testimonials-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--secondary);
+        }
+
+        /* Testimonials Slider */
+        .testimonials-slider {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .testimonial-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+            position: relative;
+        }
+
+        .testimonial-slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateX(100%);
+            position: absolute;
+            transition: all 0.5s ease-in-out;
+        }
+
+        .testimonial-slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            position: relative;
+        }
+
+        .testimonial-slide.prev {
+            transform: translateX(-100%);
+        }
+
+        .testimonial-slide.next {
+            transform: translateX(100%);
         }
 
         .testimonial-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 800px;
             border-left: 4px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         .testimonial-card h4 {
@@ -956,6 +1047,7 @@
             justify-content: space-between;
             align-items: start;
             margin: 0 0 10px 0;
+            color: var(--secondary);
         }
 
         .testimonial-rating {
@@ -967,12 +1059,155 @@
             font-style: italic;
             color: var(--gray);
             margin: 10px 0;
+            font-size: 1.1rem;
+            line-height: 1.6;
         }
 
         .testimonial-date {
             text-align: right;
             font-size: 0.9rem;
             color: #777;
+            margin-top: 15px;
+        }
+
+        /* Testimonial Navigation */
+        .testimonial-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .testimonial-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            padding: 0;
+        }
+
+        .testimonial-dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .testimonial-nav-arrows {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            padding: 0 10px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .testimonial-arrow {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #e2e8f0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--primary);
+            transition: var(--transition);
+            pointer-events: all;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            touch-action: manipulation;
+        }
+
+        .testimonial-arrow:hover {
+            background: white;
+            color: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .testimonial-arrow:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Slide Counter */
+        .slide-counter {
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        /* Auto-play Controls */
+        .autoplay-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .autoplay-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .toggle-label {
+            cursor: pointer;
+            color: var(--gray);
+            font-size: 0.9rem;
         }
 
         /* ========== CONTACT SECTION ========== */
@@ -1173,6 +1408,20 @@
                 font-size: 1.1rem;
             }
 
+            .testimonial-card {
+                padding: 20px;
+            }
+
+            .testimonial-message {
+                font-size: 1rem;
+            }
+
+            .testimonial-arrow {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
             .filter-options {
                 justify-content: flex-start;
                 overflow-x: auto;
@@ -1195,6 +1444,19 @@
                 width: 100%;
                 right: -100%;
             }
+
+            .testimonials-slider-container {
+                padding: 20px;
+            }
+
+            .testimonial-slide {
+                padding: 15px;
+            }
+
+            .autoplay-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1210,6 +1472,10 @@
                 padding: 20px 15px;
             }
 
+            .testimonial-card {
+                padding: 15px;
+            }
+
             .products-grid {
                 grid-template-columns: 1fr;
             }
@@ -1221,12 +1487,20 @@
             .faq-container, .feedback-form {
                 padding: 20px;
             }
+
+            .feedback-form {
+                padding: 20px 15px;
+            }
+
+            .testimonial-nav-arrows {
+                display: none;
+            }
         }
 
         /* Android-specific fixes */
         @media (hover: none) and (pointer: coarse) {
             button, a, input, select, textarea {
-                font-size: 16px; /* Prevent zoom on focus in iOS */
+                font-size: 16px;
             }
             
             button, .btn, .nav-menu a, .filter-btn, .cart-icon {
@@ -1237,12 +1511,11 @@
                 justify-content: center;
             }
             
-            .image-nav, .cart-item-quantity button {
+            .image-nav, .cart-item-quantity button, .testimonial-arrow {
                 min-height: 40px;
                 min-width: 40px;
             }
             
-            /* Improve touch targets */
             .nav-toggle {
                 min-height: 44px;
                 min-width: 44px;
@@ -1253,16 +1526,46 @@
                 min-width: 44px;
             }
             
-            /* Prevent double-tap zoom */
+            .testimonial-dot {
+                min-height: 15px;
+                min-width: 15px;
+            }
+            
             .btn, .nav-menu a, .filter-btn {
                 touch-action: manipulation;
             }
+
+            /* Improve touch scrolling */
+            .testimonials-slider {
+                -webkit-overflow-scrolling: touch;
+                overflow-x: auto;
+            }
+
+            /* Prevent text selection on swipe */
+            .testimonial-slide {
+                user-select: none;
+                -webkit-user-select: none;
+            }
         }
 
-        /* Prevent horizontal scrolling */
         body, html {
             max-width: 100%;
             overflow-x: hidden;
+        }
+
+        /* Touch swipe indicators */
+        .swipe-hint {
+            display: none;
+            text-align: center;
+            color: var(--gray);
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .swipe-hint {
+                display: block;
+            }
         }
     </style>
 </head>
@@ -1271,7 +1574,6 @@
     <header>
         <div class="header-container container">
             <div class="logo-container">
-                <!-- Logo Image with fallback -->
                 <img src="assets/logo/logo.png" alt="SARM ENTERPRISES Logo" class="logo" 
                      onerror="this.onerror=null; this.style.display='none'; document.getElementById('logoFallback').style.display='flex';">
                 <div id="logoFallback" class="logo-fallback" style="display: none;">S</div>
@@ -1338,22 +1640,17 @@
             <p>Discover our wide range of high-quality notebooks, registers, and stationery products. Perfect for students, professionals, and creative minds.</p>
             <a href="#products" class="btn">Explore Products</a>
             
+            <!-- Enhanced Quotes Slider - Admin controlled -->
             <div class="quote-slider">
-                <div class="quote active" id="quote1">
-                    "Quality is never an accident; it is always the result of intelligent effort."
-                    <span class="quote-author">- John Ruskin</span>
+                <div class="quotes-container" id="quotesContainer">
+                    <!-- Quotes will be loaded dynamically from Firebase -->
+                    <div class="quote active">
+                        "Your ideas deserve the perfect canvas to come alive."
+                        <span class="quote-author">- SARM Enterprises</span>
+                    </div>
                 </div>
-                <div class="quote" id="quote2">
-                    "Writing is the painting of the voice."
-                    <span class="quote-author">- Voltaire</span>
-                </div>
-                <div class="quote" id="quote3">
-                    "A notebook is a writer's best friend and a student's constant companion."
-                    <span class="quote-author">- Unknown</span>
-                </div>
-                <div class="quote" id="quote4">
-                    "Your ideas deserve the perfect canvas to come alive."
-                    <span class="quote-author">- SARM Enterprises</span>
+                <div class="quote-nav" id="quoteNav">
+                    <!-- Navigation dots will be added dynamically -->
                 </div>
             </div>
         </div>
@@ -1456,10 +1753,11 @@
         </div>
     </section>
 
-    <!-- Feedback Section -->
+    <!-- Enhanced Feedback Section -->
     <section class="feedback-section" id="feedback">
         <div class="container">
             <h2 class="section-title">Customer Feedback</h2>
+            
             <div class="feedback-form">
                 <form id="feedbackForm">
                     <div class="form-group">
@@ -1491,20 +1789,50 @@
                 </form>
             </div>
             
-            <!-- Approved Testimonials -->
-            <div class="testimonials-container" id="testimonialsContainer">
-                <h3 style="text-align: center; margin-top: 40px;">What Our Customers Say</h3>
-                <div id="approvedTestimonials">
-                    <div class="testimonial-card">
-                        <h4>Customer Name <span class="testimonial-rating">★★★★★</span></h4>
-                        <p class="testimonial-message">"Excellent quality notebooks! The paper is smooth and doesn't bleed. Delivery was prompt and the service was great."</p>
-                        <p class="testimonial-date"><i class="far fa-calendar"></i> December 15, 2024</p>
+            <!-- Enhanced Testimonials Slider Container -->
+            <div class="testimonials-slider-container">
+                <h3 class="testimonials-title">What Our Customers Say</h3>
+                
+                <div class="testimonials-slider">
+                    <div class="testimonial-nav-arrows">
+                        <button class="testimonial-arrow prev-testimonial" aria-label="Previous testimonial" id="prevTestimonial">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="testimonial-arrow next-testimonial" aria-label="Next testimonial" id="nextTestimonial">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
-                    <div class="testimonial-card">
-                        <h4>Another Customer <span class="testimonial-rating">★★★★☆</span></h4>
-                        <p class="testimonial-message">"Good quality products at reasonable prices. Will definitely order again for our office supplies."</p>
-                        <p class="testimonial-date"><i class="far fa-calendar"></i> December 10, 2024</p>
+                    
+                    <div class="testimonial-track" id="testimonialTrack">
+                        <!-- Testimonials will be loaded dynamically -->
+                        <div class="testimonial-slide active">
+                            <div class="testimonial-card">
+                                <h4>Riyaz Ahmed <span class="testimonial-rating">★★★★★</span></h4>
+                                <p class="testimonial-message">"Excellent quality notebooks! The paper is smooth and doesn't bleed. Delivery was prompt and the service was great. Highly recommended for students!"</p>
+                                <p class="testimonial-date"><i class="far fa-calendar"></i> December 15, 2024</p>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                
+                <div class="testimonial-nav" id="testimonialDots">
+                    <!-- Dots will be added dynamically -->
+                </div>
+                
+                <div class="slide-counter" id="slideCounter">1 / 1</div>
+                
+                <div class="autoplay-controls">
+                    <label class="autoplay-toggle">
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="autoplayToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </div>
+                        <span class="toggle-label">Auto-play testimonials</span>
+                    </label>
+                </div>
+                
+                <div class="swipe-hint">
+                    <i class="fas fa-hand-point-up"></i> Swipe left/right to navigate
                 </div>
             </div>
         </div>
@@ -1614,7 +1942,6 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
         import { getFirestore, collection, getDocs, addDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
@@ -1640,7 +1967,6 @@
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
         const body = document.body;
 
-        // Function to open mobile menu
         function openMobileMenu() {
             navMenu.classList.add('active');
             mobileMenuOverlay.classList.add('show');
@@ -1648,7 +1974,6 @@
             body.style.overflow = 'hidden';
         }
 
-        // Function to close mobile menu
         function closeMobileMenu() {
             navMenu.classList.remove('active');
             mobileMenuOverlay.classList.remove('show');
@@ -1656,7 +1981,6 @@
             body.style.overflow = '';
         }
 
-        // Toggle mobile menu
         function toggleMobileMenu() {
             if (navMenu.classList.contains('active')) {
                 closeMobileMenu();
@@ -1665,37 +1989,30 @@
             }
         }
 
-        // Add event listeners for mobile menu
         navToggle.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             toggleMobileMenu();
         });
 
-        // Also support touch events for Android
         navToggle.addEventListener('touchstart', function(e) {
             e.preventDefault();
             e.stopPropagation();
             toggleMobileMenu();
         });
 
-        // Close menu when clicking overlay
         mobileMenuOverlay.addEventListener('click', closeMobileMenu);
         mobileMenuOverlay.addEventListener('touchstart', closeMobileMenu);
 
-        // Close menu when clicking a link - FIXED FOR ANDROID TAPPING
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', function(e) {
-                // Close mobile menu first
                 closeMobileMenu();
                 
-                // Get target section
                 const targetId = this.getAttribute('href');
                 if (targetId === '#') return;
                 
                 const targetElement = document.querySelector(targetId);
                 if (targetElement) {
-                    // Wait a bit for menu to close, then scroll
                     setTimeout(() => {
                         window.scrollTo({
                             top: targetElement.offsetTop - 80,
@@ -1705,7 +2022,6 @@
                 }
             });
             
-            // Also add touch event for Android
             link.addEventListener('touchstart', function(e) {
                 e.preventDefault();
                 closeMobileMenu();
@@ -1725,7 +2041,6 @@
             });
         });
 
-        // Close menu when clicking outside on mobile
         document.addEventListener('click', function(event) {
             if (navMenu.classList.contains('active') && 
                 !navMenu.contains(event.target) && 
@@ -1734,18 +2049,15 @@
             }
         });
 
-        // Handle Android back button
         window.addEventListener('popstate', function() {
             closeMobileMenu();
         });
 
-        // Prevent default behavior for cart icon in mobile menu
         document.getElementById('cartIcon').addEventListener('click', function(e) {
             if (window.innerWidth <= 992) {
                 e.preventDefault();
                 e.stopPropagation();
                 closeMobileMenu();
-                // Then open cart
                 setTimeout(() => {
                     cartSidebar.classList.add('show');
                     cartOverlay.classList.add('show');
@@ -1753,10 +2065,9 @@
             }
         });
 
-        // ========== CART SYSTEM WITH SESSION CLEANUP ==========
-        // Clear old cart data on page load (session storage instead of local storage)
+        // ========== CART SYSTEM ==========
         sessionStorage.removeItem('cart');
-        localStorage.removeItem('cart'); // Clear old localStorage data
+        localStorage.removeItem('cart');
         
         let cart = [];
         const cartIcon = document.getElementById('cartIcon');
@@ -1770,7 +2081,6 @@
         const closeCart = document.querySelector('.close-cart');
         const notification = document.getElementById('notification');
 
-        // Initialize cart - start fresh every time
         function updateCart() {
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             cartCount.textContent = totalItems;
@@ -1817,11 +2127,9 @@
             cartItems.innerHTML = itemsHTML;
             cartTotal.textContent = `₹${total}`;
             checkoutBtn.disabled = false;
-            // Use sessionStorage instead of localStorage
             sessionStorage.setItem('cart', JSON.stringify(cart));
         }
 
-        // Add to cart function
         window.addToCart = function(productId, productName, price, imageUrl) {
             const existingItemIndex = cart.findIndex(item => item.id === productId);
             
@@ -1841,7 +2149,6 @@
             showNotification(`${productName} added to cart!`);
         };
 
-        // Update quantity
         window.updateQuantity = function(index, change) {
             cart[index].quantity += change;
             
@@ -1852,14 +2159,12 @@
             updateCart();
         };
 
-        // Remove from cart
         window.removeFromCart = function(index) {
             cart.splice(index, 1);
             updateCart();
             showNotification('Product removed from cart');
         };
 
-        // Show notification
         function showNotification(message) {
             notification.querySelector('span').textContent = message;
             notification.classList.add('show');
@@ -1869,7 +2174,6 @@
             }, 3000);
         }
 
-        // Checkout via WhatsApp
         checkoutBtn.addEventListener('click', () => {
             if (cart.length === 0) return;
             
@@ -1889,16 +2193,13 @@
             
             window.open(whatsappUrl, '_blank');
             
-            // Clear cart after checkout
             cart = [];
             updateCart();
             
-            // Close cart sidebar
             cartSidebar.classList.remove('show');
             cartOverlay.classList.remove('show');
         });
 
-        // Clear cart
         clearCartBtn.addEventListener('click', () => {
             if (confirm('Are you sure you want to clear your cart?')) {
                 cart = [];
@@ -1907,7 +2208,6 @@
             }
         });
 
-        // Cart sidebar toggle
         cartIcon.addEventListener('click', (e) => {
             e.preventDefault();
             cartSidebar.classList.add('show');
@@ -1924,21 +2224,416 @@
             cartOverlay.classList.remove('show');
         });
 
-        // ========== PRODUCT LOADING WITH DEFAULT IMAGE ==========
+        // ========== ENHANCED QUOTES SYSTEM ==========
+        let quotes = [];
+        let currentQuoteIndex = 0;
+        let quoteInterval;
+        let quoteDots = [];
+
+        async function loadAdminQuotes() {
+            try {
+                const q = query(
+                    collection(db, "quotes"),
+                    where("isActive", "==", true),
+                    orderBy("order", "asc")
+                );
+                
+                const querySnapshot = await getDocs(q);
+                const quotesContainer = document.getElementById('quotesContainer');
+                const quoteNav = document.getElementById('quoteNav');
+                
+                quotes = [];
+                quotesContainer.innerHTML = '';
+                quoteNav.innerHTML = '';
+                quoteDots = [];
+                
+                if (querySnapshot.empty) {
+                    quotes.push({
+                        text: "Your ideas deserve the perfect canvas to come alive.",
+                        author: "SARM Enterprises"
+                    });
+                    
+                    quotesContainer.innerHTML = `
+                        <div class="quote active">
+                            "${quotes[0].text}"
+                            <span class="quote-author">- ${quotes[0].author}</span>
+                        </div>
+                    `;
+                    
+                    quoteNav.innerHTML = '<span class="quote-dot active"></span>';
+                    return;
+                }
+                
+                let index = 0;
+                querySnapshot.forEach((doc) => {
+                    const quoteData = doc.data();
+                    quotes.push({
+                        text: quoteData.text,
+                        author: quoteData.author
+                    });
+                    
+                    const quoteElement = document.createElement('div');
+                    quoteElement.className = `quote ${index === 0 ? 'active' : ''}`;
+                    quoteElement.innerHTML = `
+                        "${quoteData.text}"
+                        <span class="quote-author">- ${quoteData.author}</span>
+                    `;
+                    quotesContainer.appendChild(quoteElement);
+                    
+                    const dot = document.createElement('span');
+                    dot.className = `quote-dot ${index === 0 ? 'active' : ''}`;
+                    dot.dataset.index = index;
+                    dot.addEventListener('click', () => goToQuote(index));
+                    quoteNav.appendChild(dot);
+                    quoteDots.push(dot);
+                    
+                    index++;
+                });
+                
+                initQuotesSlider();
+                
+            } catch (error) {
+                console.error("Error loading quotes:", error);
+                const quotesContainer = document.getElementById('quotesContainer');
+                quotesContainer.innerHTML = `
+                    <div class="quote active">
+                        "Your ideas deserve the perfect canvas to come alive."
+                        <span class="quote-author">- SARM Enterprises</span>
+                    </div>
+                `;
+                
+                const quoteNav = document.getElementById('quoteNav');
+                quoteNav.innerHTML = '<span class="quote-dot active"></span>';
+            }
+        }
+
+        function goToQuote(index) {
+            if (quotes.length <= 1) return;
+            
+            const quoteElements = document.querySelectorAll('.quote');
+            
+            quoteElements[currentQuoteIndex].classList.remove('active');
+            quoteElements[currentQuoteIndex].classList.add('slide-out');
+            
+            quoteDots[currentQuoteIndex].classList.remove('active');
+            
+            currentQuoteIndex = index;
+            
+            quoteElements[currentQuoteIndex].classList.remove('slide-out');
+            quoteElements[currentQuoteIndex].classList.add('active');
+            
+            quoteDots[currentQuoteIndex].classList.add('active');
+            
+            resetQuoteTimer();
+        }
+
+        function showNextQuote() {
+            if (quotes.length <= 1) return;
+            
+            const quoteElements = document.querySelectorAll('.quote');
+            
+            quoteElements[currentQuoteIndex].classList.remove('active');
+            quoteElements[currentQuoteIndex].classList.add('slide-out');
+            
+            quoteDots[currentQuoteIndex].classList.remove('active');
+            
+            currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+            
+            quoteElements[currentQuoteIndex].classList.remove('slide-out');
+            quoteElements[currentQuoteIndex].classList.add('active');
+            
+            quoteDots[currentQuoteIndex].classList.add('active');
+        }
+
+        function initQuotesSlider() {
+            if (quoteInterval) {
+                clearInterval(quoteInterval);
+            }
+            
+            if (quotes.length > 1) {
+                quoteInterval = setInterval(showNextQuote, 5000);
+            }
+            
+            const quoteSlider = document.querySelector('.quote-slider');
+            quoteSlider.addEventListener('mouseenter', () => {
+                if (quoteInterval) {
+                    clearInterval(quoteInterval);
+                }
+            });
+            
+            quoteSlider.addEventListener('mouseleave', () => {
+                if (quotes.length > 1) {
+                    quoteInterval = setInterval(showNextQuote, 5000);
+                }
+            });
+        }
+
+        function resetQuoteTimer() {
+            if (quoteInterval) {
+                clearInterval(quoteInterval);
+            }
+            
+            if (quotes.length > 1) {
+                quoteInterval = setInterval(showNextQuote, 5000);
+            }
+        }
+
+        // ========== ENHANCED TESTIMONIALS SLIDER ==========
+        let testimonials = [];
+        let currentTestimonialIndex = 0;
+        let testimonialInterval;
+        let autoplayEnabled = true;
+        let testimonialDots = [];
+        let isAnimating = false;
+
+        async function loadApprovedTestimonials() {
+            try {
+                const q = query(
+                    collection(db, "feedback_submissions"),
+                    where("status", "==", "approved"),
+                    orderBy("createdAt", "desc")
+                );
+                
+                const querySnapshot = await getDocs(q);
+                const testimonialTrack = document.getElementById('testimonialTrack');
+                const testimonialDotsContainer = document.getElementById('testimonialDots');
+                
+                testimonials = [];
+                testimonialTrack.innerHTML = '';
+                testimonialDotsContainer.innerHTML = '';
+                testimonialDots = [];
+                
+                if (querySnapshot.empty) {
+                    testimonials.push({
+                        customerName: "Riyaz Ahmed",
+                        rating: 5,
+                        message: "Excellent quality notebooks! The paper is smooth and doesn't bleed. Delivery was prompt and the service was great. Highly recommended for students!",
+                        createdAt: "2024-12-15T00:00:00Z"
+                    });
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        const feedback = doc.data();
+                        testimonials.push({
+                            customerName: feedback.customerName,
+                            rating: feedback.rating,
+                            message: feedback.message,
+                            createdAt: feedback.createdAt
+                        });
+                    });
+                }
+                
+                testimonials.forEach((testimonial, index) => {
+                    const starsHTML = '★'.repeat(testimonial.rating) + '☆'.repeat(5 - testimonial.rating);
+                    const date = new Date(testimonial.createdAt).toLocaleDateString('en-IN');
+                    
+                    const slide = document.createElement('div');
+                    slide.className = `testimonial-slide ${index === 0 ? 'active' : ''}`;
+                    slide.innerHTML = `
+                        <div class="testimonial-card">
+                            <h4>${testimonial.customerName} <span class="testimonial-rating">${starsHTML}</span></h4>
+                            <p class="testimonial-message">"${testimonial.message}"</p>
+                            <p class="testimonial-date"><i class="far fa-calendar"></i> ${date}</p>
+                        </div>
+                    `;
+                    testimonialTrack.appendChild(slide);
+                    
+                    const dot = document.createElement('button');
+                    dot.className = `testimonial-dot ${index === 0 ? 'active' : ''}`;
+                    dot.dataset.index = index;
+                    dot.addEventListener('click', () => goToTestimonial(index));
+                    testimonialDotsContainer.appendChild(dot);
+                    testimonialDots.push(dot);
+                });
+                
+                updateSlideCounter();
+                initTestimonialsSlider();
+                
+            } catch (error) {
+                console.error("Error loading testimonials:", error);
+                const testimonialTrack = document.getElementById('testimonialTrack');
+                testimonialTrack.innerHTML = `
+                    <div class="testimonial-slide active">
+                        <div class="testimonial-card">
+                            <h4>Riyaz Ahmed <span class="testimonial-rating">★★★★★</span></h4>
+                            <p class="testimonial-message">"Excellent quality notebooks! The paper is smooth and doesn't bleed. Delivery was prompt and the service was great. Highly recommended for students!"</p>
+                            <p class="testimonial-date"><i class="far fa-calendar"></i> December 15, 2024</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function goToTestimonial(index) {
+            if (testimonials.length <= 1 || isAnimating) return;
+            
+            isAnimating = true;
+            
+            const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+            const currentSlide = testimonialSlides[currentTestimonialIndex];
+            const targetSlide = testimonialSlides[index];
+            
+            // Remove active class from current slide
+            currentSlide.classList.remove('active');
+            
+            // Add direction classes for animation
+            if (index > currentTestimonialIndex) {
+                currentSlide.classList.add('prev');
+                targetSlide.classList.add('next');
+            } else {
+                currentSlide.classList.add('next');
+                targetSlide.classList.add('prev');
+            }
+            
+            // Update dots
+            testimonialDots[currentTestimonialIndex].classList.remove('active');
+            testimonialDots[index].classList.add('active');
+            
+            // Set new index
+            currentTestimonialIndex = index;
+            
+            // After animation completes, clean up classes
+            setTimeout(() => {
+                currentSlide.classList.remove('prev', 'next');
+                targetSlide.classList.remove('prev', 'next');
+                targetSlide.classList.add('active');
+                isAnimating = false;
+                updateSlideCounter();
+                
+                if (autoplayEnabled) {
+                    resetTestimonialTimer();
+                }
+            }, 500);
+        }
+
+        function showNextTestimonial() {
+            if (testimonials.length <= 1 || isAnimating) return;
+            
+            const nextIndex = (currentTestimonialIndex + 1) % testimonials.length;
+            goToTestimonial(nextIndex);
+        }
+
+        function showPrevTestimonial() {
+            if (testimonials.length <= 1 || isAnimating) return;
+            
+            const prevIndex = (currentTestimonialIndex - 1 + testimonials.length) % testimonials.length;
+            goToTestimonial(prevIndex);
+        }
+
+        function updateSlideCounter() {
+            const slideCounter = document.getElementById('slideCounter');
+            slideCounter.textContent = `${currentTestimonialIndex + 1} / ${testimonials.length}`;
+        }
+
+        function initTestimonialsSlider() {
+            const prevBtn = document.getElementById('prevTestimonial');
+            const nextBtn = document.getElementById('nextTestimonial');
+            const autoplayToggle = document.getElementById('autoplayToggle');
+            const testimonialSlider = document.querySelector('.testimonials-slider');
+            
+            prevBtn.addEventListener('click', () => {
+                showPrevTestimonial();
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                showNextTestimonial();
+            });
+            
+            autoplayToggle.addEventListener('change', function() {
+                autoplayEnabled = this.checked;
+                if (autoplayEnabled) {
+                    startTestimonialTimer();
+                } else {
+                    stopTestimonialTimer();
+                }
+            });
+            
+            testimonialSlider.addEventListener('mouseenter', () => {
+                if (autoplayEnabled) {
+                    stopTestimonialTimer();
+                }
+            });
+            
+            testimonialSlider.addEventListener('mouseleave', () => {
+                if (autoplayEnabled) {
+                    startTestimonialTimer();
+                }
+            });
+            
+            // Touch/swipe support for mobile
+            enableTouchSwipe();
+            
+            if (autoplayEnabled) {
+                startTestimonialTimer();
+            }
+        }
+
+        function startTestimonialTimer() {
+            if (testimonialInterval) {
+                clearInterval(testimonialInterval);
+            }
+            
+            if (testimonials.length > 1) {
+                testimonialInterval = setInterval(showNextTestimonial, 6000);
+            }
+        }
+
+        function stopTestimonialTimer() {
+            if (testimonialInterval) {
+                clearInterval(testimonialInterval);
+            }
+        }
+
+        function resetTestimonialTimer() {
+            stopTestimonialTimer();
+            if (autoplayEnabled) {
+                startTestimonialTimer();
+            }
+        }
+
+        function enableTouchSwipe() {
+            const testimonialSlider = document.querySelector('.testimonials-slider');
+            let startX = 0;
+            let endX = 0;
+            const threshold = 50;
+            
+            testimonialSlider.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                stopTestimonialTimer();
+            });
+            
+            testimonialSlider.addEventListener('touchmove', (e) => {
+                endX = e.touches[0].clientX;
+            });
+            
+            testimonialSlider.addEventListener('touchend', () => {
+                const diffX = startX - endX;
+                
+                if (Math.abs(diffX) > threshold) {
+                    if (diffX > 0) {
+                        showNextTestimonial();
+                    } else {
+                        showPrevTestimonial();
+                    }
+                }
+                
+                if (autoplayEnabled) {
+                    startTestimonialTimer();
+                }
+            });
+        }
+
+        // ========== PRODUCT LOADING ==========
         function getImagePath(filename) {
             if (!filename) return 'assets/products/default.jpg';
             
-            // If it's already a full URL, use it
             if (filename.startsWith('http')) {
                 return filename;
             }
             
-            // If it's already a local path, use it
             if (filename.startsWith('assets/')) {
                 return filename;
             }
             
-            // Otherwise, assume it's a product image in products folder
             return `assets/products/${filename}`;
         }
 
@@ -1946,7 +2641,6 @@
             const images = product.images || [];
             const firstImage = images.length > 0 ? getImagePath(images[0]) : 'assets/products/default.jpg';
             
-            // Format category for display
             const categoryName = product.category ? 
                 product.category.split('-').map(word => 
                     word.charAt(0).toUpperCase() + word.slice(1)
@@ -1993,7 +2687,6 @@
             `;
         }
 
-        // Image slider functionality
         window.changeImage = function(direction, productId, images) {
             const slider = document.getElementById(`${productId}-slider`);
             if (!slider) return;
@@ -2045,7 +2738,6 @@
                 
                 productsContainer.innerHTML = productsHTML;
                 
-                // Create category filter buttons
                 filterOptions.innerHTML = '<button class="filter-btn active" data-filter="all">All Products</button>';
                 categories.forEach(category => {
                     if (category !== 'all') {
@@ -2059,7 +2751,6 @@
                     }
                 });
                 
-                // Add event listeners to filter buttons
                 document.querySelectorAll('.filter-btn').forEach(button => {
                     button.addEventListener('click', () => {
                         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -2092,71 +2783,7 @@
             }
         }
 
-        // ========== FAQ FUNCTIONALITY ==========
-        async function loadFAQs() {
-            try {
-                const q = query(collection(db, "faqs"), orderBy("order", "asc"));
-                const querySnapshot = await getDocs(q);
-                const faqContainer = document.getElementById('faqContainer');
-                
-                if (querySnapshot.empty) {
-                    // Keep the default FAQs if none in database
-                    return;
-                }
-                
-                let faqHTML = '';
-                querySnapshot.forEach((doc, index) => {
-                    const faq = doc.data();
-                    faqHTML += `
-                        <div class="faq-item ${index === 0 ? 'active' : ''}">
-                            <div class="faq-question">
-                                ${faq.question}
-                                <span class="faq-toggle">+</span>
-                            </div>
-                            <div class="faq-answer ${index === 0 ? 'open' : ''}">
-                                ${faq.answer}
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                faqContainer.innerHTML = faqHTML;
-                
-                // Add FAQ toggle functionality
-                document.querySelectorAll('.faq-question').forEach(question => {
-                    question.addEventListener('click', () => {
-                        const item = question.parentElement;
-                        const answer = item.querySelector('.faq-answer');
-                        const toggle = item.querySelector('.faq-toggle');
-                        
-                        // Close all other FAQ items
-                        document.querySelectorAll('.faq-item').forEach(otherItem => {
-                            if (otherItem !== item) {
-                                otherItem.classList.remove('active');
-                                otherItem.querySelector('.faq-answer').classList.remove('open');
-                                otherItem.querySelector('.faq-toggle').textContent = '+';
-                            }
-                        });
-                        
-                        // Toggle current item
-                        item.classList.toggle('active');
-                        if (item.classList.contains('active')) {
-                            answer.classList.add('open');
-                            toggle.textContent = '−';
-                        } else {
-                            answer.classList.remove('open');
-                            toggle.textContent = '+';
-                        }
-                    });
-                });
-                
-            } catch (error) {
-                console.error("Error loading FAQs:", error);
-            }
-        }
-
         // ========== FEEDBACK FUNCTIONALITY ==========
-        // Star rating for feedback
         const stars = document.querySelectorAll('.star');
         const ratingInput = document.getElementById('fbRating');
         
@@ -2174,7 +2801,6 @@
                 });
             });
             
-            // Add hover effect
             star.addEventListener('mouseover', () => {
                 const rating = star.getAttribute('data-rating');
                 
@@ -2200,7 +2826,6 @@
             });
         });
 
-        // Feedback form submission
         const feedbackForm = document.getElementById('feedbackForm');
         
         feedbackForm.addEventListener('submit', async (e) => {
@@ -2217,7 +2842,6 @@
             }
             
             try {
-                // Save to Firestore
                 await addDoc(collection(db, "feedback_submissions"), {
                     customerName: name,
                     email: email,
@@ -2230,7 +2854,6 @@
                 showNotification('Thank you for your feedback! It has been submitted for review.');
                 feedbackForm.reset();
                 
-                // Reset stars
                 stars.forEach(star => star.classList.remove('active'));
                 ratingInput.value = '0';
                 
@@ -2240,72 +2863,77 @@
             }
         });
 
-        // Load approved testimonials
-        async function loadApprovedTestimonials() {
+        // ========== FAQ FUNCTIONALITY ==========
+        async function loadFAQs() {
             try {
-                const q = query(
-                    collection(db, "feedback_submissions"),
-                    where("status", "==", "approved"),
-                    orderBy("createdAt", "desc")
-                );
-                
+                const q = query(collection(db, "faqs"), orderBy("order", "asc"));
                 const querySnapshot = await getDocs(q);
-                const container = document.getElementById('approvedTestimonials');
+                const faqContainer = document.getElementById('faqContainer');
                 
                 if (querySnapshot.empty) {
-                    // Keep the default testimonials if none in database
                     return;
                 }
                 
-                let testimonialsHTML = '';
-                querySnapshot.forEach((doc) => {
-                    const feedback = doc.data();
-                    const starsHTML = '★'.repeat(feedback.rating) + '☆'.repeat(5 - feedback.rating);
-                    const date = new Date(feedback.createdAt).toLocaleDateString('en-IN');
-                    
-                    testimonialsHTML += `
-                        <div class="testimonial-card">
-                            <h4>${feedback.customerName} <span class="testimonial-rating">${starsHTML}</span></h4>
-                            <p class="testimonial-message">"${feedback.message}"</p>
-                            <p class="testimonial-date"><i class="far fa-calendar"></i> ${date}</p>
+                let faqHTML = '';
+                querySnapshot.forEach((doc, index) => {
+                    const faq = doc.data();
+                    faqHTML += `
+                        <div class="faq-item ${index === 0 ? 'active' : ''}">
+                            <div class="faq-question">
+                                ${faq.question}
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer ${index === 0 ? 'open' : ''}">
+                                ${faq.answer}
+                            </div>
                         </div>
                     `;
                 });
                 
-                container.innerHTML = testimonialsHTML;
+                faqContainer.innerHTML = faqHTML;
+                
+                document.querySelectorAll('.faq-question').forEach(question => {
+                    question.addEventListener('click', () => {
+                        const item = question.parentElement;
+                        const answer = item.querySelector('.faq-answer');
+                        const toggle = item.querySelector('.faq-toggle');
+                        
+                        document.querySelectorAll('.faq-item').forEach(otherItem => {
+                            if (otherItem !== item) {
+                                otherItem.classList.remove('active');
+                                otherItem.querySelector('.faq-answer').classList.remove('open');
+                                otherItem.querySelector('.faq-toggle').textContent = '+';
+                            }
+                        });
+                        
+                        item.classList.toggle('active');
+                        if (item.classList.contains('active')) {
+                            answer.classList.add('open');
+                            toggle.textContent = '−';
+                        } else {
+                            answer.classList.remove('open');
+                            toggle.textContent = '+';
+                        }
+                    });
+                });
                 
             } catch (error) {
-                console.error("Error loading testimonials:", error);
+                console.error("Error loading FAQs:", error);
             }
         }
 
         // ========== INITIALIZATION ==========
         document.addEventListener('DOMContentLoaded', () => {
-            // Update cart (starts fresh)
             updateCart();
             
-            // Load products
+            loadAdminQuotes();
+            
             loadProducts();
             
-            // Load FAQs
             loadFAQs();
             
-            // Load testimonials
             loadApprovedTestimonials();
             
-            // Moving Quotes
-            const quotes = document.querySelectorAll('.quote');
-            let currentQuote = 0;
-            
-            function showNextQuote() {
-                quotes[currentQuote].classList.remove('active');
-                currentQuote = (currentQuote + 1) % quotes.length;
-                quotes[currentQuote].classList.add('active');
-            }
-            
-            setInterval(showNextQuote, 5000);
-            
-            // Back to Top Button
             const backToTopButton = document.getElementById('backToTop');
             
             window.addEventListener('scroll', () => {
@@ -2323,7 +2951,6 @@
                 });
             });
             
-            // Smooth Scrolling for non-nav links
             document.querySelectorAll('a[href^="#"]:not(.nav-link)').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -2341,7 +2968,6 @@
                 });
             });
 
-            // Prevent cart icon from causing navigation issues
             document.getElementById('cartIcon').addEventListener('click', (e) => {
                 e.preventDefault();
             });
