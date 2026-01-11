@@ -84,21 +84,19 @@
             gap: 12px;
         }
 
-        .logo-wrapper {
-    height: 45px;
-    width: 45px; /* Fixed square container */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.logo {
-    max-height: 100%;
-    max-width: 100%;
-    object-fit: contain;
-    border-radius: 8px;
-}
+        .logo {
+            height: 45px;
+            width: 45px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
 
         .business-name {
             font-size: 1.5rem;
@@ -1242,7 +1240,7 @@
     <header>
         <div class="header-container container">
             <div class="logo-container">
-                <img src="assets/logo/logo.png" alt="SARM ENTERPRISES Logo" class="logo-img">
+                <div class="logo">S</div>
                 <div>
                     <div class="business-name">SARM ENTERPRISES</div>
                     <div class="business-tagline">Premium Notebooks & Stationery</div>
