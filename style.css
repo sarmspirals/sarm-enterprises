@@ -1218,7 +1218,7 @@ body {
         font-size: 0.95rem;
     }
     
-    /* Products Grid - STILL 3 COLUMNS ON MOBILE */
+    /* Products Grid - STILL 2 COLUMNS ON MOBILE */
     .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 1rem;
