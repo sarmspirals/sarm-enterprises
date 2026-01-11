@@ -1286,12 +1286,12 @@
             </button>
             
             <nav class="nav-menu" id="navMenu">
-                <a href="#home"><i class="fas fa-home"></i> Home</a>
-                <a href="#products"><i class="fas fa-book"></i> Products</a>
-                <a href="#features"><i class="fas fa-star"></i> Features</a>
-                <a href="#faq"><i class="fas fa-question-circle"></i> FAQ</a>
-                <a href="#feedback"><i class="fas fa-comment-dots"></i> Feedback</a>
-                <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
+                <a href="#home" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="#products" class="nav-link"><i class="fas fa-book"></i> Products</a>
+                <a href="#features" class="nav-link"><i class="fas fa-star"></i> Features</a>
+                <a href="#faq" class="nav-link"><i class="fas fa-question-circle"></i> FAQ</a>
+                <a href="#feedback" class="nav-link"><i class="fas fa-comment-dots"></i> Feedback</a>
+                <a href="#contact" class="nav-link"><i class="fas fa-phone"></i> Contact</a>
                 <button class="cart-icon" id="cartIcon" aria-label="Open cart">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
@@ -1634,7 +1634,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ========== MOBILE MENU FIXES FOR ANDROID ==========
+        // ========== MOBILE NAVIGATION FIX ==========
         const navToggle = document.getElementById('navToggle');
         const navMenu = document.getElementById('navMenu');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -1665,7 +1665,7 @@
             }
         }
 
-        // Add event listeners for mobile menu - FIXED FOR ANDROID
+        // Add event listeners for mobile menu
         navToggle.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -1683,10 +1683,46 @@
         mobileMenuOverlay.addEventListener('click', closeMobileMenu);
         mobileMenuOverlay.addEventListener('touchstart', closeMobileMenu);
 
-        // Close menu when clicking a link
-        document.querySelectorAll('.nav-menu a').forEach(link => {
-            link.addEventListener('click', closeMobileMenu);
-            link.addEventListener('touchstart', closeMobileMenu);
+        // Close menu when clicking a link - FIXED FOR ANDROID TAPPING
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Close mobile menu first
+                closeMobileMenu();
+                
+                // Get target section
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // Wait a bit for menu to close, then scroll
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }, 300);
+                }
+            });
+            
+            // Also add touch event for Android
+            link.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                closeMobileMenu();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }, 300);
+                }
+            });
         });
 
         // Close menu when clicking outside on mobile
@@ -1717,8 +1753,12 @@
             }
         });
 
-        // ========== CART SYSTEM ==========
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        // ========== CART SYSTEM WITH SESSION CLEANUP ==========
+        // Clear old cart data on page load (session storage instead of local storage)
+        sessionStorage.removeItem('cart');
+        localStorage.removeItem('cart'); // Clear old localStorage data
+        
+        let cart = [];
         const cartIcon = document.getElementById('cartIcon');
         const cartCount = document.getElementById('cartCount');
         const cartSidebar = document.getElementById('cartSidebar');
@@ -1730,7 +1770,7 @@
         const closeCart = document.querySelector('.close-cart');
         const notification = document.getElementById('notification');
 
-        // Initialize cart
+        // Initialize cart - start fresh every time
         function updateCart() {
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             cartCount.textContent = totalItems;
@@ -1752,9 +1792,9 @@
                 itemsHTML += `
                     <div class="cart-item">
                         <div class="cart-item-image">
-                            <img src="${item.image || 'https://via.placeholder.com/70x70?text=Notebook'}" 
+                            <img src="${item.image || 'assets/products/default.jpg'}" 
                                  alt="${item.name}"
-                                 onerror="this.src='https://via.placeholder.com/70x70?text=Notebook'">
+                                 onerror="this.onerror=null; this.src='assets/products/default.jpg';">
                         </div>
                         <div class="cart-item-details">
                             <h4>${item.name}</h4>
@@ -1777,7 +1817,8 @@
             cartItems.innerHTML = itemsHTML;
             cartTotal.textContent = `₹${total}`;
             checkoutBtn.disabled = false;
-            localStorage.setItem('cart', JSON.stringify(cart));
+            // Use sessionStorage instead of localStorage
+            sessionStorage.setItem('cart', JSON.stringify(cart));
         }
 
         // Add to cart function
@@ -1848,6 +1889,10 @@
             
             window.open(whatsappUrl, '_blank');
             
+            // Clear cart after checkout
+            cart = [];
+            updateCart();
+            
             // Close cart sidebar
             cartSidebar.classList.remove('show');
             cartOverlay.classList.remove('show');
@@ -1879,24 +1924,27 @@
             cartOverlay.classList.remove('show');
         });
 
-        // ========== PRODUCT LOADING ==========
+        // ========== PRODUCT LOADING WITH DEFAULT IMAGE ==========
         function getImagePath(filename) {
-            if (!filename) return 'https://via.placeholder.com/300x300?text=No+Image';
+            if (!filename) return 'assets/products/default.jpg';
             
-            if (filename.startsWith('http') || filename.includes('via.placeholder.com')) {
+            // If it's already a full URL, use it
+            if (filename.startsWith('http')) {
                 return filename;
             }
             
-            if (filename.startsWith('assets/products/')) {
+            // If it's already a local path, use it
+            if (filename.startsWith('assets/')) {
                 return filename;
             }
             
+            // Otherwise, assume it's a product image in products folder
             return `assets/products/${filename}`;
         }
 
         function createProductCard(product, id) {
             const images = product.images || [];
-            const firstImage = images.length > 0 ? getImagePath(images[0]) : 'https://via.placeholder.com/300x300?text=Notebook';
+            const firstImage = images.length > 0 ? getImagePath(images[0]) : 'assets/products/default.jpg';
             
             // Format category for display
             const categoryName = product.category ? 
@@ -1912,8 +1960,13 @@
                                 <img src="${getImagePath(img)}" 
                                      alt="${product.name}" 
                                      class="product-image"
-                                     onerror="this.onerror=null; this.src='https://via.placeholder.com/300x300?text=Image+${index + 1}'">
+                                     onerror="this.onerror=null; this.src='assets/products/default.jpg';">
                             `).join('')}
+                            ${images.length === 0 ? `
+                                <img src="assets/products/default.jpg" 
+                                     alt="${product.name}" 
+                                     class="product-image">
+                            ` : ''}
                         </div>
                         ${images.length > 1 ? `
                             <button class="image-nav prev" onclick="changeImage(-1, '${id}', ${JSON.stringify(images).replace(/"/g, '&quot;')})">
@@ -2228,7 +2281,7 @@
 
         // ========== INITIALIZATION ==========
         document.addEventListener('DOMContentLoaded', () => {
-            // Update cart
+            // Update cart (starts fresh)
             updateCart();
             
             // Load products
@@ -2270,8 +2323,8 @@
                 });
             });
             
-            // Smooth Scrolling
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            // Smooth Scrolling for non-nav links
+            document.querySelectorAll('a[href^="#"]:not(.nav-link)').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
                     
@@ -2280,9 +2333,6 @@
                     
                     const targetElement = document.querySelector(targetId);
                     if (targetElement) {
-                        // Close mobile menu if open
-                        closeMobileMenu();
-                        
                         window.scrollTo({
                             top: targetElement.offsetTop - 80,
                             behavior: 'smooth'
