@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SARM ENTERPRISES - Premium Notebooks & Stationery</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
@@ -26,6 +26,13 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
         }
 
         body {
@@ -34,6 +41,7 @@
             color: #333;
             background-color: #f9fafb;
             overflow-x: hidden;
+            touch-action: manipulation;
         }
 
         h1, h2, h3, h4, h5 {
@@ -57,6 +65,9 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            width: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
         }
 
         .header-container {
@@ -64,6 +75,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 20px;
+            position: relative;
         }
 
         .logo-container {
@@ -83,6 +95,7 @@
             color: white;
             font-weight: 700;
             font-size: 22px;
+            flex-shrink: 0;
         }
 
         .business-name {
@@ -102,6 +115,7 @@
             display: flex;
             align-items: center;
             gap: 25px;
+            transition: var(--transition);
         }
 
         .nav-menu a {
@@ -114,6 +128,8 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            padding: 5px 0;
+            white-space: nowrap;
         }
 
         .nav-menu a:hover {
@@ -142,6 +158,10 @@
             align-items: center;
             text-decoration: none;
             color: inherit;
+            padding: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
 
         .cart-count {
@@ -158,6 +178,7 @@
             align-items: center;
             justify-content: center;
             font-weight: 600;
+            pointer-events: none;
         }
 
         /* WhatsApp Order Button */
@@ -174,6 +195,7 @@
             gap: 8px;
             transition: var(--transition);
             box-shadow: 0 4px 6px rgba(37, 211, 102, 0.25);
+            white-space: nowrap;
         }
 
         .whatsapp-order-btn:hover {
@@ -181,14 +203,110 @@
             transform: translateY(-2px);
         }
 
-        /* Mobile Navigation Toggle */
+        /* Mobile Navigation Toggle - FIXED FOR ANDROID */
         .nav-toggle {
             display: none;
-            font-size: 1.5rem;
             background: none;
             border: none;
             color: var(--primary);
             cursor: pointer;
+            padding: 10px;
+            z-index: 1002;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+        }
+
+        .nav-toggle i {
+            font-size: 1.5rem;
+            pointer-events: none;
+        }
+
+        /* Mobile Menu Overlay */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .mobile-menu-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ========== RESPONSIVE STYLES ========== */
+        @media (max-width: 992px) {
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 300px;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                padding: 80px 30px 30px;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+                transition: right 0.3s ease;
+                z-index: 1001;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .nav-menu a {
+                width: 100%;
+                padding: 15px 0;
+                font-size: 1.1rem;
+                border-bottom: 1px solid #f0f0f0;
+                justify-content: flex-start;
+            }
+
+            .nav-menu a:last-child {
+                border-bottom: none;
+            }
+
+            .whatsapp-order-btn {
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+                padding: 12px 20px;
+            }
+
+            .nav-toggle {
+                display: flex;
+                position: relative;
+                z-index: 1002;
+            }
+
+            .header-container {
+                padding: 12px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-menu {
+                width: 100%;
+            }
+            
+            .business-name {
+                font-size: 1.2rem;
+            }
+            
+            .business-tagline {
+                font-size: 0.75rem;
+            }
         }
 
         /* ========== HERO SECTION ========== */
@@ -200,6 +318,7 @@
             padding: 80px 20px;
             text-align: center;
             position: relative;
+            margin-top: 0;
         }
 
         .hero-content {
@@ -269,6 +388,12 @@
             cursor: pointer;
             transition: var(--transition);
             box-shadow: 0 4px 6px rgba(16, 185, 129, 0.25);
+            min-height: 44px;
+            min-width: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
         }
 
         .btn:hover {
@@ -328,6 +453,9 @@
             cursor: pointer;
             transition: var(--transition);
             font-weight: 500;
+            min-height: 36px;
+            min-width: 36px;
+            touch-action: manipulation;
         }
 
         .filter-btn.active, .filter-btn:hover {
@@ -399,6 +527,8 @@
             font-size: 1.2rem;
             transition: var(--transition);
             opacity: 0;
+            min-height: 40px;
+            min-width: 40px;
         }
 
         .product-image-container:hover .image-nav {
@@ -444,12 +574,12 @@
         .cart-sidebar {
             position: fixed;
             top: 0;
-            right: -400px;
+            right: -100%;
             width: 380px;
             height: 100%;
             background: white;
             box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-            z-index: 1001;
+            z-index: 1100;
             transition: right 0.3s ease;
             display: flex;
             flex-direction: column;
@@ -465,12 +595,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: #f8f9fa;
         }
         
         .cart-items {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
+            -webkit-overflow-scrolling: touch;
         }
         
         .cart-item {
@@ -478,12 +610,12 @@
             align-items: center;
             padding: 15px 0;
             border-bottom: 1px solid #f5f5f5;
+            gap: 15px;
         }
         
         .cart-item-image {
             width: 70px;
             height: 70px;
-            margin-right: 15px;
             flex-shrink: 0;
         }
         
@@ -529,6 +661,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 25px;
+            min-width: 25px;
         }
         
         .cart-item-quantity span {
@@ -554,11 +688,14 @@
             margin-top: 5px;
             font-size: 12px;
             padding: 0;
+            min-height: 20px;
+            min-width: 20px;
         }
         
         .cart-footer {
             padding: 20px;
             border-top: 1px solid #eee;
+            background: #f8f9fa;
         }
         
         .cart-total {
@@ -567,6 +704,8 @@
             font-size: 18px;
             font-weight: 600;
             margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 2px solid var(--primary);
         }
         
         .cart-overlay {
@@ -576,7 +715,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
-            z-index: 1000;
+            z-index: 1099;
             display: none;
         }
         
@@ -596,6 +735,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 30px;
+            min-width: 30px;
         }
         
         .empty-cart {
@@ -625,51 +766,6 @@
 
         .btn-checkout.whatsapp:hover {
             background-color: #128C7E;
-        }
-
-        /* ========== FAQ SECTION ========== */
-        .faq-container {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            margin-bottom: 60px;
-        }
-
-        .faq-item {
-            border-bottom: 1px solid #e2e8f0;
-            padding: 20px 0;
-        }
-
-        .faq-question {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            padding-top: 0;
-            color: var(--gray);
-        }
-
-        .faq-answer.open {
-            max-height: 500px;
-            padding-top: 15px;
-        }
-
-        .faq-toggle {
-            color: var(--primary);
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .faq-item.active .faq-toggle {
-            transform: rotate(45deg);
         }
 
         /* ========== FEATURES SECTION ========== */
@@ -832,6 +928,8 @@
             transition: var(--transition);
             box-shadow: var(--shadow);
             z-index: 999;
+            min-height: 50px;
+            min-width: 50px;
         }
 
         .back-to-top.show {
@@ -855,36 +953,17 @@
             transition: transform 0.3s ease;
             z-index: 1001;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 300px;
         }
         
         .notification.show {
             transform: translateX(0);
         }
 
-        /* ========== MOBILE RESPONSIVENESS ========== */
+        /* ========== RESPONSIVE ADJUSTMENTS ========== */
         @media (max-width: 768px) {
-            .nav-toggle {
-                display: block;
-            }
-
-            .nav-menu {
-                position: fixed;
-                top: 80px;
-                left: 0;
-                width: 100%;
-                background: white;
-                flex-direction: column;
-                padding: 20px;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-                transform: translateY(-100%);
-                opacity: 0;
-                transition: var(--transition);
-                z-index: 999;
-            }
-
-            .nav-menu.active {
-                transform: translateY(0);
-                opacity: 1;
+            .hero {
+                padding: 100px 20px 60px;
             }
 
             .hero h1 {
@@ -899,6 +978,7 @@
                 justify-content: flex-start;
                 overflow-x: auto;
                 padding-bottom: 10px;
+                -webkit-overflow-scrolling: touch;
             }
 
             .filter-btn {
@@ -909,19 +989,19 @@
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
 
-            .about-section, .footer-content {
+            .footer-content {
                 flex-direction: column;
             }
 
             .cart-sidebar {
                 width: 100%;
-                right: -100%;
+                max-width: 100%;
             }
         }
 
         @media (max-width: 480px) {
             .hero {
-                padding: 60px 15px;
+                padding: 80px 15px 40px;
             }
 
             .hero h1 {
@@ -940,9 +1020,54 @@
                 max-width: 100%;
             }
 
-            .faq-container, .feedback-form {
-                padding: 20px;
+            .notification {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: none;
             }
+        }
+
+        /* Android-specific fixes */
+        @media (hover: none) and (pointer: coarse) {
+            button, a, input, select, textarea {
+                font-size: 16px; /* Prevent zoom on focus in iOS */
+            }
+            
+            button, .btn, .nav-menu a, .filter-btn, .cart-icon {
+                min-height: 44px;
+                min-width: 44px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .image-nav, .cart-item-quantity button {
+                min-height: 40px;
+                min-width: 40px;
+            }
+            
+            /* Improve touch targets */
+            .nav-toggle {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            .cart-icon {
+                min-height: 44px;
+                min-width: 44px;
+            }
+            
+            /* Prevent double-tap zoom */
+            .btn, .nav-menu a, .filter-btn {
+                touch-action: manipulation;
+            }
+        }
+
+        /* Prevent horizontal scrolling */
+        body, html {
+            max-width: 100%;
+            overflow-x: hidden;
         }
     </style>
 </head>
@@ -958,33 +1083,35 @@
                 </div>
             </div>
             
-            <button class="nav-toggle" id="navToggle">
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
             
             <nav class="nav-menu" id="navMenu">
                 <a href="#home"><i class="fas fa-home"></i> Home</a>
                 <a href="#products"><i class="fas fa-book"></i> Products</a>
-                <a href="#faq"><i class="fas fa-question-circle"></i> FAQ</a>
                 <a href="#features"><i class="fas fa-star"></i> Features</a>
                 <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
-                <a href="#" id="cartIcon" class="cart-icon">
+                <button class="cart-icon" id="cartIcon" aria-label="Open cart">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
-                </a>
+                </button>
                 <a href="https://wa.me/917006927825?text=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
-                   class="whatsapp-order-btn" target="_blank">
+                   class="whatsapp-order-btn" target="_blank" rel="noopener">
                     <i class="fab fa-whatsapp"></i> Order via WhatsApp
                 </a>
             </nav>
         </div>
     </header>
 
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
     <!-- Cart Sidebar -->
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
             <h3><i class="fas fa-shopping-cart"></i> Your Cart</h3>
-            <button class="close-cart">&times;</button>
+            <button class="close-cart" aria-label="Close cart">&times;</button>
         </div>
         <div class="cart-items" id="cartItems">
             <p class="empty-cart">Your cart is empty</p>
@@ -1077,14 +1204,6 @@
         </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section class="container" id="faq">
-        <h2 class="section-title">Frequently Asked Questions</h2>
-        <div class="faq-container" id="faqContainer">
-            <!-- FAQs will be loaded dynamically -->
-        </div>
-    </section>
-
     <!-- Contact Section -->
     <section class="contact-section" id="contact">
         <div class="container">
@@ -1112,7 +1231,7 @@
                     <h3>Order Now</h3>
                     <div class="contact-buttons">
                         <a href="https://wa.me/917006927825?text=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
-                           class="btn btn-whatsapp" target="_blank" style="text-align: center;">
+                           class="btn btn-whatsapp" target="_blank" rel="noopener" style="text-align: center;">
                             <i class="fab fa-whatsapp"></i> Order via WhatsApp
                         </a>
                         
@@ -1144,10 +1263,10 @@
                     <p>Premium Notebooks & Stationery</p>
                     <p style="margin-top: 10px; color: #cbd5e1;">Quality Pages for Quality Thoughts</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
                 <div class="footer-column">
@@ -1155,7 +1274,6 @@
                     <div class="footer-links">
                         <a href="#home">Home</a>
                         <a href="#products">Products</a>
-                        <a href="#faq">FAQs</a>
                         <a href="#features">Features</a>
                         <a href="#contact">Contact</a>
                     </div>
@@ -1177,7 +1295,7 @@
     </footer>
 
     <!-- Back to Top Button -->
-    <div class="back-to-top" id="backToTop">
+    <div class="back-to-top" id="backToTop" aria-label="Back to top">
         <i class="fas fa-chevron-up"></i>
     </div>
 
@@ -1207,6 +1325,89 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        // ========== MOBILE MENU FIXES FOR ANDROID ==========
+        const navToggle = document.getElementById('navToggle');
+        const navMenu = document.getElementById('navMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const body = document.body;
+
+        // Function to open mobile menu
+        function openMobileMenu() {
+            navMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('show');
+            navToggle.innerHTML = '<i class="fas fa-times"></i>';
+            body.style.overflow = 'hidden';
+        }
+
+        // Function to close mobile menu
+        function closeMobileMenu() {
+            navMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('show');
+            navToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            body.style.overflow = '';
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            if (navMenu.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        }
+
+        // Add event listeners for mobile menu - FIXED FOR ANDROID
+        navToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMobileMenu();
+        });
+
+        // Also support touch events for Android
+        navToggle.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMobileMenu();
+        });
+
+        // Close menu when clicking overlay
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        mobileMenuOverlay.addEventListener('touchstart', closeMobileMenu);
+
+        // Close menu when clicking a link
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+            link.addEventListener('touchstart', closeMobileMenu);
+        });
+
+        // Close menu when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (navMenu.classList.contains('active') && 
+                !navMenu.contains(event.target) && 
+                !navToggle.contains(event.target)) {
+                closeMobileMenu();
+            }
+        });
+
+        // Handle Android back button
+        window.addEventListener('popstate', function() {
+            closeMobileMenu();
+        });
+
+        // Prevent default behavior for cart icon in mobile menu
+        document.getElementById('cartIcon').addEventListener('click', function(e) {
+            if (window.innerWidth <= 992) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeMobileMenu();
+                // Then open cart
+                setTimeout(() => {
+                    cartSidebar.classList.add('show');
+                    cartOverlay.classList.add('show');
+                }, 300);
+            }
+        });
 
         // ========== CART SYSTEM ==========
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -1423,7 +1624,7 @@
                             Add to Cart
                         </button>
                         <a href="https://wa.me/917006927825?text=${encodeURIComponent(`Hello SARM ENTERPRISES, I would like to order ${product.name} - ₹${product.price}`)}" 
-                           class="btn btn-whatsapp" target="_blank" style="margin-top: 10px; display: block; text-align: center;">
+                           class="btn btn-whatsapp" target="_blank" rel="noopener" style="margin-top: 10px; display: block; text-align: center;">
                             <i class="fab fa-whatsapp"></i> Order via WhatsApp
                         </a>
                     </div>
@@ -1530,76 +1731,6 @@
             }
         }
 
-        // ========== FAQ LOADING ==========
-        async function loadFAQs() {
-            try {
-                const q = query(collection(db, "faqs"), orderBy("order", "asc"));
-                const querySnapshot = await getDocs(q);
-                const faqContainer = document.getElementById('faqContainer');
-                
-                if (querySnapshot.empty) {
-                    faqContainer.innerHTML = `
-                        <div class="faq-item active">
-                            <div class="faq-question">
-                                What is your delivery policy?
-                                <span class="faq-toggle">+</span>
-                            </div>
-                            <div class="faq-answer open">
-                                We offer free delivery within 5km radius. For areas beyond 5km, delivery charges may apply based on distance.
-                            </div>
-                        </div>
-                        <div class="faq-item">
-                            <div class="faq-question">
-                                How can I place an order?
-                                <span class="faq-toggle">+</span>
-                            </div>
-                            <div class="faq-answer">
-                                You can order through WhatsApp (7006927825), call us directly, or use the cart system on our website.
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    let faqHTML = '';
-                    querySnapshot.forEach((doc, index) => {
-                        const faq = doc.data();
-                        faqHTML += `
-                            <div class="faq-item ${index === 0 ? 'active' : ''}">
-                                <div class="faq-question">
-                                    ${faq.question}
-                                    <span class="faq-toggle">+</span>
-                                </div>
-                                <div class="faq-answer ${index === 0 ? 'open' : ''}">
-                                    ${faq.answer}
-                                </div>
-                            </div>
-                        `;
-                    });
-                    faqContainer.innerHTML = faqHTML;
-                }
-                
-                // Add FAQ toggle functionality
-                document.querySelectorAll('.faq-question').forEach(question => {
-                    question.addEventListener('click', () => {
-                        const item = question.parentElement;
-                        const answer = item.querySelector('.faq-answer');
-                        const toggle = item.querySelector('.faq-toggle');
-                        
-                        item.classList.toggle('active');
-                        if (item.classList.contains('active')) {
-                            answer.classList.add('open');
-                            toggle.textContent = '−';
-                        } else {
-                            answer.classList.remove('open');
-                            toggle.textContent = '+';
-                        }
-                    });
-                });
-                
-            } catch (error) {
-                console.error("Error loading FAQs:", error);
-            }
-        }
-
         // ========== INITIALIZATION ==========
         document.addEventListener('DOMContentLoaded', () => {
             // Update cart
@@ -1607,30 +1738,6 @@
             
             // Load products
             loadProducts();
-            
-            // Load FAQs
-            loadFAQs();
-            
-            // Mobile Navigation Toggle
-            const navToggle = document.getElementById('navToggle');
-            const navMenu = document.getElementById('navMenu');
-            
-            navToggle.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-                navToggle.innerHTML = navMenu.classList.contains('active') 
-                    ? '<i class="fas fa-times"></i>' 
-                    : '<i class="fas fa-bars"></i>';
-            });
-            
-            // Close mobile menu when clicking on a link
-            document.querySelectorAll('.nav-menu a').forEach(link => {
-                link.addEventListener('click', () => {
-                    if (link.id !== 'cartIcon') {
-                        navMenu.classList.remove('active');
-                        navToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                    }
-                });
-            });
             
             // Moving Quotes
             const quotes = document.querySelectorAll('.quote');
@@ -1672,12 +1779,20 @@
                     
                     const targetElement = document.querySelector(targetId);
                     if (targetElement) {
+                        // Close mobile menu if open
+                        closeMobileMenu();
+                        
                         window.scrollTo({
                             top: targetElement.offsetTop - 80,
                             behavior: 'smooth'
                         });
                     }
                 });
+            });
+
+            // Prevent cart icon from causing navigation issues
+            document.getElementById('cartIcon').addEventListener('click', (e) => {
+                e.preventDefault();
             });
         });
     </script>
