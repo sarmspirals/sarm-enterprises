@@ -936,19 +936,42 @@
             color: var(--accent);
         }
 
-        /* Testimonials Styles */
-        .testimonials-container {
+        /* Testimonials Slider Styles */
+        .testimonials-slider-container {
             max-width: 800px;
             margin: 40px auto 0;
+            position: relative;
+        }
+
+        .testimonials-slider {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            position: relative;
+            min-height: 200px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+
+        .testimonial-slide {
+            opacity: 0;
+            position: absolute;
+            transition: opacity 1s ease;
+            padding: 0 10px;
+            width: 100%;
+        }
+
+        .testimonial-slide.active {
+            opacity: 1;
         }
 
         .testimonial-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: var(--shadow);
-            border-left: 4px solid var(--primary);
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            margin: 0;
+            box-shadow: none;
+            border-left: none;
         }
 
         .testimonial-card h4 {
@@ -967,12 +990,69 @@
             font-style: italic;
             color: var(--gray);
             margin: 10px 0;
+            font-size: 1.1rem;
+            line-height: 1.6;
         }
 
         .testimonial-date {
             text-align: right;
             font-size: 0.9rem;
             color: #777;
+        }
+
+        /* Testimonial Navigation */
+        .testimonial-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .testimonial-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .testimonial-dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+
+        .testimonial-nav-arrows {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .testimonial-arrow {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--primary);
+            transition: var(--transition);
+            pointer-events: all;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .testimonial-arrow:hover {
+            background: white;
+            color: var(--primary-dark);
+            transform: scale(1.1);
         }
 
         /* ========== CONTACT SECTION ========== */
@@ -1173,6 +1253,16 @@
                 font-size: 1.1rem;
             }
 
+            .testimonial-message {
+                font-size: 1rem;
+            }
+
+            .testimonial-arrow {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+
             .filter-options {
                 justify-content: flex-start;
                 overflow-x: auto;
@@ -1210,6 +1300,14 @@
                 padding: 20px 15px;
             }
 
+            .testimonials-slider {
+                padding: 20px;
+            }
+
+            .testimonial-nav-arrows {
+                display: none; /* Hide arrows on very small screens */
+            }
+
             .products-grid {
                 grid-template-columns: 1fr;
             }
@@ -1237,7 +1335,7 @@
                 justify-content: center;
             }
             
-            .image-nav, .cart-item-quantity button {
+            .image-nav, .cart-item-quantity button, .testimonial-arrow {
                 min-height: 40px;
                 min-width: 40px;
             }
@@ -1251,6 +1349,11 @@
             .cart-icon {
                 min-height: 44px;
                 min-width: 44px;
+            }
+            
+            .testimonial-dot {
+                min-height: 15px;
+                min-width: 15px;
             }
             
             /* Prevent double-tap zoom */
@@ -1491,19 +1594,50 @@
                 </form>
             </div>
             
-            <!-- Approved Testimonials -->
-            <div class="testimonials-container" id="testimonialsContainer">
-                <h3 style="text-align: center; margin-top: 40px;">What Our Customers Say</h3>
-                <div id="approvedTestimonials">
-                    <div class="testimonial-card">
-                        <h4>Customer Name <span class="testimonial-rating">★★★★★</span></h4>
-                        <p class="testimonial-message">"Excellent quality notebooks! The paper is smooth and doesn't bleed. Delivery was prompt and the service was great."</p>
-                        <p class="testimonial-date"><i class="far fa-calendar"></i> December 15, 2024</p>
+            <!-- Testimonials Slider -->
+            <div class="testimonials-slider-container">
+                <h3 style="text-align: center; margin-top: 40px; margin-bottom: 30px;">What Our Customers Say</h3>
+                
+                <div class="testimonials-slider">
+                    <div class="testimonial-nav-arrows">
+                        <button class="testimonial-arrow prev-testimonial" aria-label="Previous testimonial">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="testimonial-arrow next-testimonial" aria-label="Next testimonial">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
-                    <div class="testimonial-card">
-                        <h4>Another Customer <span class="testimonial-rating">★★★★☆</span></h4>
-                        <p class="testimonial-message">"Good quality products at reasonable prices. Will definitely order again for our office supplies."</p>
-                        <p class="testimonial-date"><i class="far fa-calendar"></i> December 10, 2024</p>
+                    
+                    <div id="testimonialsSlider">
+                        <!-- Dynamic testimonials will be inserted here -->
+                        <!-- Default testimonials shown while loading -->
+                        <div class="testimonial-slide active" id="testimonial1">
+                            <div class="testimonial-card">
+                                <h4>Riyaz Ahmed <span class="testimonial-rating">★★★★★</span></h4>
+                                <p class="testimonial-message">"Excellent quality notebooks! The paper is smooth and doesn't bleed. Delivery was prompt and the service was great. Highly recommended for students!"</p>
+                                <p class="testimonial-date"><i class="far fa-calendar"></i> December 15, 2024</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-slide" id="testimonial2">
+                            <div class="testimonial-card">
+                                <h4>Sameer Dar <span class="testimonial-rating">★★★★☆</span></h4>
+                                <p class="testimonial-message">"Good quality products at reasonable prices. Ordered 50 notebooks for our office and got them delivered on time. Will definitely order again!"</p>
+                                <p class="testimonial-date"><i class="far fa-calendar"></i> December 10, 2024</p>
+                            </div>
+                        </div>
+                        <div class="testimonial-slide" id="testimonial3">
+                            <div class="testimonial-card">
+                                <h4>Aisha Khan <span class="testimonial-rating">★★★★★</span></h4>
+                                <p class="testimonial-message">"The custom notebooks I ordered for my coaching center are perfect! The pages are thick and the binding is durable. Great service and quality!"</p>
+                                <p class="testimonial-date"><i class="far fa-calendar"></i> December 5, 2024</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="testimonial-nav" id="testimonialDots">
+                        <span class="testimonial-dot active" data-index="0"></span>
+                        <span class="testimonial-dot" data-index="1"></span>
+                        <span class="testimonial-dot" data-index="2"></span>
                     </div>
                 </div>
             </div>
@@ -2155,6 +2289,118 @@
             }
         }
 
+        // ========== TESTIMONIALS SLIDER ==========
+        let currentTestimonial = 0;
+        let testimonials = [];
+        let testimonialInterval;
+
+        // Function to show next testimonial
+        function showNextTestimonial() {
+            const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+            const testimonialDots = document.querySelectorAll('.testimonial-dot');
+            
+            if (testimonialSlides.length === 0) return;
+            
+            // Hide current testimonial
+            testimonialSlides[currentTestimonial].classList.remove('active');
+            testimonialDots[currentTestimonial].classList.remove('active');
+            
+            // Move to next testimonial
+            currentTestimonial = (currentTestimonial + 1) % testimonialSlides.length;
+            
+            // Show next testimonial
+            testimonialSlides[currentTestimonial].classList.add('active');
+            testimonialDots[currentTestimonial].classList.add('active');
+        }
+
+        // Function to show previous testimonial
+        function showPrevTestimonial() {
+            const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+            const testimonialDots = document.querySelectorAll('.testimonial-dot');
+            
+            if (testimonialSlides.length === 0) return;
+            
+            // Hide current testimonial
+            testimonialSlides[currentTestimonial].classList.remove('active');
+            testimonialDots[currentTestimonial].classList.remove('active');
+            
+            // Move to previous testimonial
+            currentTestimonial = (currentTestimonial - 1 + testimonialSlides.length) % testimonialSlides.length;
+            
+            // Show previous testimonial
+            testimonialSlides[currentTestimonial].classList.add('active');
+            testimonialDots[currentTestimonial].classList.add('active');
+        }
+
+        // Function to go to specific testimonial
+        function goToTestimonial(index) {
+            const testimonialSlides = document.querySelectorAll('.testimonial-slide');
+            const testimonialDots = document.querySelectorAll('.testimonial-dot');
+            
+            if (testimonialSlides.length === 0 || index < 0 || index >= testimonialSlides.length) return;
+            
+            // Hide current testimonial
+            testimonialSlides[currentTestimonial].classList.remove('active');
+            testimonialDots[currentTestimonial].classList.remove('active');
+            
+            // Set new testimonial
+            currentTestimonial = index;
+            
+            // Show new testimonial
+            testimonialSlides[currentTestimonial].classList.add('active');
+            testimonialDots[currentTestimonial].classList.add('active');
+            
+            // Reset auto-rotation timer
+            resetTestimonialTimer();
+        }
+
+        // Function to reset testimonial auto-rotation timer
+        function resetTestimonialTimer() {
+            if (testimonialInterval) {
+                clearInterval(testimonialInterval);
+            }
+            
+            // Start auto-rotation again (every 6 seconds)
+            testimonialInterval = setInterval(showNextTestimonial, 6000);
+        }
+
+        // Initialize testimonials slider
+        function initTestimonialsSlider() {
+            // Add event listeners for navigation arrows
+            document.querySelector('.prev-testimonial').addEventListener('click', showPrevTestimonial);
+            document.querySelector('.next-testimonial').addEventListener('click', showNextTestimonial);
+            
+            // Add event listeners for dots
+            document.querySelectorAll('.testimonial-dot').forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const index = parseInt(dot.getAttribute('data-index'));
+                    goToTestimonial(index);
+                });
+            });
+            
+            // Start auto-rotation
+            resetTestimonialTimer();
+            
+            // Pause on hover
+            const testimonialsSlider = document.querySelector('.testimonials-slider');
+            testimonialsSlider.addEventListener('mouseenter', () => {
+                if (testimonialInterval) {
+                    clearInterval(testimonialInterval);
+                }
+            });
+            
+            testimonialsSlider.addEventListener('mouseleave', resetTestimonialTimer);
+            
+            // Also support touch events for mobile
+            testimonialsSlider.addEventListener('touchstart', () => {
+                if (testimonialInterval) {
+                    clearInterval(testimonialInterval);
+                }
+            });
+            
+            testimonialsSlider.addEventListener('touchend', resetTestimonialTimer);
+        }
+
         // ========== FEEDBACK FUNCTIONALITY ==========
         // Star rating for feedback
         const stars = document.querySelectorAll('.star');
@@ -2250,33 +2496,80 @@
                 );
                 
                 const querySnapshot = await getDocs(q);
-                const container = document.getElementById('approvedTestimonials');
+                const container = document.getElementById('testimonialsSlider');
                 
                 if (querySnapshot.empty) {
                     // Keep the default testimonials if none in database
+                    initTestimonialsSlider();
                     return;
                 }
                 
                 let testimonialsHTML = '';
+                let slideIndex = 0;
+                
                 querySnapshot.forEach((doc) => {
                     const feedback = doc.data();
                     const starsHTML = '★'.repeat(feedback.rating) + '☆'.repeat(5 - feedback.rating);
                     const date = new Date(feedback.createdAt).toLocaleDateString('en-IN');
                     
                     testimonialsHTML += `
-                        <div class="testimonial-card">
-                            <h4>${feedback.customerName} <span class="testimonial-rating">${starsHTML}</span></h4>
-                            <p class="testimonial-message">"${feedback.message}"</p>
-                            <p class="testimonial-date"><i class="far fa-calendar"></i> ${date}</p>
+                        <div class="testimonial-slide ${slideIndex === 0 ? 'active' : ''}" id="dynamic-testimonial-${slideIndex}">
+                            <div class="testimonial-card">
+                                <h4>${feedback.customerName} <span class="testimonial-rating">${starsHTML}</span></h4>
+                                <p class="testimonial-message">"${feedback.message}"</p>
+                                <p class="testimonial-date"><i class="far fa-calendar"></i> ${date}</p>
+                            </div>
                         </div>
                     `;
+                    slideIndex++;
                 });
                 
                 container.innerHTML = testimonialsHTML;
                 
+                // Update navigation dots
+                const testimonialDotsContainer = document.getElementById('testimonialDots');
+                let dotsHTML = '';
+                for (let i = 0; i < slideIndex; i++) {
+                    dotsHTML += `<span class="testimonial-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>`;
+                }
+                testimonialDotsContainer.innerHTML = dotsHTML;
+                
+                // Re-initialize the slider with new testimonials
+                initTestimonialsSlider();
+                
             } catch (error) {
                 console.error("Error loading testimonials:", error);
+                // If error, still initialize with default testimonials
+                initTestimonialsSlider();
             }
+        }
+
+        // ========== QUOTES SLIDER ==========
+        let currentQuote = 0;
+        let quoteInterval;
+
+        function showNextQuote() {
+            const quotes = document.querySelectorAll('.quote');
+            quotes[currentQuote].classList.remove('active');
+            currentQuote = (currentQuote + 1) % quotes.length;
+            quotes[currentQuote].classList.add('active');
+        }
+
+        function initQuotesSlider() {
+            // Start quotes auto-rotation (every 5 seconds)
+            quoteInterval = setInterval(showNextQuote, 5000);
+            
+            // Pause on hover
+            const quoteSlider = document.querySelector('.quote-slider');
+            quoteSlider.addEventListener('mouseenter', () => {
+                if (quoteInterval) {
+                    clearInterval(quoteInterval);
+                }
+            });
+            
+            quoteSlider.addEventListener('mouseleave', () => {
+                quoteInterval = setInterval(showNextQuote, 5000);
+            });
         }
 
         // ========== INITIALIZATION ==========
@@ -2293,17 +2586,8 @@
             // Load testimonials
             loadApprovedTestimonials();
             
-            // Moving Quotes
-            const quotes = document.querySelectorAll('.quote');
-            let currentQuote = 0;
-            
-            function showNextQuote() {
-                quotes[currentQuote].classList.remove('active');
-                currentQuote = (currentQuote + 1) % quotes.length;
-                quotes[currentQuote].classList.add('active');
-            }
-            
-            setInterval(showNextQuote, 5000);
+            // Initialize quotes slider
+            initQuotesSlider();
             
             // Back to Top Button
             const backToTopButton = document.getElementById('backToTop');
