@@ -203,7 +203,7 @@
             transform: translateY(-2px);
         }
 
-        /* Mobile Navigation Toggle - FIXED FOR ANDROID */
+        /* Mobile Navigation Toggle */
         .nav-toggle {
             display: none;
             background: none;
@@ -796,6 +796,154 @@
             margin-bottom: 1rem;
         }
 
+        /* ========== FAQ SECTION ========== */
+        .faq-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 60px;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 0;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            padding-top: 0;
+            color: var(--gray);
+        }
+
+        .faq-answer.open {
+            max-height: 500px;
+            padding-top: 15px;
+        }
+
+        .faq-toggle {
+            color: var(--primary);
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        /* ========== FEEDBACK SECTION ========== */
+        .feedback-section {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 50px 20px;
+            border-radius: 12px;
+            margin-bottom: 60px;
+        }
+
+        .feedback-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: 'Roboto', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .rating {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .star {
+            color: #cbd5e1;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .star.active {
+            color: var(--accent);
+        }
+
+        /* Testimonials Styles */
+        .testimonials-container {
+            max-width: 800px;
+            margin: 40px auto 0;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+
+        .testimonial-card h4 {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin: 0 0 10px 0;
+        }
+
+        .testimonial-rating {
+            color: #f39c12;
+            font-size: 1.2rem;
+        }
+
+        .testimonial-message {
+            font-style: italic;
+            color: var(--gray);
+            margin: 10px 0;
+        }
+
+        .testimonial-date {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
         /* ========== CONTACT SECTION ========== */
         .contact-section {
             background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
@@ -962,8 +1110,28 @@
 
         /* ========== RESPONSIVE ADJUSTMENTS ========== */
         @media (max-width: 768px) {
-            .hero {
-                padding: 100px 20px 60px;
+            .nav-toggle {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                transition: var(--transition);
+                z-index: 999;
+            }
+
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
             }
 
             .hero h1 {
@@ -978,7 +1146,6 @@
                 justify-content: flex-start;
                 overflow-x: auto;
                 padding-bottom: 10px;
-                -webkit-overflow-scrolling: touch;
             }
 
             .filter-btn {
@@ -995,13 +1162,13 @@
 
             .cart-sidebar {
                 width: 100%;
-                max-width: 100%;
+                right: -100%;
             }
         }
 
         @media (max-width: 480px) {
             .hero {
-                padding: 80px 15px 40px;
+                padding: 60px 15px;
             }
 
             .hero h1 {
@@ -1020,11 +1187,8 @@
                 max-width: 100%;
             }
 
-            .notification {
-                bottom: 10px;
-                right: 10px;
-                left: 10px;
-                max-width: none;
+            .faq-container, .feedback-form {
+                padding: 20px;
             }
         }
 
@@ -1091,6 +1255,8 @@
                 <a href="#home"><i class="fas fa-home"></i> Home</a>
                 <a href="#products"><i class="fas fa-book"></i> Products</a>
                 <a href="#features"><i class="fas fa-star"></i> Features</a>
+                <a href="#faq"><i class="fas fa-question-circle"></i> FAQ</a>
+                <a href="#feedback"><i class="fas fa-comment-dots"></i> Feedback</a>
                 <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
                 <button class="cart-icon" id="cartIcon" aria-label="Open cart">
                     <i class="fas fa-shopping-cart"></i>
@@ -1204,6 +1370,112 @@
         </div>
     </section>
 
+    <!-- FAQ Section -->
+    <section class="container" id="faq">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-container" id="faqContainer">
+            <div class="faq-item active">
+                <div class="faq-question">
+                    What is your delivery policy?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer open">
+                    We offer free delivery within 5km radius. For areas beyond 5km, delivery charges may apply based on distance. Standard delivery takes 24-48 hours.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    How can I place an order?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    You can order through WhatsApp (7006927825), call us directly, or use the cart system on our website and checkout via WhatsApp.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Do you offer bulk discounts?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes, we offer special discounts for bulk orders (50+ items). Please contact us directly for custom quotes.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    What are your business hours?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    We are available Monday to Saturday: 9:00 AM - 8:00 PM, Sunday: 10:00 AM - 6:00 PM.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can I customize notebooks?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes, we offer customization services for notebooks including custom covers, page count, and paper quality. Minimum order quantity applies.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feedback Section -->
+    <section class="feedback-section" id="feedback">
+        <div class="container">
+            <h2 class="section-title">Customer Feedback</h2>
+            <div class="feedback-form">
+                <form id="feedbackForm">
+                    <div class="form-group">
+                        <label for="fbName">Full Name</label>
+                        <input type="text" id="fbName" class="form-control" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fbEmail">Email Address</label>
+                        <input type="email" id="fbEmail" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Rate Your Experience</label>
+                        <div class="rating">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <input type="hidden" id="fbRating" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="fbMessage">Your Feedback</label>
+                        <textarea id="fbMessage" class="form-control" placeholder="Tell us about your experience with our products or services" required></textarea>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Submit Feedback
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Approved Testimonials -->
+            <div class="testimonials-container" id="testimonialsContainer">
+                <h3 style="text-align: center; margin-top: 40px;">What Our Customers Say</h3>
+                <div id="approvedTestimonials">
+                    <div class="testimonial-card">
+                        <h4>Customer Name <span class="testimonial-rating">★★★★★</span></h4>
+                        <p class="testimonial-message">"Excellent quality notebooks! The paper is smooth and doesn't bleed. Delivery was prompt and the service was great."</p>
+                        <p class="testimonial-date"><i class="far fa-calendar"></i> December 15, 2024</p>
+                    </div>
+                    <div class="testimonial-card">
+                        <h4>Another Customer <span class="testimonial-rating">★★★★☆</span></h4>
+                        <p class="testimonial-message">"Good quality products at reasonable prices. Will definitely order again for our office supplies."</p>
+                        <p class="testimonial-date"><i class="far fa-calendar"></i> December 10, 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section class="contact-section" id="contact">
         <div class="container">
@@ -1275,6 +1547,8 @@
                         <a href="#home">Home</a>
                         <a href="#products">Products</a>
                         <a href="#features">Features</a>
+                        <a href="#faq">FAQs</a>
+                        <a href="#feedback">Feedback</a>
                         <a href="#contact">Contact</a>
                     </div>
                 </div>
@@ -1309,7 +1583,7 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
         // Firebase Configuration
         const firebaseConfig = {
@@ -1731,6 +2005,193 @@
             }
         }
 
+        // ========== FAQ FUNCTIONALITY ==========
+        async function loadFAQs() {
+            try {
+                const q = query(collection(db, "faqs"), orderBy("order", "asc"));
+                const querySnapshot = await getDocs(q);
+                const faqContainer = document.getElementById('faqContainer');
+                
+                if (querySnapshot.empty) {
+                    // Keep the default FAQs if none in database
+                    return;
+                }
+                
+                let faqHTML = '';
+                querySnapshot.forEach((doc, index) => {
+                    const faq = doc.data();
+                    faqHTML += `
+                        <div class="faq-item ${index === 0 ? 'active' : ''}">
+                            <div class="faq-question">
+                                ${faq.question}
+                                <span class="faq-toggle">+</span>
+                            </div>
+                            <div class="faq-answer ${index === 0 ? 'open' : ''}">
+                                ${faq.answer}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                faqContainer.innerHTML = faqHTML;
+                
+                // Add FAQ toggle functionality
+                document.querySelectorAll('.faq-question').forEach(question => {
+                    question.addEventListener('click', () => {
+                        const item = question.parentElement;
+                        const answer = item.querySelector('.faq-answer');
+                        const toggle = item.querySelector('.faq-toggle');
+                        
+                        // Close all other FAQ items
+                        document.querySelectorAll('.faq-item').forEach(otherItem => {
+                            if (otherItem !== item) {
+                                otherItem.classList.remove('active');
+                                otherItem.querySelector('.faq-answer').classList.remove('open');
+                                otherItem.querySelector('.faq-toggle').textContent = '+';
+                            }
+                        });
+                        
+                        // Toggle current item
+                        item.classList.toggle('active');
+                        if (item.classList.contains('active')) {
+                            answer.classList.add('open');
+                            toggle.textContent = '−';
+                        } else {
+                            answer.classList.remove('open');
+                            toggle.textContent = '+';
+                        }
+                    });
+                });
+                
+            } catch (error) {
+                console.error("Error loading FAQs:", error);
+            }
+        }
+
+        // ========== FEEDBACK FUNCTIONALITY ==========
+        // Star rating for feedback
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('fbRating');
+        
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const rating = star.getAttribute('data-rating');
+                ratingInput.value = rating;
+                
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Add hover effect
+            star.addEventListener('mouseover', () => {
+                const rating = star.getAttribute('data-rating');
+                
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseout', () => {
+                const currentRating = ratingInput.value;
+                
+                stars.forEach((s, index) => {
+                    if (index < currentRating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Feedback form submission
+        const feedbackForm = document.getElementById('feedbackForm');
+        
+        feedbackForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('fbName').value;
+            const email = document.getElementById('fbEmail').value;
+            const rating = document.getElementById('fbRating').value;
+            const message = document.getElementById('fbMessage').value;
+            
+            if (rating === '0') {
+                alert('Please select a rating before submitting feedback.');
+                return;
+            }
+            
+            try {
+                // Save to Firestore
+                await addDoc(collection(db, "feedback_submissions"), {
+                    customerName: name,
+                    email: email,
+                    rating: parseInt(rating),
+                    message: message,
+                    status: "pending",
+                    createdAt: new Date().toISOString()
+                });
+                
+                showNotification('Thank you for your feedback! It has been submitted for review.');
+                feedbackForm.reset();
+                
+                // Reset stars
+                stars.forEach(star => star.classList.remove('active'));
+                ratingInput.value = '0';
+                
+            } catch (error) {
+                console.error("Error submitting feedback:", error);
+                alert('Sorry, there was an error submitting your feedback. Please try again.');
+            }
+        });
+
+        // Load approved testimonials
+        async function loadApprovedTestimonials() {
+            try {
+                const q = query(
+                    collection(db, "feedback_submissions"),
+                    where("status", "==", "approved"),
+                    orderBy("createdAt", "desc")
+                );
+                
+                const querySnapshot = await getDocs(q);
+                const container = document.getElementById('approvedTestimonials');
+                
+                if (querySnapshot.empty) {
+                    // Keep the default testimonials if none in database
+                    return;
+                }
+                
+                let testimonialsHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const feedback = doc.data();
+                    const starsHTML = '★'.repeat(feedback.rating) + '☆'.repeat(5 - feedback.rating);
+                    const date = new Date(feedback.createdAt).toLocaleDateString('en-IN');
+                    
+                    testimonialsHTML += `
+                        <div class="testimonial-card">
+                            <h4>${feedback.customerName} <span class="testimonial-rating">${starsHTML}</span></h4>
+                            <p class="testimonial-message">"${feedback.message}"</p>
+                            <p class="testimonial-date"><i class="far fa-calendar"></i> ${date}</p>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = testimonialsHTML;
+                
+            } catch (error) {
+                console.error("Error loading testimonials:", error);
+            }
+        }
+
         // ========== INITIALIZATION ==========
         document.addEventListener('DOMContentLoaded', () => {
             // Update cart
@@ -1738,6 +2199,12 @@
             
             // Load products
             loadProducts();
+            
+            // Load FAQs
+            loadFAQs();
+            
+            // Load testimonials
+            loadApprovedTestimonials();
             
             // Moving Quotes
             const quotes = document.querySelectorAll('.quote');
