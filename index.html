@@ -2,916 +2,113 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SARM ENTERPRISES - Premium Notebooks & Stationery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Quotes Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        /* ========== CORE STYLES ========== */
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #0f172a;
-            --accent: #10b981;
-            --whatsapp: #25D366;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --dark-gray: #334155;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f9fafb;
-            overflow-x: hidden;
-            touch-action: manipulation;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        h1, h2, h3, h4, h5 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
-            color: var(--secondary);
-            margin-bottom: 1rem;
-        }
-
-        .container {
-            width: 100%;
+        .admin-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
         }
 
-        /* ========== HEADER & NAVIGATION ========== */
-        header {
-            background-color: white;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            width: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
+        .admin-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
         }
 
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            position: relative;
+        .admin-header h1 {
+            color: #333;
+            margin-bottom: 10px;
         }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .admin-header p {
+            color: #666;
+            font-size: 18px;
         }
 
-        /* Logo Image Styles */
-        .logo {
-            height: 45px;
-            width: auto;
-            max-width: 150px;
-            object-fit: contain;
-            border-radius: 8px;
-            flex-shrink: 0;
-        }
-
-        /* Fallback logo if image doesn't load */
-        .logo-fallback {
-            height: 45px;
-            width: 45px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .back-to-site {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #4CAF50;
             color: white;
-            font-weight: 700;
-            font-size: 22px;
-            flex-shrink: 0;
-        }
-
-        .business-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--secondary);
-        }
-
-        .business-tagline {
-            font-size: 0.85rem;
-            color: var(--gray);
-            margin-top: 2px;
-        }
-
-        /* Navigation Menu */
-        .nav-menu {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            transition: var(--transition);
-        }
-
-        .nav-menu a {
             text-decoration: none;
-            color: var(--dark-gray);
+            border-radius: 5px;
             font-weight: 500;
-            font-size: 1rem;
-            transition: var(--transition);
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 0;
-            white-space: nowrap;
         }
 
-        .nav-menu a:hover {
-            color: var(--primary);
+        .back-to-site:hover {
+            background: #45a049;
         }
 
-        .nav-menu a:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            bottom: -5px;
-            left: 0;
-            transition: var(--transition);
-        }
-
-        .nav-menu a:hover:after {
-            width: 100%;
-        }
-
-        /* Cart Icon */
-        .cart-icon {
-            position: relative;
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: inherit;
-            padding: 5px;
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .cart-count {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            pointer-events: none;
-        }
-
-        /* WhatsApp Order Button */
-        .whatsapp-order-btn {
-            background-color: var(--whatsapp);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
-            box-shadow: 0 4px 6px rgba(37, 211, 102, 0.25);
-            white-space: nowrap;
-        }
-
-        .whatsapp-order-btn:hover {
-            background-color: #128C7E;
-            transform: translateY(-2px);
-        }
-
-        /* Mobile Navigation Toggle */
-        .nav-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            padding: 10px;
-            z-index: 1002;
-            width: 44px;
-            height: 44px;
-            align-items: center;
-            justify-content: center;
-            touch-action: manipulation;
-        }
-
-        .nav-toggle i {
-            font-size: 1.5rem;
-            pointer-events: none;
-        }
-
-        /* Mobile Menu Overlay */
-        .mobile-menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 998;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .mobile-menu-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* ========== RESPONSIVE STYLES ========== */
-        @media (max-width: 992px) {
-            .nav-menu {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 300px;
-                height: 100vh;
-                background: white;
-                flex-direction: column;
-                padding: 80px 30px 30px;
-                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-                transition: right 0.3s ease;
-                z-index: 1001;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            .nav-menu.active {
-                right: 0;
-            }
-
-            .nav-menu a {
-                width: 100%;
-                padding: 15px 0;
-                font-size: 1.1rem;
-                border-bottom: 1px solid #f0f0f0;
-                justify-content: flex-start;
-            }
-
-            .nav-menu a:last-child {
-                border-bottom: none;
-            }
-
-            .whatsapp-order-btn {
-                width: 100%;
-                justify-content: center;
-                margin-top: 10px;
-                padding: 12px 20px;
-            }
-
-            .nav-toggle {
-                display: flex;
-                position: relative;
-                z-index: 1002;
-            }
-
-            .header-container {
-                padding: 12px 15px;
-            }
+        .admin-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
         }
 
         @media (max-width: 768px) {
-            .logo {
-                height: 40px;
-                max-width: 120px;
-            }
-            
-            .business-name {
-                font-size: 1.2rem;
-            }
-            
-            .business-tagline {
-                font-size: 0.75rem;
+            .admin-content {
+                grid-template-columns: 1fr;
             }
         }
 
-        @media (max-width: 480px) {
-            .logo {
-                height: 35px;
-                max-width: 100px;
-            }
-            
-            .nav-menu {
-                width: 100%;
-            }
-            
-            .business-name {
-                font-size: 1.1rem;
-            }
-            
-            .business-tagline {
-                font-size: 0.7rem;
-            }
+        .form-section, .quotes-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        /* ========== HERO SECTION ========== */
-        .hero {
-            background: linear-gradient(rgba(37, 99, 235, 0.9), rgba(29, 78, 216, 0.9)), url('https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 80px 20px;
-            text-align: center;
-            position: relative;
-            margin-top: 0;
-        }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-
-        /* Quotes Slider */
-        .quote-slider {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 40px;
-            position: relative;
-            min-height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .quote {
-            font-size: 1.3rem;
-            font-style: italic;
-            text-align: center;
-            opacity: 0;
-            position: absolute;
-            transition: opacity 1s ease;
-            padding: 0 20px;
-        }
-
-        .quote.active {
-            opacity: 1;
-        }
-
-        .quote-author {
-            display: block;
-            margin-top: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--accent);
-        }
-
-        /* ========== BUTTONS ========== */
-        .btn {
-            display: inline-block;
-            background-color: var(--accent);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.25);
-            min-height: 44px;
-            min-width: 44px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            touch-action: manipulation;
-        }
-
-        .btn:hover {
-            background-color: #0da271;
-            transform: translateY(-3px);
-        }
-
-        .btn-whatsapp {
-            background-color: var(--whatsapp);
-            color: white;
-        }
-
-        .btn-whatsapp:hover {
-            background-color: #128C7E;
-        }
-
-        /* ========== PRODUCTS SECTION ========== */
         .section-title {
-            text-align: center;
-            margin: 50px 0 30px;
-            position: relative;
-        }
-
-        .section-title:after {
-            content: '';
-            position: absolute;
-            width: 80px;
-            height: 4px;
-            background: var(--primary);
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
-
-        /* Product Filter */
-        .filter-container {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
-        }
-
-        .filter-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .filter-btn {
-            padding: 8px 20px;
-            background: white;
-            border: 1px solid var(--gray);
-            border-radius: 30px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-            min-height: 36px;
-            min-width: 36px;
-            touch-action: manipulation;
-        }
-
-        .filter-btn.active, .filter-btn:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* Products Grid */
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 60px;
-        }
-
-        .product-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .product-image-container {
-            position: relative;
-            height: 220px;
-            overflow: hidden;
-        }
-
-        .product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .product-image-slider {
-            display: flex;
-            transition: transform 0.5s ease;
-            height: 100%;
-        }
-
-        .product-image-slider img {
-            min-width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .image-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.8);
-            color: var(--primary);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: var(--transition);
-            opacity: 0;
-            min-height: 40px;
-            min-width: 40px;
-        }
-
-        .product-image-container:hover .image-nav {
-            opacity: 1;
-        }
-
-        .image-nav:hover {
-            background: white;
-            color: var(--primary-dark);
-        }
-
-        .image-nav.prev {
-            left: 10px;
-        }
-
-        .image-nav.next {
-            right: 10px;
-        }
-
-        .product-info {
-            padding: 20px;
-        }
-
-        .product-title {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-
-        .product-price {
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-        }
-
-        .product-description {
-            color: var(--gray);
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-        }
-
-        /* ========== CART SIDEBAR ========== */
-        .cart-sidebar {
-            position: fixed;
-            top: 0;
-            right: -100%;
-            width: 380px;
-            height: 100%;
-            background: white;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
-            z-index: 1100;
-            transition: right 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .cart-sidebar.show {
-            right: 0;
-        }
-        
-        .cart-header {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8f9fa;
-        }
-        
-        .cart-items {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .cart-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #f5f5f5;
-            gap: 15px;
-        }
-        
-        .cart-item-image {
-            width: 70px;
-            height: 70px;
-            flex-shrink: 0;
-        }
-        
-        .cart-item-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-        
-        .cart-item-details {
-            flex: 1;
-            min-width: 0;
-        }
-        
-        .cart-item-details h4 {
-            margin: 0 0 5px 0;
-            font-size: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .cart-item-details p {
-            margin: 0;
-            font-size: 12px;
-            color: #666;
-        }
-        
-        .cart-item-quantity {
-            display: flex;
-            align-items: center;
-            margin-top: 8px;
-        }
-        
-        .cart-item-quantity button {
-            width: 25px;
-            height: 25px;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 3px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 25px;
-            min-width: 25px;
-        }
-        
-        .cart-item-quantity span {
-            margin: 0 10px;
-            font-weight: 500;
-            min-width: 20px;
-            text-align: center;
-        }
-        
-        .cart-item-price {
-            text-align: right;
-            font-weight: 600;
-            color: var(--primary);
-            min-width: 60px;
-            margin-left: 10px;
-        }
-        
-        .remove-item {
-            background: none;
-            border: none;
-            color: #ff6b6b;
-            cursor: pointer;
-            margin-top: 5px;
-            font-size: 12px;
-            padding: 0;
-            min-height: 20px;
-            min-width: 20px;
-        }
-        
-        .cart-footer {
-            padding: 20px;
-            border-top: 1px solid #eee;
-            background: #f8f9fa;
-        }
-        
-        .cart-total {
-            display: flex;
-            justify-content: space-between;
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            padding: 10px 0;
-            border-bottom: 2px solid var(--primary);
-        }
-        
-        .cart-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1099;
-            display: none;
-        }
-        
-        .cart-overlay.show {
-            display: block;
-        }
-        
-        .close-cart {
-            background: none;
-            border: none;
+            color: #333;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
             font-size: 24px;
-            cursor: pointer;
-            color: #666;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 30px;
-            min-width: 30px;
-        }
-        
-        .empty-cart {
-            text-align: center;
-            color: #999;
-            padding: 40px 0;
-            font-style: italic;
-        }
-        
-        .btn-checkout {
-            width: 100%;
-            margin-bottom: 10px;
-            padding: 12px;
-        }
-        
-        .btn-clear-cart {
-            width: 100%;
-            padding: 12px;
-            background: #f8f9fa;
-            color: #666;
-            border: 1px solid #ddd;
-        }
-
-        .btn-checkout.whatsapp {
-            background-color: var(--whatsapp);
-        }
-
-        .btn-checkout.whatsapp:hover {
-            background-color: #128C7E;
-        }
-
-        /* ========== FEATURES SECTION ========== */
-        .features {
-            padding: 3rem 0;
-            background-color: #f8f9fa;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .feature-card {
-            text-align: center;
-            padding: 2rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-        }
-
-        .feature-card i {
-            font-size: 2.5rem;
-            color: var(--secondary);
-            margin-bottom: 1rem;
-        }
-
-        /* ========== FAQ SECTION ========== */
-        .faq-container {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            margin-bottom: 60px;
-        }
-
-        .faq-item {
-            border-bottom: 1px solid #e2e8f0;
-            padding: 20px 0;
-        }
-
-        .faq-question {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .faq-answer {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            padding-top: 0;
-            color: var(--gray);
-        }
-
-        .faq-answer.open {
-            max-height: 500px;
-            padding-top: 15px;
-        }
-
-        .faq-toggle {
-            color: var(--primary);
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .faq-item.active .faq-toggle {
-            transform: rotate(45deg);
-        }
-
-        /* ========== FEEDBACK SECTION ========== */
-        .feedback-section {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            padding: 50px 20px;
-            border-radius: 12px;
-            margin-bottom: 60px;
-        }
-
-        .feedback-form {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 8px;
+            color: #555;
             font-weight: 500;
         }
 
         .form-control {
             width: 100%;
             padding: 12px 15px;
-            border: 1px solid #cbd5e1;
+            border: 1px solid #ddd;
             border-radius: 8px;
-            font-family: 'Roboto', sans-serif;
-            transition: var(--transition);
+            font-size: 16px;
+            transition: border 0.3s;
         }
 
         .form-control:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         textarea.form-control {
@@ -919,841 +116,252 @@
             resize: vertical;
         }
 
-        .rating {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 10px;
-        }
-
-        .star {
-            color: #cbd5e1;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .star.active {
-            color: var(--accent);
-        }
-
-        /* Testimonials Slider Styles */
-        .testimonials-slider-container {
-            max-width: 800px;
-            margin: 40px auto 0;
-            position: relative;
-        }
-
-        .testimonials-slider {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            position: relative;
-            min-height: 200px;
-            box-shadow: var(--shadow);
-            border-left: 4px solid var(--primary);
-        }
-
-        .testimonial-slide {
-            opacity: 0;
-            position: absolute;
-            transition: opacity 1s ease;
-            padding: 0 10px;
-            width: 100%;
-        }
-
-        .testimonial-slide.active {
-            opacity: 1;
-        }
-
-        .testimonial-card {
-            background: transparent;
-            border-radius: 0;
-            padding: 0;
-            margin: 0;
-            box-shadow: none;
-            border-left: none;
-        }
-
-        .testimonial-card h4 {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin: 0 0 10px 0;
-        }
-
-        .testimonial-rating {
-            color: #f39c12;
-            font-size: 1.2rem;
-        }
-
-        .testimonial-message {
-            font-style: italic;
-            color: var(--gray);
-            margin: 10px 0;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-
-        .testimonial-date {
-            text-align: right;
-            font-size: 0.9rem;
-            color: #777;
-        }
-
-        /* Testimonial Navigation */
-        .testimonial-nav {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .testimonial-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #ddd;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .testimonial-dot.active {
-            background: var(--primary);
-            transform: scale(1.2);
-        }
-
-        .testimonial-nav-arrows {
-            position: absolute;
-            top: 50%;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            transform: translateY(-50%);
-            pointer-events: none;
-        }
-
-        .testimonial-arrow {
-            background: rgba(255, 255, 255, 0.9);
+        .btn {
+            background: #667eea;
+            color: white;
             border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
             cursor: pointer;
-            font-size: 1.2rem;
-            color: var(--primary);
-            transition: var(--transition);
-            pointer-events: all;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .testimonial-arrow:hover {
-            background: white;
-            color: var(--primary-dark);
-            transform: scale(1.1);
-        }
-
-        /* ========== CONTACT SECTION ========== */
-        .contact-section {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            padding: 60px 20px;
-            border-radius: 12px;
-            margin-bottom: 60px;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            margin-top: 40px;
-        }
-
-        .contact-info h3 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
-            color: var(--primary);
-        }
-
-        .contact-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        /* ========== FOOTER ========== */
-        footer {
-            background-color: var(--secondary);
-            color: white;
-            padding: 50px 20px 20px;
-        }
-
-        .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-column {
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .footer-column h3 {
-            color: white;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-
-        .footer-links a {
-            display: block;
-            color: #cbd5e1;
-            text-decoration: none;
-            margin-bottom: 10px;
-            transition: var(--transition);
-        }
-
-        .footer-links a:hover {
-            color: white;
-            padding-left: 5px;
-        }
-
-        .contact-info {
-            color: #cbd5e1;
-        }
-
-        .contact-info p {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-links a {
+            transition: background 0.3s;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: white;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .social-links a:hover {
-            background: var(--primary);
-            transform: translateY(-5px);
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid #334155;
-            color: #94a3b8;
-            font-size: 0.9rem;
-        }
-
-        /* ========== BACK TO TOP BUTTON ========== */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
-            background-color: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
-            z-index: 999;
-            min-height: 50px;
-            min-width: 50px;
-        }
-
-        .back-to-top.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* ========== NOTIFICATION ========== */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--accent);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
             gap: 10px;
-            transform: translateX(150%);
-            transition: transform 0.3s ease;
-            z-index: 1001;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            max-width: 300px;
-        }
-        
-        .notification.show {
-            transform: translateX(0);
         }
 
-        /* ========== RESPONSIVE ADJUSTMENTS ========== */
-        @media (max-width: 768px) {
-            .nav-toggle {
-                display: flex;
-            }
-
-            .nav-menu {
-                position: fixed;
-                top: 80px;
-                left: 0;
-                width: 100%;
-                background: white;
-                flex-direction: column;
-                padding: 20px;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-                transform: translateY(-100%);
-                opacity: 0;
-                transition: var(--transition);
-                z-index: 999;
-            }
-
-            .nav-menu.active {
-                transform: translateY(0);
-                opacity: 1;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-
-            .quote {
-                font-size: 1.1rem;
-            }
-
-            .testimonial-message {
-                font-size: 1rem;
-            }
-
-            .testimonial-arrow {
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
-            }
-
-            .filter-options {
-                justify-content: flex-start;
-                overflow-x: auto;
-                padding-bottom: 10px;
-            }
-
-            .filter-btn {
-                flex-shrink: 0;
-            }
-
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-
-            .footer-content {
-                flex-direction: column;
-            }
-
-            .cart-sidebar {
-                width: 100%;
-                right: -100%;
-            }
+        .btn:hover {
+            background: #5a6fd8;
         }
 
-        @media (max-width: 480px) {
-            .hero {
-                padding: 60px 15px;
-            }
-
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-
-            .quote-slider {
-                padding: 20px 15px;
-            }
-
-            .testimonials-slider {
-                padding: 20px;
-            }
-
-            .testimonial-nav-arrows {
-                display: none; /* Hide arrows on very small screens */
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .product-card {
-                max-width: 100%;
-            }
-
-            .faq-container, .feedback-form {
-                padding: 20px;
-            }
+        .btn-danger {
+            background: #dc3545;
         }
 
-        /* Android-specific fixes */
-        @media (hover: none) and (pointer: coarse) {
-            button, a, input, select, textarea {
-                font-size: 16px; /* Prevent zoom on focus in iOS */
-            }
-            
-            button, .btn, .nav-menu a, .filter-btn, .cart-icon {
-                min-height: 44px;
-                min-width: 44px;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .image-nav, .cart-item-quantity button, .testimonial-arrow {
-                min-height: 40px;
-                min-width: 40px;
-            }
-            
-            /* Improve touch targets */
-            .nav-toggle {
-                min-height: 44px;
-                min-width: 44px;
-            }
-            
-            .cart-icon {
-                min-height: 44px;
-                min-width: 44px;
-            }
-            
-            .testimonial-dot {
-                min-height: 15px;
-                min-width: 15px;
-            }
-            
-            /* Prevent double-tap zoom */
-            .btn, .nav-menu a, .filter-btn {
-                touch-action: manipulation;
-            }
+        .btn-danger:hover {
+            background: #c82333;
         }
 
-        /* Prevent horizontal scrolling */
-        body, html {
-            max-width: 100%;
-            overflow-x: hidden;
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .quote-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .quote-text {
+            font-size: 18px;
+            font-style: italic;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .quote-author {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .quote-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .quote-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading i {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .order-input {
+            width: 80px;
+            text-align: center;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-left: 10px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #28a745;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
         }
     </style>
 </head>
 <body>
-    <!-- Header with Cart and WhatsApp -->
-    <header>
-        <div class="header-container container">
-            <div class="logo-container">
-                <!-- Logo Image with fallback -->
-                <img src="assets/logo/logo.png" alt="SARM ENTERPRISES Logo" class="logo" 
-                     onerror="this.onerror=null; this.style.display='none'; document.getElementById('logoFallback').style.display='flex';">
-                <div id="logoFallback" class="logo-fallback" style="display: none;">S</div>
-                <div>
-                    <div class="business-name">SARM ENTERPRISES</div>
-                    <div class="business-tagline">Premium Notebooks & Stationery</div>
-                </div>
-            </div>
-            
-            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-            
-            <nav class="nav-menu" id="navMenu">
-                <a href="#home" class="nav-link"><i class="fas fa-home"></i> Home</a>
-                <a href="#products" class="nav-link"><i class="fas fa-book"></i> Products</a>
-                <a href="#features" class="nav-link"><i class="fas fa-star"></i> Features</a>
-                <a href="#faq" class="nav-link"><i class="fas fa-question-circle"></i> FAQ</a>
-                <a href="#feedback" class="nav-link"><i class="fas fa-comment-dots"></i> Feedback</a>
-                <a href="#contact" class="nav-link"><i class="fas fa-phone"></i> Contact</a>
-                <button class="cart-icon" id="cartIcon" aria-label="Open cart">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
-                </button>
-                <a href="https://wa.me/917006927825?text=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
-                   class="whatsapp-order-btn" target="_blank" rel="noopener">
-                    <i class="fab fa-whatsapp"></i> Order via WhatsApp
-                </a>
-            </nav>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fas fa-quote-left"></i> Quotes Management</h1>
+            <p>Admin Panel for SARM ENTERPRISES</p>
+            <a href="index.html" class="back-to-site">
+                <i class="fas fa-arrow-left"></i> Back to Main Website
+            </a>
         </div>
-    </header>
 
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+        <div class="message" id="message"></div>
 
-    <!-- Cart Sidebar -->
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h3><i class="fas fa-shopping-cart"></i> Your Cart</h3>
-            <button class="close-cart" aria-label="Close cart">&times;</button>
-        </div>
-        <div class="cart-items" id="cartItems">
-            <p class="empty-cart">Your cart is empty</p>
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <span>Total:</span>
-                <span id="cartTotal">₹0</span>
-            </div>
-            <button class="btn btn-checkout whatsapp" id="checkoutBtn" disabled>
-                <i class="fab fa-whatsapp"></i> Checkout on WhatsApp
-            </button>
-            <button class="btn-clear-cart" id="clearCartBtn">
-                <i class="fas fa-trash"></i> Clear Cart
-            </button>
-        </div>
-    </div>
-    <div class="cart-overlay" id="cartOverlay"></div>
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-content">
-            <h1>Premium Notebooks for Quality Thoughts</h1>
-            <p>Discover our wide range of high-quality notebooks, registers, and stationery products. Perfect for students, professionals, and creative minds.</p>
-            <a href="#products" class="btn">Explore Products</a>
-            
-            <div class="quote-slider">
-                <div class="quote active" id="quote1">
-                    "Quality is never an accident; it is always the result of intelligent effort."
-                    <span class="quote-author">- John Ruskin</span>
-                </div>
-                <div class="quote" id="quote2">
-                    "Writing is the painting of the voice."
-                    <span class="quote-author">- Voltaire</span>
-                </div>
-                <div class="quote" id="quote3">
-                    "A notebook is a writer's best friend and a student's constant companion."
-                    <span class="quote-author">- Unknown</span>
-                </div>
-                <div class="quote" id="quote4">
-                    "Your ideas deserve the perfect canvas to come alive."
-                    <span class="quote-author">- SARM Enterprises</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Products Section -->
-    <section class="container" id="products">
-        <h2 class="section-title">Our Products</h2>
-        
-        <!-- Product Filter -->
-        <div class="filter-container">
-            <div class="filter-options">
-                <button class="filter-btn active" data-filter="all">All Products</button>
-                <!-- Categories will be loaded dynamically -->
-            </div>
-        </div>
-        
-        <!-- Products Grid -->
-        <div class="products-grid" id="productsContainer">
-            <div class="loading-products" style="text-align: center; padding: 50px; grid-column: 1 / -1;">
-                <i class="fas fa-spinner fa-spin" style="font-size: 40px; color: var(--primary);"></i>
-                <p>Loading products...</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="container">
-            <h2 class="section-title">Why Choose Us</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fas fa-shipping-fast"></i>
-                    <h3>Free Delivery</h3>
-                    <p>Free delivery within 5km radius</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Quality Guarantee</h3>
-                    <p>Premium quality paper and binding</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-headset"></i>
-                    <h3>24/7 Support</h3>
-                    <p>Always available to assist you</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="container" id="faq">
-        <h2 class="section-title">Frequently Asked Questions</h2>
-        <div class="faq-container" id="faqContainer">
-            <div class="faq-item active">
-                <div class="faq-question">
-                    What is your delivery policy?
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-answer open">
-                    We offer free delivery within 5km radius. For areas beyond 5km, delivery charges may apply based on distance. Standard delivery takes 24-48 hours.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">
-                    How can I place an order?
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-answer">
-                    You can order through WhatsApp (7006927825), call us directly, or use the cart system on our website and checkout via WhatsApp.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">
-                    Do you offer bulk discounts?
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-answer">
-                    Yes, we offer special discounts for bulk orders (50+ items). Please contact us directly for custom quotes.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">
-                    What are your business hours?
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-answer">
-                    We are available Monday to Saturday: 9:00 AM - 8:00 PM, Sunday: 10:00 AM - 6:00 PM.
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">
-                    Can I customize notebooks?
-                    <span class="faq-toggle">+</span>
-                </div>
-                <div class="faq-answer">
-                    Yes, we offer customization services for notebooks including custom covers, page count, and paper quality. Minimum order quantity applies.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Feedback Section -->
-    <section class="feedback-section" id="feedback">
-        <div class="container">
-            <h2 class="section-title">Customer Feedback</h2>
-            <div class="feedback-form">
-                <form id="feedbackForm">
+        <div class="admin-content">
+            <!-- Add/Edit Quote Form -->
+            <div class="form-section">
+                <h2 class="section-title" id="formTitle">Add New Quote</h2>
+                <form id="quoteForm">
+                    <input type="hidden" id="quoteId">
+                    
                     <div class="form-group">
-                        <label for="fbName">Full Name</label>
-                        <input type="text" id="fbName" class="form-control" placeholder="Enter your name" required>
+                        <label for="quoteText"><i class="fas fa-quote-right"></i> Quote Text</label>
+                        <textarea id="quoteText" class="form-control" placeholder="Enter inspirational quote..." required></textarea>
                     </div>
+
                     <div class="form-group">
-                        <label for="fbEmail">Email Address</label>
-                        <input type="email" id="fbEmail" class="form-control" placeholder="Enter your email" required>
+                        <label for="quoteAuthor"><i class="fas fa-user"></i> Author</label>
+                        <input type="text" id="quoteAuthor" class="form-control" placeholder="Author name..." required>
                     </div>
+
                     <div class="form-group">
-                        <label>Rate Your Experience</label>
-                        <div class="rating">
-                            <span class="star" data-rating="1">★</span>
-                            <span class="star" data-rating="2">★</span>
-                            <span class="star" data-rating="3">★</span>
-                            <span class="star" data-rating="4">★</span>
-                            <span class="star" data-rating="5">★</span>
+                        <label for="quoteOrder"><i class="fas fa-sort-numeric-down"></i> Display Order</label>
+                        <input type="number" id="quoteOrder" class="form-control order-input" value="1" min="1" required>
+                        <small style="color: #666; display: block; margin-top: 5px;">Lower numbers appear first</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-toggle-on"></i> Status</label>
+                        <div style="display: flex; align-items: center; margin-top: 10px;">
+                            <span id="statusText">Active</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="quoteStatus" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
                         </div>
-                        <input type="hidden" id="fbRating" value="0">
                     </div>
-                    <div class="form-group">
-                        <label for="fbMessage">Your Feedback</label>
-                        <textarea id="fbMessage" class="form-control" placeholder="Tell us about your experience with our products or services" required></textarea>
+
+                    <div class="form-group" style="display: flex; gap: 15px; margin-top: 30px;">
+                        <button type="submit" class="btn" id="submitBtn">
+                            <i class="fas fa-plus"></i> Add Quote
+                        </button>
+                        <button type="button" class="btn btn-danger" id="cancelBtn" style="display: none;">
+                            <i class="fas fa-times"></i> Cancel Edit
+                        </button>
                     </div>
-                    <button type="submit" class="btn" style="width: 100%;">
-                        <i class="fas fa-paper-plane"></i> Submit Feedback
-                    </button>
                 </form>
             </div>
-            
-            <!-- Testimonials Slider -->
-            <div class="testimonials-slider-container">
-                <h3 style="text-align: center; margin-top: 40px; margin-bottom: 30px;">What Our Customers Say</h3>
-                
-                <div class="testimonials-slider">
-                    <div class="testimonial-nav-arrows">
-                        <button class="testimonial-arrow prev-testimonial" aria-label="Previous testimonial">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="testimonial-arrow next-testimonial" aria-label="Next testimonial">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                    
-                    <div id="testimonialsSlider">
-                        <!-- Dynamic testimonials will be inserted here -->
-                        <!-- Default testimonials shown while loading -->
-                        <div class="testimonial-slide active" id="testimonial1">
-                            <div class="testimonial-card">
-                                <h4>Riyaz Ahmed <span class="testimonial-rating">★★★★★</span></h4>
-                                <p class="testimonial-message">"Excellent quality notebooks! The paper is smooth and doesn't bleed. Delivery was prompt and the service was great. Highly recommended for students!"</p>
-                                <p class="testimonial-date"><i class="far fa-calendar"></i> December 15, 2024</p>
-                            </div>
-                        </div>
-                        <div class="testimonial-slide" id="testimonial2">
-                            <div class="testimonial-card">
-                                <h4>Sameer Dar <span class="testimonial-rating">★★★★☆</span></h4>
-                                <p class="testimonial-message">"Good quality products at reasonable prices. Ordered 50 notebooks for our office and got them delivered on time. Will definitely order again!"</p>
-                                <p class="testimonial-date"><i class="far fa-calendar"></i> December 10, 2024</p>
-                            </div>
-                        </div>
-                        <div class="testimonial-slide" id="testimonial3">
-                            <div class="testimonial-card">
-                                <h4>Aisha Khan <span class="testimonial-rating">★★★★★</span></h4>
-                                <p class="testimonial-message">"The custom notebooks I ordered for my coaching center are perfect! The pages are thick and the binding is durable. Great service and quality!"</p>
-                                <p class="testimonial-date"><i class="far fa-calendar"></i> December 5, 2024</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="testimonial-nav" id="testimonialDots">
-                        <span class="testimonial-dot active" data-index="0"></span>
-                        <span class="testimonial-dot" data-index="1"></span>
-                        <span class="testimonial-dot" data-index="2"></span>
-                    </div>
+
+            <!-- Quotes List -->
+            <div class="quotes-section">
+                <h2 class="section-title">Manage Quotes</h2>
+                <div id="quotesList" class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading quotes...</p>
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact-section" id="contact">
-        <div class="container">
-            <h2 class="section-title">Contact Us</h2>
-            <p class="section-subtitle">Get in touch for orders and inquiries</p>
-            
-            <div class="contact-grid">
-                <div class="contact-info">
-                    <h3><i class="fas fa-map-marker-alt"></i> Our Address</h3>
-                    <p>KAWOOSA KHALISA, NARBAL, BADGAM</p>
-                    <p>Pincode: 193411</p>
-                    
-                    <h3><i class="fas fa-phone"></i> Phone Numbers</h3>
-                    <p>7006927825</p>
-                    
-                    <h3><i class="fas fa-envelope"></i> Email</h3>
-                    <p>sarmenterprises786@gmail.com</p>
-                    
-                    <h3><i class="fas fa-clock"></i> Business Hours</h3>
-                    <p>Monday - Saturday: 9:00 AM - 8:00 PM</p>
-                    <p>Sunday: 10:00 AM - 6:00 PM</p>
-                </div>
-                
-                <div class="contact-info">
-                    <h3>Order Now</h3>
-                    <div class="contact-buttons">
-                        <a href="https://wa.me/917006927825?text=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
-                           class="btn btn-whatsapp" target="_blank" rel="noopener" style="text-align: center;">
-                            <i class="fab fa-whatsapp"></i> Order via WhatsApp
-                        </a>
-                        
-                        <a href="tel:+917006927825" class="btn" style="text-align: center;">
-                            <i class="fas fa-phone"></i> Call Us Now
-                        </a>
-                        
-                        <a href="mailto:sarmenterprises786@gmail.com?subject=Order%20Inquiry&body=Hello%20SARM%20ENTERPRISES,%20I%20would%20like%20to%20order%20notebooks" 
-                           class="btn" style="text-align: center;">
-                            <i class="fas fa-envelope"></i> Email Us
-                        </a>
-                    </div>
-                    
-                    <div style="margin-top: 30px; padding: 20px; background: white; border-radius: 10px; box-shadow: var(--shadow);">
-                        <i class="fas fa-quote-right" style="color: var(--primary); font-size: 24px; margin-bottom: 10px; display: block;"></i>
-                        <p style="font-style: italic; color: var(--gray);">"Your ideas are precious. We provide the perfect canvas to preserve them."</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3><i class="fas fa-book"></i> SARM ENTERPRISES</h3>
-                    <p>Premium Notebooks & Stationery</p>
-                    <p style="margin-top: 10px; color: #cbd5e1;">Quality Pages for Quality Thoughts</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                    </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <div class="footer-links">
-                        <a href="#home">Home</a>
-                        <a href="#products">Products</a>
-                        <a href="#features">Features</a>
-                        <a href="#faq">FAQs</a>
-                        <a href="#feedback">Feedback</a>
-                        <a href="#contact">Contact</a>
-                    </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Contact Info</h3>
-                    <div class="contact-info">
-                        <p><i class="fas fa-map-marker-alt"></i> Kawoosa Khalisa, Narbal, Badgam</p>
-                        <p><i class="fas fa-phone"></i> 7006927825</p>
-                        <p><i class="fas fa-envelope"></i> sarmenterprises786@gmail.com</p>
-                        <p><i class="fas fa-clock"></i> Mon-Sat: 9AM-8PM, Sun: 10AM-6PM</p>
-                    </div>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2024 SARM ENTERPRISES. All rights reserved. | Crafted with <i class="fas fa-heart" style="color: #ff6b6b;"></i> in Kashmir</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Back to Top Button -->
-    <div class="back-to-top" id="backToTop" aria-label="Back to top">
-        <i class="fas fa-chevron-up"></i>
-    </div>
-
-    <!-- Notification -->
-    <div class="notification" id="notification">
-        <i class="fas fa-check-circle"></i>
-        <span>Product added to cart!</span>
     </div>
 
     <!-- Firebase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-        import { getFirestore, collection, getDocs, addDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-        // Firebase Configuration
+        // Firebase Configuration (same as main site)
         const firebaseConfig = {
             apiKey: "AIzaSyAZe6bywYSgnMFZsef1xgfPFQBkw4y7tco",
             authDomain: "sarm-enterprises.firebaseapp.com",
@@ -1768,867 +376,217 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // ========== MOBILE NAVIGATION FIX ==========
-        const navToggle = document.getElementById('navToggle');
-        const navMenu = document.getElementById('navMenu');
-        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        const body = document.body;
+        // DOM Elements
+        const quoteForm = document.getElementById('quoteForm');
+        const quoteIdInput = document.getElementById('quoteId');
+        const quoteTextInput = document.getElementById('quoteText');
+        const quoteAuthorInput = document.getElementById('quoteAuthor');
+        const quoteOrderInput = document.getElementById('quoteOrder');
+        const quoteStatusInput = document.getElementById('quoteStatus');
+        const statusText = document.getElementById('statusText');
+        const submitBtn = document.getElementById('submitBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const formTitle = document.getElementById('formTitle');
+        const quotesList = document.getElementById('quotesList');
+        const messageDiv = document.getElementById('message');
 
-        // Function to open mobile menu
-        function openMobileMenu() {
-            navMenu.classList.add('active');
-            mobileMenuOverlay.classList.add('show');
-            navToggle.innerHTML = '<i class="fas fa-times"></i>';
-            body.style.overflow = 'hidden';
-        }
-
-        // Function to close mobile menu
-        function closeMobileMenu() {
-            navMenu.classList.remove('active');
-            mobileMenuOverlay.classList.remove('show');
-            navToggle.innerHTML = '<i class="fas fa-bars"></i>';
-            body.style.overflow = '';
-        }
-
-        // Toggle mobile menu
-        function toggleMobileMenu() {
-            if (navMenu.classList.contains('active')) {
-                closeMobileMenu();
-            } else {
-                openMobileMenu();
-            }
-        }
-
-        // Add event listeners for mobile menu
-        navToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleMobileMenu();
-        });
-
-        // Also support touch events for Android
-        navToggle.addEventListener('touchstart', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleMobileMenu();
-        });
-
-        // Close menu when clicking overlay
-        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-        mobileMenuOverlay.addEventListener('touchstart', closeMobileMenu);
-
-        // Close menu when clicking a link - FIXED FOR ANDROID TAPPING
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Close mobile menu first
-                closeMobileMenu();
-                
-                // Get target section
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    // Wait a bit for menu to close, then scroll
-                    setTimeout(() => {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                    }, 300);
-                }
-            });
-            
-            // Also add touch event for Android
-            link.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                closeMobileMenu();
-                
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    setTimeout(() => {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                    }, 300);
-                }
-            });
-        });
-
-        // Close menu when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            if (navMenu.classList.contains('active') && 
-                !navMenu.contains(event.target) && 
-                !navToggle.contains(event.target)) {
-                closeMobileMenu();
-            }
-        });
-
-        // Handle Android back button
-        window.addEventListener('popstate', function() {
-            closeMobileMenu();
-        });
-
-        // Prevent default behavior for cart icon in mobile menu
-        document.getElementById('cartIcon').addEventListener('click', function(e) {
-            if (window.innerWidth <= 992) {
-                e.preventDefault();
-                e.stopPropagation();
-                closeMobileMenu();
-                // Then open cart
-                setTimeout(() => {
-                    cartSidebar.classList.add('show');
-                    cartOverlay.classList.add('show');
-                }, 300);
-            }
-        });
-
-        // ========== CART SYSTEM WITH SESSION CLEANUP ==========
-        // Clear old cart data on page load (session storage instead of local storage)
-        sessionStorage.removeItem('cart');
-        localStorage.removeItem('cart'); // Clear old localStorage data
-        
-        let cart = [];
-        const cartIcon = document.getElementById('cartIcon');
-        const cartCount = document.getElementById('cartCount');
-        const cartSidebar = document.getElementById('cartSidebar');
-        const cartOverlay = document.getElementById('cartOverlay');
-        const cartItems = document.getElementById('cartItems');
-        const cartTotal = document.getElementById('cartTotal');
-        const checkoutBtn = document.getElementById('checkoutBtn');
-        const clearCartBtn = document.getElementById('clearCartBtn');
-        const closeCart = document.querySelector('.close-cart');
-        const notification = document.getElementById('notification');
-
-        // Initialize cart - start fresh every time
-        function updateCart() {
-            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            cartCount.textContent = totalItems;
-            
-            if (cart.length === 0) {
-                cartItems.innerHTML = '<p class="empty-cart">Your cart is empty</p>';
-                cartTotal.textContent = '₹0';
-                checkoutBtn.disabled = true;
-                return;
-            }
-            
-            let itemsHTML = '';
-            let total = 0;
-            
-            cart.forEach((item, index) => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                
-                itemsHTML += `
-                    <div class="cart-item">
-                        <div class="cart-item-image">
-                            <img src="${item.image || 'assets/products/default.jpg'}" 
-                                 alt="${item.name}"
-                                 onerror="this.onerror=null; this.src='assets/products/default.jpg';">
-                        </div>
-                        <div class="cart-item-details">
-                            <h4>${item.name}</h4>
-                            <div class="cart-item-quantity">
-                                <button onclick="updateQuantity(${index}, -1)">-</button>
-                                <span>${item.quantity}</span>
-                                <button onclick="updateQuantity(${index}, 1)">+</button>
-                            </div>
-                        </div>
-                        <div class="cart-item-price">
-                            ₹${itemTotal}
-                            <button class="remove-item" onclick="removeFromCart(${index})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            cartItems.innerHTML = itemsHTML;
-            cartTotal.textContent = `₹${total}`;
-            checkoutBtn.disabled = false;
-            // Use sessionStorage instead of localStorage
-            sessionStorage.setItem('cart', JSON.stringify(cart));
-        }
-
-        // Add to cart function
-        window.addToCart = function(productId, productName, price, imageUrl) {
-            const existingItemIndex = cart.findIndex(item => item.id === productId);
-            
-            if (existingItemIndex > -1) {
-                cart[existingItemIndex].quantity += 1;
-            } else {
-                cart.push({
-                    id: productId,
-                    name: productName,
-                    price: price,
-                    image: imageUrl,
-                    quantity: 1
-                });
-            }
-            
-            updateCart();
-            showNotification(`${productName} added to cart!`);
-        };
-
-        // Update quantity
-        window.updateQuantity = function(index, change) {
-            cart[index].quantity += change;
-            
-            if (cart[index].quantity <= 0) {
-                cart.splice(index, 1);
-            }
-            
-            updateCart();
-        };
-
-        // Remove from cart
-        window.removeFromCart = function(index) {
-            cart.splice(index, 1);
-            updateCart();
-            showNotification('Product removed from cart');
-        };
-
-        // Show notification
-        function showNotification(message) {
-            notification.querySelector('span').textContent = message;
-            notification.classList.add('show');
+        // Show message function
+        function showMessage(text, type = 'success') {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
             
             setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
+                messageDiv.style.display = 'none';
+            }, 5000);
         }
 
-        // Checkout via WhatsApp
-        checkoutBtn.addEventListener('click', () => {
-            if (cart.length === 0) return;
-            
-            let message = "Hello SARM ENTERPRISES, I would like to order:\n\n";
-            let total = 0;
-            
-            cart.forEach((item, index) => {
-                const itemTotal = item.price * item.quantity;
-                total += itemTotal;
-                message += `${index + 1}. ${item.name} - ${item.quantity} x ₹${item.price} = ₹${itemTotal}\n`;
-            });
-            
-            message += `\nTotal: ₹${total}\n\nPlease confirm my order.`;
-            
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/917006927825?text=${encodedMessage}`;
-            
-            window.open(whatsappUrl, '_blank');
-            
-            // Clear cart after checkout
-            cart = [];
-            updateCart();
-            
-            // Close cart sidebar
-            cartSidebar.classList.remove('show');
-            cartOverlay.classList.remove('show');
+        // Toggle status text
+        quoteStatusInput.addEventListener('change', function() {
+            statusText.textContent = this.checked ? 'Active' : 'Inactive';
         });
 
-        // Clear cart
-        clearCartBtn.addEventListener('click', () => {
-            if (confirm('Are you sure you want to clear your cart?')) {
-                cart = [];
-                updateCart();
-                showNotification('Cart cleared');
-            }
-        });
-
-        // Cart sidebar toggle
-        cartIcon.addEventListener('click', (e) => {
-            e.preventDefault();
-            cartSidebar.classList.add('show');
-            cartOverlay.classList.add('show');
-        });
-
-        closeCart.addEventListener('click', () => {
-            cartSidebar.classList.remove('show');
-            cartOverlay.classList.remove('show');
-        });
-
-        cartOverlay.addEventListener('click', () => {
-            cartSidebar.classList.remove('show');
-            cartOverlay.classList.remove('show');
-        });
-
-        // ========== PRODUCT LOADING WITH DEFAULT IMAGE ==========
-        function getImagePath(filename) {
-            if (!filename) return 'assets/products/default.jpg';
-            
-            // If it's already a full URL, use it
-            if (filename.startsWith('http')) {
-                return filename;
-            }
-            
-            // If it's already a local path, use it
-            if (filename.startsWith('assets/')) {
-                return filename;
-            }
-            
-            // Otherwise, assume it's a product image in products folder
-            return `assets/products/${filename}`;
-        }
-
-        function createProductCard(product, id) {
-            const images = product.images || [];
-            const firstImage = images.length > 0 ? getImagePath(images[0]) : 'assets/products/default.jpg';
-            
-            // Format category for display
-            const categoryName = product.category ? 
-                product.category.split('-').map(word => 
-                    word.charAt(0).toUpperCase() + word.slice(1)
-                ).join(' ') : 'Uncategorized';
-            
-            return `
-                <div class="product-card" data-category="${product.category || 'uncategorized'}">
-                    <div class="product-image-container">
-                        <div class="product-image-slider" id="${id}-slider">
-                            ${images.map((img, index) => `
-                                <img src="${getImagePath(img)}" 
-                                     alt="${product.name}" 
-                                     class="product-image"
-                                     onerror="this.onerror=null; this.src='assets/products/default.jpg';">
-                            `).join('')}
-                            ${images.length === 0 ? `
-                                <img src="assets/products/default.jpg" 
-                                     alt="${product.name}" 
-                                     class="product-image">
-                            ` : ''}
-                        </div>
-                        ${images.length > 1 ? `
-                            <button class="image-nav prev" onclick="changeImage(-1, '${id}', ${JSON.stringify(images).replace(/"/g, '&quot;')})">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <button class="image-nav next" onclick="changeImage(1, '${id}', ${JSON.stringify(images).replace(/"/g, '&quot;')})">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        ` : ''}
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">${product.name}</h3>
-                        <div class="product-price">₹${product.price}</div>
-                        <p class="product-description">${product.description || 'Premium quality notebook for all your writing needs.'}</p>
-                        <button class="btn" onclick="addToCart('${id}', '${product.name.replace(/'/g, "\\'")}', ${product.price}, '${firstImage}')">
-                            Add to Cart
-                        </button>
-                        <a href="https://wa.me/917006927825?text=${encodeURIComponent(`Hello SARM ENTERPRISES, I would like to order ${product.name} - ₹${product.price}`)}" 
-                           class="btn btn-whatsapp" target="_blank" rel="noopener" style="margin-top: 10px; display: block; text-align: center;">
-                            <i class="fab fa-whatsapp"></i> Order via WhatsApp
-                        </a>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Image slider functionality
-        window.changeImage = function(direction, productId, images) {
-            const slider = document.getElementById(`${productId}-slider`);
-            if (!slider) return;
-            
-            const currentIndex = parseInt(slider.getAttribute('data-index') || '0');
-            const totalImages = images.length;
-            let newIndex = currentIndex + direction;
-            
-            if (newIndex < 0) newIndex = totalImages - 1;
-            if (newIndex >= totalImages) newIndex = 0;
-            
-            slider.style.transform = `translateX(-${newIndex * 100}%)`;
-            slider.setAttribute('data-index', newIndex);
-        };
-
-        async function loadProducts() {
+        // Load quotes from Firebase
+        async function loadQuotes() {
             try {
-                const productsRef = collection(db, "products");
-                const q = query(productsRef, orderBy("createdAt", "desc"));
+                const q = query(collection(db, "quotes"), orderBy("order", "asc"));
                 const querySnapshot = await getDocs(q);
                 
-                const productsContainer = document.getElementById('productsContainer');
-                const filterOptions = document.querySelector('.filter-options');
+                quotesList.innerHTML = '';
                 
                 if (querySnapshot.empty) {
-                    productsContainer.innerHTML = `
-                        <div style="text-align: center; padding: 50px; grid-column: 1 / -1;">
-                            <i class="fas fa-book" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
-                            <p style="color: #999; font-size: 18px;">No products available yet.</p>
-                            <p style="color: #666; font-size: 14px;">Please add products from the admin panel.</p>
+                    quotesList.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: #666;">
+                            <i class="fas fa-quote-left" style="font-size: 40px; margin-bottom: 20px;"></i>
+                            <p>No quotes found. Add your first quote!</p>
                         </div>
                     `;
                     return;
                 }
                 
-                let categories = new Set(['all']);
-                let productsHTML = '';
-                
                 querySnapshot.forEach((doc) => {
-                    const product = doc.data();
-                    const productId = doc.id;
+                    const quote = doc.data();
+                    const quoteId = doc.id;
                     
-                    if (product.category) {
-                        categories.add(product.category);
-                    }
+                    const quoteElement = document.createElement('div');
+                    quoteElement.className = 'quote-item';
+                    quoteElement.innerHTML = `
+                        <div class="quote-text">"${quote.text}"</div>
+                        <div class="quote-author">- ${quote.author}</div>
+                        <div class="quote-meta">
+                            <div>
+                                Order: <strong>${quote.order || 1}</strong>
+                                <span class="status-badge ${quote.isActive ? 'status-active' : 'status-inactive'}">
+                                    ${quote.isActive ? 'Active' : 'Inactive'}
+                                </span>
+                            </div>
+                            <div>ID: ${quoteId.substring(0, 8)}...</div>
+                        </div>
+                        <div class="quote-actions">
+                            <button class="btn btn-success edit-btn" data-id="${quoteId}">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-danger delete-btn" data-id="${quoteId}">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    `;
                     
-                    productsHTML += createProductCard(product, productId);
+                    quotesList.appendChild(quoteElement);
                 });
                 
-                productsContainer.innerHTML = productsHTML;
-                
-                // Create category filter buttons
-                filterOptions.innerHTML = '<button class="filter-btn active" data-filter="all">All Products</button>';
-                categories.forEach(category => {
-                    if (category !== 'all') {
-                        const formattedCategory = category.split('-').map(word => 
-                            word.charAt(0).toUpperCase() + word.slice(1)
-                        ).join(' ');
-                        
-                        filterOptions.innerHTML += `
-                            <button class="filter-btn" data-filter="${category}">${formattedCategory}</button>
-                        `;
-                    }
-                });
-                
-                // Add event listeners to filter buttons
-                document.querySelectorAll('.filter-btn').forEach(button => {
-                    button.addEventListener('click', () => {
-                        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-                        button.classList.add('active');
-                        
-                        const filter = button.getAttribute('data-filter');
-                        const productCards = document.querySelectorAll('.product-card');
-                        
-                        productCards.forEach(card => {
-                            const category = card.getAttribute('data-category');
-                            if (filter === 'all' || category === filter) {
-                                card.style.display = 'block';
-                            } else {
-                                card.style.display = 'none';
-                            }
-                        });
+                // Add event listeners to edit and delete buttons
+                document.querySelectorAll('.edit-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const quoteId = e.target.closest('.edit-btn').getAttribute('data-id');
+                        await editQuote(quoteId);
                     });
                 });
                 
-            } catch (error) {
-                console.error("Error loading products:", error);
-                const productsContainer = document.getElementById('productsContainer');
-                productsContainer.innerHTML = `
-                    <div style="text-align: center; padding: 50px; grid-column: 1 / -1;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 60px; color: #e74c3c; margin-bottom: 20px;"></i>
-                        <p style="color: #e74c3c; font-size: 18px;">Error loading products.</p>
-                        <p style="color: #666; font-size: 14px;">Please check your internet connection.</p>
-                    </div>
-                `;
-            }
-        }
-
-        // ========== FAQ FUNCTIONALITY ==========
-        async function loadFAQs() {
-            try {
-                const q = query(collection(db, "faqs"), orderBy("order", "asc"));
-                const querySnapshot = await getDocs(q);
-                const faqContainer = document.getElementById('faqContainer');
-                
-                if (querySnapshot.empty) {
-                    // Keep the default FAQs if none in database
-                    return;
-                }
-                
-                let faqHTML = '';
-                querySnapshot.forEach((doc, index) => {
-                    const faq = doc.data();
-                    faqHTML += `
-                        <div class="faq-item ${index === 0 ? 'active' : ''}">
-                            <div class="faq-question">
-                                ${faq.question}
-                                <span class="faq-toggle">+</span>
-                            </div>
-                            <div class="faq-answer ${index === 0 ? 'open' : ''}">
-                                ${faq.answer}
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                faqContainer.innerHTML = faqHTML;
-                
-                // Add FAQ toggle functionality
-                document.querySelectorAll('.faq-question').forEach(question => {
-                    question.addEventListener('click', () => {
-                        const item = question.parentElement;
-                        const answer = item.querySelector('.faq-answer');
-                        const toggle = item.querySelector('.faq-toggle');
-                        
-                        // Close all other FAQ items
-                        document.querySelectorAll('.faq-item').forEach(otherItem => {
-                            if (otherItem !== item) {
-                                otherItem.classList.remove('active');
-                                otherItem.querySelector('.faq-answer').classList.remove('open');
-                                otherItem.querySelector('.faq-toggle').textContent = '+';
-                            }
-                        });
-                        
-                        // Toggle current item
-                        item.classList.toggle('active');
-                        if (item.classList.contains('active')) {
-                            answer.classList.add('open');
-                            toggle.textContent = '−';
-                        } else {
-                            answer.classList.remove('open');
-                            toggle.textContent = '+';
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        const quoteId = e.target.closest('.delete-btn').getAttribute('data-id');
+                        if (confirm('Are you sure you want to delete this quote?')) {
+                            await deleteQuote(quoteId);
                         }
                     });
                 });
                 
             } catch (error) {
-                console.error("Error loading FAQs:", error);
+                console.error("Error loading quotes:", error);
+                quotesList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #dc3545;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 40px; margin-bottom: 20px;"></i>
+                        <p>Error loading quotes. Please check your connection.</p>
+                    </div>
+                `;
             }
         }
 
-        // ========== TESTIMONIALS SLIDER ==========
-        let currentTestimonial = 0;
-        let testimonials = [];
-        let testimonialInterval;
-
-        // Function to show next testimonial
-        function showNextTestimonial() {
-            const testimonialSlides = document.querySelectorAll('.testimonial-slide');
-            const testimonialDots = document.querySelectorAll('.testimonial-dot');
-            
-            if (testimonialSlides.length === 0) return;
-            
-            // Hide current testimonial
-            testimonialSlides[currentTestimonial].classList.remove('active');
-            testimonialDots[currentTestimonial].classList.remove('active');
-            
-            // Move to next testimonial
-            currentTestimonial = (currentTestimonial + 1) % testimonialSlides.length;
-            
-            // Show next testimonial
-            testimonialSlides[currentTestimonial].classList.add('active');
-            testimonialDots[currentTestimonial].classList.add('active');
-        }
-
-        // Function to show previous testimonial
-        function showPrevTestimonial() {
-            const testimonialSlides = document.querySelectorAll('.testimonial-slide');
-            const testimonialDots = document.querySelectorAll('.testimonial-dot');
-            
-            if (testimonialSlides.length === 0) return;
-            
-            // Hide current testimonial
-            testimonialSlides[currentTestimonial].classList.remove('active');
-            testimonialDots[currentTestimonial].classList.remove('active');
-            
-            // Move to previous testimonial
-            currentTestimonial = (currentTestimonial - 1 + testimonialSlides.length) % testimonialSlides.length;
-            
-            // Show previous testimonial
-            testimonialSlides[currentTestimonial].classList.add('active');
-            testimonialDots[currentTestimonial].classList.add('active');
-        }
-
-        // Function to go to specific testimonial
-        function goToTestimonial(index) {
-            const testimonialSlides = document.querySelectorAll('.testimonial-slide');
-            const testimonialDots = document.querySelectorAll('.testimonial-dot');
-            
-            if (testimonialSlides.length === 0 || index < 0 || index >= testimonialSlides.length) return;
-            
-            // Hide current testimonial
-            testimonialSlides[currentTestimonial].classList.remove('active');
-            testimonialDots[currentTestimonial].classList.remove('active');
-            
-            // Set new testimonial
-            currentTestimonial = index;
-            
-            // Show new testimonial
-            testimonialSlides[currentTestimonial].classList.add('active');
-            testimonialDots[currentTestimonial].classList.add('active');
-            
-            // Reset auto-rotation timer
-            resetTestimonialTimer();
-        }
-
-        // Function to reset testimonial auto-rotation timer
-        function resetTestimonialTimer() {
-            if (testimonialInterval) {
-                clearInterval(testimonialInterval);
+        // Edit quote
+        async function editQuote(quoteId) {
+            try {
+                const docRef = doc(db, "quotes", quoteId);
+                const docSnap = await getDocs(query(collection(db, "quotes"), where("__name__", "==", quoteId)));
+                
+                if (!docSnap.empty) {
+                    const quote = docSnap.docs[0].data();
+                    
+                    // Fill form with quote data
+                    quoteIdInput.value = quoteId;
+                    quoteTextInput.value = quote.text;
+                    quoteAuthorInput.value = quote.author;
+                    quoteOrderInput.value = quote.order || 1;
+                    quoteStatusInput.checked = quote.isActive !== false;
+                    statusText.textContent = quote.isActive !== false ? 'Active' : 'Inactive';
+                    
+                    // Update form for edit mode
+                    formTitle.textContent = 'Edit Quote';
+                    submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Quote';
+                    submitBtn.className = 'btn btn-success';
+                    cancelBtn.style.display = 'inline-block';
+                    
+                    // Scroll to form
+                    quoteTextInput.focus();
+                }
+                
+            } catch (error) {
+                console.error("Error loading quote:", error);
+                showMessage('Error loading quote details', 'error');
             }
-            
-            // Start auto-rotation again (every 6 seconds)
-            testimonialInterval = setInterval(showNextTestimonial, 6000);
         }
 
-        // Initialize testimonials slider
-        function initTestimonialsSlider() {
-            // Add event listeners for navigation arrows
-            document.querySelector('.prev-testimonial').addEventListener('click', showPrevTestimonial);
-            document.querySelector('.next-testimonial').addEventListener('click', showNextTestimonial);
-            
-            // Add event listeners for dots
-            document.querySelectorAll('.testimonial-dot').forEach(dot => {
-                dot.addEventListener('click', () => {
-                    const index = parseInt(dot.getAttribute('data-index'));
-                    goToTestimonial(index);
-                });
-            });
-            
-            // Start auto-rotation
-            resetTestimonialTimer();
-            
-            // Pause on hover
-            const testimonialsSlider = document.querySelector('.testimonials-slider');
-            testimonialsSlider.addEventListener('mouseenter', () => {
-                if (testimonialInterval) {
-                    clearInterval(testimonialInterval);
-                }
-            });
-            
-            testimonialsSlider.addEventListener('mouseleave', resetTestimonialTimer);
-            
-            // Also support touch events for mobile
-            testimonialsSlider.addEventListener('touchstart', () => {
-                if (testimonialInterval) {
-                    clearInterval(testimonialInterval);
-                }
-            });
-            
-            testimonialsSlider.addEventListener('touchend', resetTestimonialTimer);
+        // Delete quote
+        async function deleteQuote(quoteId) {
+            try {
+                await deleteDoc(doc(db, "quotes", quoteId));
+                showMessage('Quote deleted successfully');
+                loadQuotes();
+            } catch (error) {
+                console.error("Error deleting quote:", error);
+                showMessage('Error deleting quote', 'error');
+            }
         }
 
-        // ========== FEEDBACK FUNCTIONALITY ==========
-        // Star rating for feedback
-        const stars = document.querySelectorAll('.star');
-        const ratingInput = document.getElementById('fbRating');
-        
-        stars.forEach(star => {
-            star.addEventListener('click', () => {
-                const rating = star.getAttribute('data-rating');
-                ratingInput.value = rating;
-                
-                stars.forEach((s, index) => {
-                    if (index < rating) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
-                });
-            });
-            
-            // Add hover effect
-            star.addEventListener('mouseover', () => {
-                const rating = star.getAttribute('data-rating');
-                
-                stars.forEach((s, index) => {
-                    if (index < rating) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
-                });
-            });
-            
-            star.addEventListener('mouseout', () => {
-                const currentRating = ratingInput.value;
-                
-                stars.forEach((s, index) => {
-                    if (index < currentRating) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
-                });
-            });
+        // Cancel edit
+        cancelBtn.addEventListener('click', () => {
+            resetForm();
         });
 
-        // Feedback form submission
-        const feedbackForm = document.getElementById('feedbackForm');
-        
-        feedbackForm.addEventListener('submit', async (e) => {
+        // Reset form
+        function resetForm() {
+            quoteForm.reset();
+            quoteIdInput.value = '';
+            quoteStatusInput.checked = true;
+            statusText.textContent = 'Active';
+            formTitle.textContent = 'Add New Quote';
+            submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Quote';
+            submitBtn.className = 'btn';
+            cancelBtn.style.display = 'none';
+        }
+
+        // Form submission
+        quoteForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const name = document.getElementById('fbName').value;
-            const email = document.getElementById('fbEmail').value;
-            const rating = document.getElementById('fbRating').value;
-            const message = document.getElementById('fbMessage').value;
+            const quoteData = {
+                text: quoteTextInput.value.trim(),
+                author: quoteAuthorInput.value.trim(),
+                order: parseInt(quoteOrderInput.value) || 1,
+                isActive: quoteStatusInput.checked,
+                updatedAt: new Date().toISOString()
+            };
             
-            if (rating === '0') {
-                alert('Please select a rating before submitting feedback.');
+            if (!quoteData.text || !quoteData.author) {
+                showMessage('Please fill in all required fields', 'error');
                 return;
             }
             
             try {
-                // Save to Firestore
-                await addDoc(collection(db, "feedback_submissions"), {
-                    customerName: name,
-                    email: email,
-                    rating: parseInt(rating),
-                    message: message,
-                    status: "pending",
-                    createdAt: new Date().toISOString()
-                });
+                if (quoteIdInput.value) {
+                    // Update existing quote
+                    const docRef = doc(db, "quotes", quoteIdInput.value);
+                    await updateDoc(docRef, quoteData);
+                    showMessage('Quote updated successfully');
+                } else {
+                    // Add new quote
+                    quoteData.createdAt = new Date().toISOString();
+                    await addDoc(collection(db, "quotes"), quoteData);
+                    showMessage('Quote added successfully');
+                }
                 
-                showNotification('Thank you for your feedback! It has been submitted for review.');
-                feedbackForm.reset();
-                
-                // Reset stars
-                stars.forEach(star => star.classList.remove('active'));
-                ratingInput.value = '0';
+                resetForm();
+                loadQuotes();
                 
             } catch (error) {
-                console.error("Error submitting feedback:", error);
-                alert('Sorry, there was an error submitting your feedback. Please try again.');
+                console.error("Error saving quote:", error);
+                showMessage('Error saving quote', 'error');
             }
         });
 
-        // Load approved testimonials
-        async function loadApprovedTestimonials() {
-            try {
-                const q = query(
-                    collection(db, "feedback_submissions"),
-                    where("status", "==", "approved"),
-                    orderBy("createdAt", "desc")
-                );
-                
-                const querySnapshot = await getDocs(q);
-                const container = document.getElementById('testimonialsSlider');
-                
-                if (querySnapshot.empty) {
-                    // Keep the default testimonials if none in database
-                    initTestimonialsSlider();
-                    return;
-                }
-                
-                let testimonialsHTML = '';
-                let slideIndex = 0;
-                
-                querySnapshot.forEach((doc) => {
-                    const feedback = doc.data();
-                    const starsHTML = '★'.repeat(feedback.rating) + '☆'.repeat(5 - feedback.rating);
-                    const date = new Date(feedback.createdAt).toLocaleDateString('en-IN');
-                    
-                    testimonialsHTML += `
-                        <div class="testimonial-slide ${slideIndex === 0 ? 'active' : ''}" id="dynamic-testimonial-${slideIndex}">
-                            <div class="testimonial-card">
-                                <h4>${feedback.customerName} <span class="testimonial-rating">${starsHTML}</span></h4>
-                                <p class="testimonial-message">"${feedback.message}"</p>
-                                <p class="testimonial-date"><i class="far fa-calendar"></i> ${date}</p>
-                            </div>
-                        </div>
-                    `;
-                    slideIndex++;
-                });
-                
-                container.innerHTML = testimonialsHTML;
-                
-                // Update navigation dots
-                const testimonialDotsContainer = document.getElementById('testimonialDots');
-                let dotsHTML = '';
-                for (let i = 0; i < slideIndex; i++) {
-                    dotsHTML += `<span class="testimonial-dot ${i === 0 ? 'active' : ''}" data-index="${i}"></span>`;
-                }
-                testimonialDotsContainer.innerHTML = dotsHTML;
-                
-                // Re-initialize the slider with new testimonials
-                initTestimonialsSlider();
-                
-            } catch (error) {
-                console.error("Error loading testimonials:", error);
-                // If error, still initialize with default testimonials
-                initTestimonialsSlider();
-            }
-        }
-
-        // ========== QUOTES SLIDER ==========
-        let currentQuote = 0;
-        let quoteInterval;
-
-        function showNextQuote() {
-            const quotes = document.querySelectorAll('.quote');
-            quotes[currentQuote].classList.remove('active');
-            currentQuote = (currentQuote + 1) % quotes.length;
-            quotes[currentQuote].classList.add('active');
-        }
-
-        function initQuotesSlider() {
-            // Start quotes auto-rotation (every 5 seconds)
-            quoteInterval = setInterval(showNextQuote, 5000);
-            
-            // Pause on hover
-            const quoteSlider = document.querySelector('.quote-slider');
-            quoteSlider.addEventListener('mouseenter', () => {
-                if (quoteInterval) {
-                    clearInterval(quoteInterval);
-                }
-            });
-            
-            quoteSlider.addEventListener('mouseleave', () => {
-                quoteInterval = setInterval(showNextQuote, 5000);
-            });
-        }
-
-        // ========== INITIALIZATION ==========
+        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            // Update cart (starts fresh)
-            updateCart();
-            
-            // Load products
-            loadProducts();
-            
-            // Load FAQs
-            loadFAQs();
-            
-            // Load testimonials
-            loadApprovedTestimonials();
-            
-            // Initialize quotes slider
-            initQuotesSlider();
-            
-            // Back to Top Button
-            const backToTopButton = document.getElementById('backToTop');
-            
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 300) {
-                    backToTopButton.classList.add('show');
-                } else {
-                    backToTopButton.classList.remove('show');
-                }
-            });
-            
-            backToTopButton.addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            });
-            
-            // Smooth Scrolling for non-nav links
-            document.querySelectorAll('a[href^="#"]:not(.nav-link)').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    const targetId = this.getAttribute('href');
-                    if (targetId === '#') return;
-                    
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-
-            // Prevent cart icon from causing navigation issues
-            document.getElementById('cartIcon').addEventListener('click', (e) => {
-                e.preventDefault();
-            });
+            loadQuotes();
         });
     </script>
 </body>
