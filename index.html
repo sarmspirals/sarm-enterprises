@@ -58,6 +58,21 @@
             padding: 0 20px;
         }
 
+        /* ========== CRITICAL IMAGE FIXES ========== */
+        /* Apply to ALL images to prevent cropping */
+        img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* Prevent parent containers from cropping images */
+        .container, .wrapper, .card, .box, .product-card, .product-image-container,
+        .cart-item-image, .swiper-slide {
+            overflow: visible !important;
+        }
+
         /* ========== HEADER & NAVIGATION ========== */
         header {
             background-color: white;
@@ -84,7 +99,7 @@
             gap: 12px;
         }
 
-        /* Logo Image Styles */
+        /* Logo Image Styles - FIXED */
         .logo {
             height: 45px;
             width: auto;
@@ -495,7 +510,7 @@
             border-color: var(--primary);
         }
 
-        /* Products Grid */
+        /* Products Grid - IMAGE FIXES */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -506,7 +521,7 @@
         .product-card {
             background: white;
             border-radius: 12px;
-            overflow: hidden;
+            overflow: visible; /* Changed from hidden */
             box-shadow: var(--shadow);
             transition: var(--transition);
         }
@@ -519,26 +534,40 @@
         .product-image-container {
             position: relative;
             height: 220px;
-            overflow: hidden;
+            overflow: visible; /* Changed from hidden */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background: #f8f9fa;
         }
 
+        /* CRITICAL IMAGE FIX */
         .product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
+            width: auto !important;
+            height: auto !important;
+            max-width: 100% !important;
+            max-height: 200px !important;
+            object-fit: contain !important;
+            display: block;
+            margin: 0 auto;
         }
 
         .product-image-slider {
             display: flex;
             transition: transform 0.5s ease;
             height: 100%;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
         }
 
         .product-image-slider img {
             min-width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto;
+            max-height: 200px;
+            object-fit: contain;
+            display: block;
         }
 
         .image-nav {
@@ -601,7 +630,7 @@
             margin-bottom: 15px;
         }
 
-        /* ========== CART SIDEBAR ========== */
+        /* ========== CART SIDEBAR - IMAGE FIXES ========== */
         .cart-sidebar {
             position: fixed;
             top: 0;
@@ -648,13 +677,24 @@
             width: 70px;
             height: 70px;
             flex-shrink: 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+            overflow: visible; /* Changed from hidden */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
         }
         
+        /* CART IMAGE FIX */
         .cart-item-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            width: auto !important;
+            height: auto !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            object-fit: contain !important;
             border-radius: 5px;
+            display: block;
         }
         
         .cart-item-details {
@@ -1185,6 +1225,15 @@
 
             .products-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .product-image-container {
+                height: 180px;
+            }
+
+            .product-image {
+                max-height: 160px !important;
             }
 
             .footer-content {
@@ -1220,6 +1269,14 @@
 
             .faq-container, .feedback-form {
                 padding: 20px;
+            }
+
+            .product-image-container {
+                height: 160px;
+            }
+
+            .product-image {
+                max-height: 140px !important;
             }
         }
 
@@ -1263,6 +1320,21 @@
         body, html {
             max-width: 100%;
             overflow-x: hidden;
+        }
+
+        /* ========== EMERGENCY OVERRIDES ========== */
+        /* Force images to be fully visible with !important */
+        img[src*=".jpg"], img[src*=".png"], img[src*=".jpeg"], img[src*=".gif"] {
+            max-width: 100% !important;
+            height: auto !important;
+            object-fit: contain !important;
+            object-position: center center !important;
+            display: block !important;
+        }
+
+        /* Override any inline styles that might be hiding images */
+        .product-card * {
+            overflow: visible !important;
         }
     </style>
 </head>
