@@ -37,6 +37,32 @@ body {
     width: 100%;
 }
 
+/* ===========================================
+   UNIVERSAL IMAGE FIXES - ADDED HERE
+   =========================================== */
+
+/* Apply to ALL images to prevent cropping and ensure visibility */
+img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+/* Prevent parent containers from cropping images */
+.container, .wrapper, .card, .box, .swiper-slide {
+    overflow: visible !important;
+}
+
+/* Specific fix for product image containers */
+.product-image-container,
+.product-image-slider,
+.cart-item-image,
+.logo-img,
+.image-container {
+    overflow: visible !important;
+}
+
 /* Container */
 .container {
     width: 100%;
@@ -71,10 +97,13 @@ body {
     gap: 15px;
 }
 
+/* LOGO IMAGE FIX */
 .logo-img {
     height: 60px;
     width: auto;
     border-radius: 5px;
+    max-width: 100%;
+    object-fit: contain;
 }
 
 .nav-brand h1 {
@@ -227,7 +256,6 @@ body {
     margin-right: auto;
 }
 
-       
 /* PRODUCTS GRID - MULTI-COLUMN ON ALL DEVICES */
 .products-grid {
     display: grid;
@@ -240,7 +268,7 @@ body {
 .product-card {
     background: white;
     border-radius: var(--border-radius);
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden */
     box-shadow: var(--shadow);
     transition: transform 0.3s;
     display: flex;
@@ -259,30 +287,35 @@ body {
     position: relative;
     width: 100%;
     background: #f8f9fa;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden */
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 280px;
-    max-height: 300px;
+    max-height: none; /* Removed fixed max-height */
+    padding: 10px; /* Added padding for breathing space */
 }
 
 .product-image-slider {
     width: 100%;
-    height: 100%;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
 }
 
+/* IMAGE FIX - This is the main fix */
 .product-image-slider img {
-    width: 100%;
-    height: 100%;
-    max-height: 280px;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 280px; /* Kept for consistency but can adjust */
     object-fit: contain;
-    padding: 20px;
+    padding: 15px;
     transition: opacity 0.5s ease;
+    display: block;
+    margin: 0 auto;
 }
 
 /* MULTI-IMAGE NAVIGATION */
@@ -723,7 +756,7 @@ body {
     border: none;
 }
 
-/* Cart Styles */
+/* CART IMAGE FIXES */
 .cart-sidebar {
     position: fixed;
     top: 0;
@@ -771,17 +804,21 @@ body {
     flex-shrink: 0;
     background: #f8f9fa;
     border-radius: 8px;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden */
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+/* CART IMAGE FIX */
 .cart-item-image img {
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
     padding: 8px;
+    display: block;
 }
 
 .cart-item-details {
@@ -982,12 +1019,14 @@ body {
 .product-image-carousel {
     background: white;
     border-radius: 10px;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden */
     position: relative;
-    height: 500px;
+    height: auto; /* Changed from 500px */
+    min-height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 20px;
 }
 
 .product-image-carousel .swiper-slide {
@@ -998,8 +1037,10 @@ body {
 }
 
 .product-image-carousel .swiper-slide img {
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 400px;
     object-fit: contain;
     padding: 20px;
 }
@@ -1123,11 +1164,11 @@ body {
     /* Product Image Container */
     .product-image-container {
         min-height: 240px;
-        max-height: 260px;
+        max-height: none; /* Removed fixed max-height */
     }
     
     .product-image-slider img {
-        max-height: 240px;
+        max-height: 220px; /* Adjusted for tablet */
         padding: 15px;
     }
     
@@ -1190,6 +1231,17 @@ body {
     .notification.show {
         transform: translateY(0);
     }
+    
+    /* Image Modal for mobile */
+    .product-image-carousel {
+        min-height: 300px;
+        padding: 15px;
+    }
+    
+    .product-image-carousel .swiper-slide img {
+        max-height: 300px;
+        padding: 15px;
+    }
 }
 
 /* Mobile (480px and below) */
@@ -1232,12 +1284,12 @@ body {
     }
     
     .product-image-container {
-        min-height: 220px;
-        max-height: 240px;
+        min-height: 200px;
+        max-height: none;
     }
     
     .product-image-slider img {
-        max-height: 220px;
+        max-height: 200px;
         padding: 12px;
     }
     
@@ -1268,7 +1320,13 @@ body {
     }
     
     .product-image-carousel {
-        height: 300px;
+        min-height: 250px;
+        padding: 10px;
+    }
+    
+    .product-image-carousel .swiper-slide img {
+        max-height: 250px;
+        padding: 10px;
     }
 }
 
@@ -1281,11 +1339,11 @@ body {
     
     .product-image-container {
         min-height: 320px;
-        max-height: 350px;
+        max-height: none;
     }
     
     .product-image-slider img {
-        max-height: 320px;
+        max-height: 300px;
     }
     
     .hero-content h2 {
@@ -1318,4 +1376,39 @@ html, body {
         min-height: 30px;
         min-width: 30px;
     }
+}
+
+/* ===========================================
+   ADDITIONAL IMAGE SAFETY RULES
+   =========================================== */
+
+/* Ensure all images respect container boundaries */
+img.responsive {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* For any image that should never be cropped */
+.no-crop {
+    object-fit: contain !important;
+    object-position: center center !important;
+}
+
+/* For background images that should be fully visible */
+.bg-image-contain {
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+}
+
+/* Fix for images in flex containers */
+.flex-container img {
+    flex-shrink: 0;
+}
+
+/* Image fallback styling */
+img[onerror] {
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
 }
